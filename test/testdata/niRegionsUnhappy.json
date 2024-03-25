@@ -1,0 +1,20 @@
+[
+  {
+    "region": "London"
+  },
+  {
+    "region": "Birmingham"
+  },
+  {
+    "region": "abc 123"
+  },
+  {
+    "region": "!@%#"
+  },
+  {
+    "region": "Belfast"
+  },
+  {
+    "region": "0AA"
+  }
+]
