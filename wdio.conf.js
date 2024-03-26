@@ -13,7 +13,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: `https://${process.env.BASE_URL}/aqie-privatebeta-test`,
+  baseUrl: `https://${process.env.BASE_URL}/`,
 
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
