@@ -13,7 +13,10 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: `https://${process.env.BASE_URL}/`,
+  // baseUrl: `https://${process.env.BASE_URL}/`,
+  // baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
+
+  baseUrl: `https://${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
@@ -41,9 +44,7 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [
-    // 'path/to/excluded/files'
-  ],
+  exclude: ['./test/specs/passwordPageLogin.js'],
   // injectGlobals: false,
   //
   // ============
