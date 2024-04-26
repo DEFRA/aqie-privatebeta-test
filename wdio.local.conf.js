@@ -55,12 +55,12 @@ export const config = {
   //
 
   capabilities: debug
-    ? [{ browserName: 'chrome' }]
+    ? [{ browserName: 'MicrosoftEdge' }]
     : [
         {
           maxInstances: 1,
-          browserName: 'chrome',
-          'goog:chromeOptions': {
+          browserName: 'MicrosoftEdge',
+          'goog:MicrosoftEdge': {
             args: [
               '--no-sandbox',
               '--disable-infobars',
@@ -104,7 +104,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'https://test.cdp-int.defra.cloud/',
+  baseUrl: 'https://aqie-front-end.test.cdp-int.defra.cloud',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -143,7 +143,7 @@ export const config = {
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter
-
+  // disableMochaHooks: true
   reporters: [
     'spec',
     [

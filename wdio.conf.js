@@ -16,7 +16,7 @@ export const config = {
   // baseUrl: `https://${process.env.BASE_URL}/`,
   // baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
-  baseUrl: `https://${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
+  baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:

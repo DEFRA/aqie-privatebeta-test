@@ -2,7 +2,7 @@ import passwordPage from 'page-objects/passwordpage'
 import { browser, expect } from '@wdio/globals'
 class PasswordPageLogin {
   async passwordPageLogin() {
-    await browser.url('/aqie-front-end')
+    await browser.url('')
     await browser.maximizeWindow()
     await expect(browser).toHaveTitle('Sign in - Private beta air quality')
     const PasswordPageHeaderText = 'This is a private beta'
@@ -17,7 +17,7 @@ class PasswordPageLogin {
     await expect(getPasswordPageStatement).toMatch(PasswordPageStatement)
     const getLabelPassword = await passwordPage.labelPassword.getText()
     await expect(getLabelPassword).toMatch(labelPassword)
-    await passwordPage.setPassword('n1tr0g3n')
+    await passwordPage.setPassword('e3BakXA1Up8PxN3ehAYO')
     await passwordPage.continueBtnClick()
   }
 }
