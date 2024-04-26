@@ -124,7 +124,7 @@ describe('Location Search', () => {
 
   regionsCaseSen.forEach(({ region }) => {
     it('region-case-sensitive location search', async () => {
-      await browser.url('/aqie-front-end/search-location')
+      await browser.url('/search-location')
       await browser.maximizeWindow()
       // password-block
       await passwordPageLogin.passwordPageLogin()
@@ -153,7 +153,7 @@ describe('Location Search', () => {
   postalcodeCaseSen.forEach(({ region }) => {
     it('postal-code-sensitive location search', async () => {
       const locationESWSearchBoxText = 'Enter a location or postcode'
-      await browser.url('/aqie-front-end/search-location')
+      await browser.url('/search-location')
       await browser.maximizeWindow()
       // password-block
       await passwordPageLogin.passwordPageLogin()

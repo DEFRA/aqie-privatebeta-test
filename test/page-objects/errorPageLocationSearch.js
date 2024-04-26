@@ -4,11 +4,11 @@ class ErrorPageLocationSearch {
   }
 
   get searchBackLink() {
-    return $("a[href='/aqie-front-end/search-location']")
+    return $("a[href='/search-location']")
   }
 
   async clickSearchBackLink() {
-    await $("a[href='/aqie-front-end/search-location']").click()
+    await $("a[href='/search-location']").click()
   }
 }
 

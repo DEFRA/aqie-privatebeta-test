@@ -10,7 +10,7 @@ const locationValue = JSON.parse(
 
 describe('AQIE-unhappyPath', () => {
   it('Location Empty Search', async () => {
-    await browser.url('/aqie-front-end/search-location')
+    await browser.url('/search-location')
     await browser.maximizeWindow()
     // password-block
     await passwordPageLogin.passwordPageLogin()
@@ -50,8 +50,6 @@ describe('AQIE-unhappyPath', () => {
   })
   locationValue.forEach(({ region }) => {
     it('invalid page search-invalid postcode & special characters', async () => {
-      // await browser.url("/aqie-front-end/search-location")
-      // await browser.maximizeWindow()
       // password-block
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()

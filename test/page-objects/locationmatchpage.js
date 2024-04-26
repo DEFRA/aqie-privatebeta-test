@@ -11,7 +11,7 @@ class LocationMatchPage {
   }
 
   async clickSearchBackLink() {
-    await $("a[href='/aqie-front-end/search-location']").click()
+    await $("a[href='/search-location']").click()
   }
 
   async clickOnMatchRegionLinks() {

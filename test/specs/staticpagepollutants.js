@@ -96,7 +96,7 @@ async function pollutantsPageNavigations(matchPollutantSubHeader) {
 
 describe('Pollutants Static Page content', () => {
   it('pollutants redirection to its page from forecast', async () => {
-    await browser.url('/aqie-front-end/search-location')
+    await browser.url('/search-location')
     await browser.maximizeWindow()
     // password-block
     passwordPageLogin.passwordPageLogin()
