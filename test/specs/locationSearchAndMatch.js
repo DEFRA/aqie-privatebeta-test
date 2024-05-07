@@ -1,9 +1,4 @@
 /* eslint-disable wdio/no-pause */
-// const startNowPage = require('../pageobjects/startnowpage.js');
-// const locationSearchPage = require('../pageobjects/locationsearchpage.js');
-// import ForecastMainPage from '../pageobjects/forecastmainpage.js'
-// import {expect as expectChai} from 'chai'
-// import { isUtf8 } from 'buffer'
 import { browser, expect } from '@wdio/globals'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
@@ -11,6 +6,7 @@ import LocationMatchPage from 'page-objects/locationmatchpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import passwordPageLogin from './passwordPageLogin'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
+import createLogger from 'helpers/logger'
 import fs from 'node:fs'
 const locationValue = JSON.parse(fs.readFileSync('test/testdata/regions.json'))
 const nieswlocationValue = JSON.parse(
@@ -25,14 +21,13 @@ const regionsCaseSen = JSON.parse(
 const postalcodeCaseSen = JSON.parse(
   fs.readFileSync('test/testdata/postalcodeCaseSen.json')
 )
-// let content = fs.readFileSync('test/testdata/regions.json', 'utf-8');
-// import fs from 'fs';
+
+const logger = createLogger()
 
 describe('Location Search', () => {
   locationValue.forEach(({ region }) => {
     it('Start Page', async () => {
-      // await browser.url("/aqie-front-end/check-local-air-quality")
-      // await browser.maximizeWindow()
+      logger.info('Test Suite locationSearchAndMatch started')
       // password-block
       await passwordPageLogin.passwordPageLogin()
       const StartPageHeaderText = 'Check local air quality'

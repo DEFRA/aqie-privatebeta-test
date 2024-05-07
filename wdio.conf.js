@@ -71,7 +71,17 @@ export const config = {
 
   capabilities: [
     {
-      browserName: 'chrome'
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080'
+        ]
+      }
     }
   ],
 

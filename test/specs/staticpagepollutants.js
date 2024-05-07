@@ -8,13 +8,14 @@ import ForecastMainPage from 'page-objects/forecastmainpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import passwordPageLogin from './passwordPageLogin.js'
 import startNowPage from 'page-objects/startnowpage'
+import createLogger from 'helpers/logger'
 import { browser, expect } from '@wdio/globals'
 // import defraPrototype from './defraPrototype.js'
 import fs from 'node:fs'
 const singleRegion = JSON.parse(
   fs.readFileSync('test/testdata/singleRegion.json')
 )
-
+const logger = createLogger()
 async function pollutantsPageNavigations(matchPollutantSubHeader) {
   if (matchPollutantSubHeader === 'Ozone') {
     const link = await $('=' + matchPollutantSubHeader + '')
@@ -96,7 +97,8 @@ async function pollutantsPageNavigations(matchPollutantSubHeader) {
 
 describe('Pollutants Static Page content', () => {
   it('pollutants redirection to its page from forecast', async () => {
-    await browser.url('/search-location')
+    logger.info('Test Suite staticpagepollutants started')
+    await browser.url(' /search-location')
     await browser.maximizeWindow()
     // password-block
     passwordPageLogin.passwordPageLogin()

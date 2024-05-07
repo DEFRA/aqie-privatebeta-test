@@ -4,12 +4,15 @@ import startNowPage from '../page-objects/startnowpage.js'
 import passwordPageLogin from './passwordPageLogin.js'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
+import createLogger from 'helpers/logger'
 const locationValue = JSON.parse(
   fs.readFileSync('test/testdata/regionsUnhappy.json')
 )
+const logger = createLogger()
 
 describe('AQIE-unhappyPath', () => {
   it('Location Empty Search', async () => {
+    logger.info('Test Suite unhappyPath started')
     await browser.url('/search-location')
     await browser.maximizeWindow()
     // password-block

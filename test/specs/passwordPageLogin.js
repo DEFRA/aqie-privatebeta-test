@@ -1,4 +1,5 @@
 import passwordPage from 'page-objects/passwordpage'
+import config from 'helpers/config'
 import { browser, expect } from '@wdio/globals'
 class PasswordPageLogin {
   async passwordPageLogin() {
@@ -17,7 +18,8 @@ class PasswordPageLogin {
     await expect(getPasswordPageStatement).toMatch(PasswordPageStatement)
     const getLabelPassword = await passwordPage.labelPassword.getText()
     await expect(getLabelPassword).toMatch(labelPassword)
-    await passwordPage.setPassword('e3BakXA1Up8PxN3ehAYO')
+    const getPassword = config.get('daqiePassword')
+    await passwordPage.setPassword(getPassword)
     await passwordPage.continueBtnClick()
   }
 }
