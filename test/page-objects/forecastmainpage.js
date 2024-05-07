@@ -6,6 +6,73 @@ class ForecastMainPage {
   get subHeadersinForecastPage() {
     return $$("h2[class='govuk-heading-m']")
   }
+  // DAQI forecast
+
+  get daqiForecastValue() {
+    return $("td[class*='daqi-selected']")
+  }
+
+  get daqiForecastCaption() {
+    return $(
+      "caption[class='govuk-table__caption govuk-heading-m daqi-table__caption govuk-!-margin-bottom-6']"
+    )
+  }
+
+  get daqiForecastHeader() {
+    return this.subHeadersinForecastPage[0]
+  }
+
+  // Health advice para first line
+  get forecastMainPagePara() {
+    return $$('p')
+  }
+
+  get daqiForecastPara() {
+    return this.forecastMainPagePara[1]
+  }
+
+  // accordian link
+  get daqiAccordian() {
+    return $("summary[class='govuk-details__summary']")
+  }
+
+  get daqiAccordianHeader() {
+    return $$("th[class='govuk-table__header']")
+  }
+
+  get daqiAccordianHeaderIndex() {
+    return this.daqiAccordianHeader[1]
+  }
+
+  // pollutant summary
+
+  get pollutantSummary() {
+    return $("p[class='govuk-!-margin-bottom-6']")
+  }
+
+  // Station Name
+  get pollutantStationNamesArr() {
+    return $$(
+      "div[class='defra-toggletip defra-toggletip--open defra-toggletip--up']"
+    )
+  }
+
+  // ToolTip
+  get toolTipMessage() {
+    return $(
+      "div[class='defra-toggletip defra-toggletip--open defra-toggletip--up']"
+    )
+  }
+
+  get pollutantStationName() {
+    return this.pollutantStationNamesArr[0]
+  }
+
+  // Pollutant link
+
+  get pollutantFetchTable1() {
+    return $('//*[@id="1"]/tbody/tr[1]/td[2]')
+  }
 
   get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[2]
@@ -68,7 +135,29 @@ class ForecastMainPage {
     )
   }
 
-  // a[normalize-space()='Ozone'])[2]
+  async tooltipMessage() {
+    const tooltip = $('//*[@id="Chepstow"]')
+    return tooltip
+  }
+
+  async pollutantsFirstTableCollections() {
+    const arr = []
+    for (let i = 1; i <= 5; i++) {
+      for (let j = 1; j <= 3; j++) {
+        const values = $('//*[@id="1"]/tbody/tr[' + i + ']/td[' + j + ']')
+        const isExisting = await values.isExisting()
+        if (isExisting) {
+          if (
+            (await values.getText()) !== null ||
+            (await values.getText()) !== ''
+          ) {
+            arr.push(await values.getText())
+          }
+        }
+      }
+    }
+    return arr
+  }
 }
 
 export default new ForecastMainPage()

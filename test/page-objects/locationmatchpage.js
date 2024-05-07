@@ -10,6 +10,10 @@ class LocationMatchPage {
     return $$("li a[class='govuk-link']")
   }
 
+  get firstLinkOfLocationMatch() {
+    return this.linksOnMatchRegion[0]
+  }
+
   async clickSearchBackLink() {
     await $("a[href='/search-location']").click()
   }

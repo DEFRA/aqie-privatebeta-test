@@ -33,8 +33,17 @@
     "@wdio/mocha-framework": "8.29.0",
     "@wdio/spec-reporter": "8.29.0",
     "allure-commandline": "2.26.0",
+    "@elastic/ecs-pino-format": "1.5.0",
     "babel-plugin-module-resolver": "5.0.0",
-    "chai": "^5.0.3"
+    "chai": "^5.0.3",
+    "moment": "2.30.1",
+    "xml-js": "1.6.11",
+    "await-reduce": "1.2.3",
+    "fast-xml-parser": "4.3.5",
+    "axios": "1.6.8",
+    "convict": "6.2.4",
+    "pino": "8.20.0",
+    "pino-pretty": "11.0.0"
   },
   "devDependencies": {
     "eslint": "8.56.0",
