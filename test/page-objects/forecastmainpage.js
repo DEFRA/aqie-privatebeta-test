@@ -58,10 +58,39 @@ class ForecastMainPage {
   }
 
   // ToolTip
-  get toolTipMessage() {
-    return $(
-      "div[class='defra-toggletip defra-toggletip--open defra-toggletip--up']"
+  get toolTipMessageArr() {
+    return $$("span[class='defra-toggletip__text']")
+  }
+
+  // ToolTip Button
+  get toolTipButtonArr() {
+    return $$(
+      "button[class='tooltip defra-toggletip__button defra-toggletip-target']"
     )
+  }
+
+  get toolTipButton1() {
+    return this.toolTipButtonArr[0]
+  }
+
+  get toolTipButton2() {
+    return this.toolTipButtonArr[1]
+  }
+
+  get toolTipButton3() {
+    return this.toolTipButtonArr[2]
+  }
+
+  get toolTipMessage1() {
+    return this.toolTipMessageArr[0]
+  }
+
+  get toolTipMessage2() {
+    return this.toolTipMessageArr[1]
+  }
+
+  get toolTipMessage3() {
+    return this.toolTipMessageArr[2]
   }
 
   get pollutantStationName() {
@@ -129,16 +158,15 @@ class ForecastMainPage {
     return this.pollutantNameHeader[0]
   }
 
-  get pollutantNearestRegions() {
+  /* get pollutantNearestRegions() {
     return $$(
       "h3 div[class='defra-toggletip defra-toggletip--open defra-toggletip--up']"
     )
   }
 
-  async tooltipMessage() {
-    const tooltip = $('//*[@id="Chepstow"]')
-    return tooltip
-  }
+  get pollutantStationName1() {
+    return this.pollutantNearestRegions[0]
+  } */
 
   async pollutantsFirstTableCollections() {
     const arr = []

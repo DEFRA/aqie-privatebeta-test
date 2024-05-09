@@ -1,0 +1,58 @@
+[
+  {
+    "region": "Gloucester",
+    "area": "Chepstow A48",
+    "areaType": "Traffic Urban",
+    "areaMessage": "This monitoring area is located in a city or a town close to roads, motorways or highways.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Aberdeen Erroll Park",
+    "area": "Aberdeen Erroll Park",
+    "areaType": "Background Urban",
+    "areaMessage": "This monitoring area is located in a city or a town. It is located so pollutant measurements do not come from one specific source.",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Manchester Sharston",
+    "area": "Manchester Sharston",
+    "areaType": "Industrial Suburban",
+    "areaMessage": "This monitoring area is on the outskirts of an urban area or in an area of its own and downwind of an industrial source.",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Leominster",
+    "area": "Leominster",
+    "areaType": "Background Suburban",
+    "areaMessage": "This monitoring area is on the outskirts of an urban area or in an area of its own. It is located so pollutant measurements do not come from one specific source.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Glazebury",
+    "area": "Glazebury",
+    "areaType": "Background Rural",
+    "areaMessage": "This monitoring area is in small settlements or areas with natural ecosystems, forests or crops. It is located so pollutant measurements do not come from one specific source.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Port Talbot Margam",
+    "area": "Port Talbot Margam",
+    "areaType": "Industrial Urban",
+    "areaMessage": "This monitoring area is located in a city or a town downwind of an industrial source.",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "BT1 1AA",
+    "area": "Belfast Centre",
+    "areaType": "Background Urban",
+    "areaMessage": "This monitoring area is located in a city or a town. It is located so pollutant measurements do not come from one specific source.",
+    "locationMatch": "No",
+    "NI": "Yes"
+  }
+]
