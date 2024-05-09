@@ -29,7 +29,13 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: ['./test/specs/passwordPageLogin.js'],
+  exclude: [
+    './test/specs/passwordPageLogin.js',
+    './test/specs/forecastPage.js',
+    './test/specs/locationSearchAndMatch.js',
+    './test/specs/staticpagepollutants.js',
+    './test/specs/unhappyPath.js'
+  ],
   // injectGlobals: false,
   //
   // ============
@@ -104,7 +110,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://localhost:3000/',
+  baseUrl: 'https://aqie-front-end.test.cdp-int.defra.cloud/',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,

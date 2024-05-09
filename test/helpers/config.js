@@ -28,7 +28,7 @@ const config = convict({
   isDevelopment: {
     doc: 'If this application running in the development environment',
     format: Boolean,
-    default: process.env.NODE_ENV !== 'development'
+    default: process.env.NODE_ENV !== 'production'
   },
   isTest: {
     doc: 'If this application running in the test environment',
