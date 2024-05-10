@@ -150,5 +150,6 @@ describe('Pollutants Static Page content', () => {
         await ForecastMainPage.pollutantNameCollections[j].getText()
       await pollutantsPageNavigations(pollutantFromTable)
     }
+    await browser.deleteCookies(['airaqie-cookie'])
   })
 })
