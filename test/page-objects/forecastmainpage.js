@@ -13,9 +13,7 @@ class ForecastMainPage {
   }
 
   get daqiForecastCaption() {
-    return $(
-      "caption[class='govuk-table__caption govuk-heading-m daqi-table__caption govuk-!-margin-bottom-6']"
-    )
+    return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
   }
 
   get daqiForecastHeader() {

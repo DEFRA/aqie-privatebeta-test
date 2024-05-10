@@ -184,7 +184,7 @@ async function pollutantsValueCheck(rowsOfPollutants, pollutantValue) {
     }
   }
   if (getpollutantNameTrimmed[0].trim() === 'Sulphur dioxide') {
-    const polValueCheck = Number(getpollutantValueTrimmed[0].trim())
+    const polValueCheck = getpollutantValueTrimmed[0].trim()
     // evaluate value
     const apiValue = await getValueOfPol(pollutantValue, 'Sulphur dioxide')
     await expect(polValueCheck.toString()).toMatch(apiValue.toString())
@@ -222,6 +222,7 @@ dynlocationValue.forEach(
   }) => {
     describe('Forecast Main Page', () => {
       it('daqi value-direct search', async () => {
+        logger.info('Test Suite forecastPage started')
         await passwordPageLogin.passwordPageLogin()
         await startNowPage.startNowBtnClick()
         if (NI === 'No') {
@@ -235,19 +236,6 @@ dynlocationValue.forEach(
         if (await LocationMatchPage.headerTextMatch.isExisting()) {
           await LocationMatchPage.firstLinkOfLocationMatch.click()
         }
-
-        // Accordian text check
-        const accordianText =
-          'How different levels of air pollution can affect health'
-        const accordianTextReceived =
-          await ForecastMainPage.daqiAccordian.getText()
-        await expect(accordianTextReceived).toMatch(accordianText)
-        await ForecastMainPage.daqiAccordian.click()
-        const accordianHeading = 'Index'
-        const accordianHeadingReceived =
-          await ForecastMainPage.daqiAccordianHeaderIndex.getText()
-        await expect(accordianHeadingReceived).toMatch(accordianHeading)
-        await ForecastMainPage.daqiAccordian.click()
         // DAQI Value check
         const getDaqiValue = await ForecastMainPage.daqiForecastValue.getText()
         // Give the nearest match value here - take from front end code
@@ -320,7 +308,19 @@ dynlocationValue.forEach(
             await ForecastMainPage.daqiForecastPara.getText()
           await expect(healthParaFirstLineReceived).toMatch(healthParaFirstLine)
         }
-
+        // Accordian text check
+        await browser.scroll(0, 500)
+        const accordianText =
+          'How different levels of air pollution can affect health'
+        const accordianTextReceived =
+          await ForecastMainPage.daqiAccordian.getText()
+        await expect(accordianTextReceived).toMatch(accordianText)
+        await ForecastMainPage.daqiAccordian.click()
+        const accordianHeading = 'Index'
+        const accordianHeadingReceived =
+          await ForecastMainPage.daqiAccordianHeaderIndex.getText()
+        await expect(accordianHeadingReceived).toMatch(accordianHeading)
+        await ForecastMainPage.daqiAccordian.click()
         // Pollutant Summary checks
         const sourcePollutantSummaryUrl = await pollutantSummaryUrl()
         const pollutantSummaryFromPage =
