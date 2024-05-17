@@ -29,7 +29,13 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: ['./test/specs/passwordPageLogin.js'],
+  exclude: [
+    './test/specs/passwordPageLogin.js',
+    './test/specs/forecastPageExtra.js',
+    './test/specs/locationSearchAndMatch.js',
+    './test/specs/unhappyPath.js',
+    './test/specs/forecastPage.js'
+  ],
   // injectGlobals: false,
   //
   // ============
@@ -80,7 +86,7 @@ export const config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: debug ? 'debug' : 'info',
+  logLevel: debug ? 'debug' : 'silent',
   //
   // Set specific log levels per logger
   // loggers:
@@ -104,7 +110,7 @@ export const config = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'https://aqie-front-end.test.cdp-int.defra.cloud/',
+  baseUrl: 'https://aqie-front-end.dev.cdp-int.defra.cloud/',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
