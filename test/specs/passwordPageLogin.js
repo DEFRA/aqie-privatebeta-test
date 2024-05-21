@@ -1,4 +1,5 @@
 import passwordPage from 'page-objects/passwordpage'
+import cookieBanner from 'page-objects/cookieBanner'
 import config from 'helpers/config'
 import { browser, expect } from '@wdio/globals'
 class PasswordPageLogin {
@@ -21,6 +22,11 @@ class PasswordPageLogin {
     const getPassword = config.get('daqiePassword')
     await passwordPage.setPassword(getPassword)
     await passwordPage.continueBtnClick()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
   }
 }
 
