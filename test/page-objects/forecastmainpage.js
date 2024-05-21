@@ -1,4 +1,9 @@
 class ForecastMainPage {
+  // change location link
+  get changeLocationLink() {
+    return $("a[class='govuk-back-link']")
+  }
+
   get regionHeaderDisplay() {
     return $("h1[class='govuk-heading-xl']")
   }
@@ -20,13 +25,14 @@ class ForecastMainPage {
     return this.subHeadersinForecastPage[0]
   }
 
-  // Health advice para first line
+  // All para in forecastpage
   get forecastMainPagePara() {
     return $$('p')
   }
 
+  // Health advice para first line
   get daqiForecastPara() {
-    return this.forecastMainPagePara[1]
+    return this.forecastMainPagePara[5]
   }
 
   // accordian link
@@ -99,6 +105,10 @@ class ForecastMainPage {
 
   get pollutantFetchTable1() {
     return $('//*[@id="1"]/tbody/tr[1]/td[2]')
+  }
+
+  get pollutantsUKSummaryLinks() {
+    return this.subHeadersinForecastPage[1]
   }
 
   get pollutantsHeaderLinks() {

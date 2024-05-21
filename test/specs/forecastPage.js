@@ -255,11 +255,24 @@ dynlocationValue.forEach(
             await ForecastMainPage.daqiForecastHeader.getText()
           await expect(caption2Received).toMatch(caption2InPage)
           const healthParaFirstLine = 'Enjoy your usual outdoor activities.'
-          // await ForecastMainPage.daqiForecastPara.scrollIntoView()
-          const healthParaFirstLineReceived =
-            await ForecastMainPage.daqiForecastPara.getText()
-
-          await expect(healthParaFirstLineReceived).toMatch(healthParaFirstLine)
+          await ForecastMainPage.daqiForecastPara.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start'
+          })
+          const paraArrayList = []
+          for (
+            let z = 0;
+            z < (await ForecastMainPage.forecastMainPagePara.length);
+            z++
+          ) {
+            const paraValue =
+              await ForecastMainPage.forecastMainPagePara[z].getText()
+            if (paraValue !== '') {
+              paraArrayList.push(paraValue)
+            }
+          }
+          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
         } else if (getDaqiValue > 3 && getDaqiValue < 7) {
           const captionInPage =
             'The air pollution forecast for today is moderate'
@@ -273,9 +286,19 @@ dynlocationValue.forEach(
           await expect(caption2Received).toMatch(caption2InPage)
           const healthParaFirstLine =
             'For most people, short term exposure to moderate levels of air pollution is not an issue.'
-          const healthParaFirstLineReceived =
-            await ForecastMainPage.daqiForecastPara.getText()
-          await expect(healthParaFirstLineReceived).toMatch(healthParaFirstLine)
+          const paraArrayList = []
+          for (
+            let z = 0;
+            z < (await ForecastMainPage.forecastMainPagePara.length);
+            z++
+          ) {
+            const paraValue =
+              await ForecastMainPage.forecastMainPagePara[z].getText()
+            if (paraValue !== '') {
+              paraArrayList.push(paraValue)
+            }
+          }
+          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
         } else if (getDaqiValue >= 7 && getDaqiValue < 10) {
           const captionInPage = 'The air pollution forecast for today is high'
           const captionReceived =
@@ -288,9 +311,19 @@ dynlocationValue.forEach(
           await expect(caption2Received).toMatch(caption2InPage)
           const healthParaFirstLine =
             'Anyone experiencing discomfort such as sore eyes, cough or sore throat should consider reducing activity, particularly outdoors.'
-          const healthParaFirstLineReceived =
-            await ForecastMainPage.daqiForecastPara.getText()
-          await expect(healthParaFirstLineReceived).toMatch(healthParaFirstLine)
+          const paraArrayList = []
+          for (
+            let z = 0;
+            z < (await ForecastMainPage.forecastMainPagePara.length);
+            z++
+          ) {
+            const paraValue =
+              await ForecastMainPage.forecastMainPagePara[z].getText()
+            if (paraValue !== '') {
+              paraArrayList.push(paraValue)
+            }
+          }
+          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
         } else if (getDaqiValue === '10') {
           const captionInPage =
             'The air pollution forecast for today is very high'
@@ -304,9 +337,19 @@ dynlocationValue.forEach(
           await expect(caption2Received).toMatch(caption2InPage)
           const healthParaFirstLine =
             'Reduce physical exertion, particularly outdoors, especially if you experience symptoms such as cough or sore throat.'
-          const healthParaFirstLineReceived =
-            await ForecastMainPage.daqiForecastPara.getText()
-          await expect(healthParaFirstLineReceived).toMatch(healthParaFirstLine)
+          const paraArrayList = []
+          for (
+            let z = 0;
+            z < (await ForecastMainPage.forecastMainPagePara.length);
+            z++
+          ) {
+            const paraValue =
+              await ForecastMainPage.forecastMainPagePara[z].getText()
+            if (paraValue !== '') {
+              paraArrayList.push(paraValue)
+            }
+          }
+          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
         }
         // Accordian text check
         await browser.scroll(0, 500)

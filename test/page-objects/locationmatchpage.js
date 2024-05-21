@@ -6,6 +6,10 @@ class LocationMatchPage {
     return $("h1[class='govuk-heading-l']")
   }
 
+  get paraTextMatch() {
+    return $("p[class='govuk-body']")
+  }
+
   get linksOnMatchRegion() {
     return $$("li a[class='govuk-link']")
   }
