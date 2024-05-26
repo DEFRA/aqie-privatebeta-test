@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 class CookieBanner {
   get cookieBannerDialog() {
     return $("div[class='govuk-cookie-banner']")
@@ -9,7 +8,7 @@ class CookieBanner {
   }
 
   get acceptButtonCookiesDialog() {
-    return $("button[class='defra-cookie-banner__button-accept']")
+    return $("button[class='govuk-button js-cookie-banner-accept']")
   }
 
   get rejectButtonCookiesDialog() {
@@ -44,6 +43,18 @@ class CookieBanner {
     )
   }
 
+  get rejectCookieSettingHideDialog() {
+    return $(
+      "div[class='govuk-cookie-banner__message js-cookie-banner-confirmation-reject app-width-container govuk-width-container'] a[class='govuk-link']"
+    )
+  }
+
+  get acceptCookieSettingHideDialog() {
+    return $(
+      "div[class='govuk-cookie-banner__message js-cookie-banner-confirmation-accept app-width-container govuk-width-container'] a[class='govuk-link']"
+    )
+  }
+
   get hideButtonHideDialog() {
     return $(
       "button[class*='govuk-button js-cookie-banner-hide js-cookie-banner-hide--reject']"
@@ -61,24 +72,9 @@ class CookieBanner {
     return $("h2[class='govuk-heading-m']")
   }
 
-  // save cookies in cookies page
-  get saveCookiesInCookiesPage() {
-    return $('#cookies-save')
-  }
-
-  // After Save Cookies -success dialog
-  get afterSaveCookiesInCookiesPage() {
-    return $("h2[class='defra-cookie-notification__title']")
-  }
-
-  // After Save Cookies -success dialog - para
-  get afterSaveCookiesParaInCookiesPage() {
-    return $("p[class='defra-cookie-notification__heading']")
-  }
-
-  // After Save Cookies -success dialog - Link
-  get afterSaveCookiesLinkInCookiesPage() {
-    return $("a[href='https://check-for-flooding.service.gov.uk/']") // replace URL later
+  // You’ve set your cookie preferences.
+  get decisionDialogPara() {
+    return $("p[class='govuk-notification-banner__heading']")
   }
 }
 
