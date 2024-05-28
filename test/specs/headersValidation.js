@@ -50,13 +50,12 @@ locationMatchRegion.forEach(({ region }) => {
       const feedbackLink = await headersValidation.betaBannerFeedback.getText()
       await expect(feedbackLink).toMatch('feedback')
       await headersValidation.betaBannerFeedback.click()
-      const handles = await browser.getWindowHandles()
-      await browser.switchToWindow(handles[1])
       const browserURL = await browser.getUrl()
       await expect(browserURL).toMatch(
         'https://defragroup.eu.qualtrics.com/jfe/form/SV_dj4wJCoOkFQLXfM'
       )
-      await browser.switchToWindow(handles[0])
+      await browser.back()
+      await browser.deleteCookies()
     })
   })
 })
