@@ -77,7 +77,7 @@ const config = convict({
   measurementsApiUrl: {
     doc: 'Ricardo API url',
     format: String,
-    default: `https://aqie-back-end.test.cdp-int.defra.cloud/measurements`,
+    default: `https://aqie-back-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/measurements`,
     env: 'MEASUREMENTS_API_URL'
   }
 })
