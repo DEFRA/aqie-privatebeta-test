@@ -9,6 +9,9 @@ import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import createLogger from 'helpers/logger'
 import fs from 'node:fs'
 const locationValue = JSON.parse(fs.readFileSync('test/testdata/regions.json'))
+const singleRegion = JSON.parse(
+  fs.readFileSync('test/testdata/singleRegion.json')
+)
 const nieswlocationValue = JSON.parse(
   fs.readFileSync('test/testdata/ni-esw-postalcode.json')
 )
@@ -69,6 +72,17 @@ describe('Location Search', () => {
       await LocationMatchPage.clickOnMatchRegionLinks()
       await browser.deleteCookies(['airaqie-cookie'])
     })
+  })
+  it('Single Location- Two Lang(Eng-Wales)', async () => {
+    await passwordPageLogin.passwordPageLogin()
+    await startNowPage.startNowBtnClick()
+    await locationSearchPage.clickESWRadiobtn()
+    await locationSearchPage.setUserESWRegion(singleRegion[1].region)
+    await locationSearchPage.clickContinueBtn()
+    const getForecastHeader =
+      await ForecastMainPage.regionHeaderDisplay.getText()
+    await expect(getForecastHeader).toMatch('Tenby, Sir Benfro - Pembrokeshire')
+    await browser.deleteCookies(['airaqie-cookie'])
   })
   nieswlocationValue.forEach(({ region }) => {
     it('NI Location Search', async () => {
