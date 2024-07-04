@@ -87,7 +87,11 @@ describe('Cookies Validation', () => {
       await expect(getECHeaderInCookiePage).toMatch(
         'Essential cookies (strictly necessary)'
       )
-      await cookiePage.saveCookieSettings.scrollIntoView()
+      await cookiePage.saveCookieSettings.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      })
       await cookiePage.saveCookieSettings.click()
       // success dialog after save cookie page
       await cookiePage.decisionHeaderBanner.scrollIntoView({
