@@ -352,7 +352,8 @@ dynlocationValue.forEach(
           await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
         }
         // Accordian text check
-        await browser.scroll(0, 500)
+        // await browser.scroll(0, 500)
+        await ForecastMainPage.daqiAccordian.scrollIntoView()
         const accordianText =
           'How different levels of air pollution can affect health'
         const accordianTextReceived =

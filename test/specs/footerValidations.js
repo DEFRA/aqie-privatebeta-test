@@ -20,7 +20,13 @@ describe('Footer Validations', () => {
     await browser.maximizeWindow()
     // password-block
     await passwordPageLogin.passwordPageLogin()
-    await footerObjects.cookieFooterLink.scrollIntoView()
+    try {
+      await footerObjects.cookieFooterLink.scrollIntoView()
+    } catch (error) {
+      logger.info('ERRORINSCROLLINTOVIEW')
+      logger.error(error)
+    }
+
     const getCookieFooterLinkText =
       await footerObjects.cookieFooterLink.getText()
     await expect(getCookieFooterLinkText).toMatch('Cookies')
@@ -41,18 +47,33 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
-    await footerObjects.cookieFooterLink.scrollIntoView()
+    try {
+      await footerObjects.cookieFooterLink.scrollIntoView()
+    } catch (error) {
+      logger.error(error)
+    }
+
     await footerObjects.cookieFooterLink.click()
 
     // reject cookies and save
-    await cookiePage.rejectRadioButton.scrollIntoView()
+    try {
+      await cookiePage.rejectRadioButton.scrollIntoView()
+    } catch (error) {
+      logger.error(error)
+    }
+
     await cookiePage.rejectRadioButton.click()
     await cookiePage.saveCookieSettings.click()
-    await cookiePage.decisionHeaderBanner.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start'
-    })
+    try {
+      await cookiePage.decisionHeaderBanner.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      })
+    } catch (error) {
+      logger.error(error)
+    }
+
     const decisionBanner = await cookiePage.decisionHeaderBanner.getText()
     await expect(decisionBanner).toMatch('Success')
     // Validate _ga cookie not comes until user accepts
@@ -78,16 +99,31 @@ describe('Footer Validations', () => {
     await expect(airaqieCookiesAnalytics[0].value).toMatch('false')
 
     // Next click on the footer for the check for accept cookies
-    await footerObjects.cookieFooterLink.scrollIntoView()
+    try {
+      await footerObjects.cookieFooterLink.scrollIntoView()
+    } catch (error) {
+      logger.error(error)
+    }
+
     await footerObjects.cookieFooterLink.click()
-    await cookiePage.acceptRadioButton.scrollIntoView()
+    try {
+      await cookiePage.acceptRadioButton.scrollIntoView()
+    } catch (error) {
+      logger.error(error)
+    }
+
     await cookiePage.acceptRadioButton.click()
     await cookiePage.saveCookieSettings.click()
-    await cookiePage.decisionHeaderBanner.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start'
-    })
+    try {
+      await cookiePage.decisionHeaderBanner.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start'
+      })
+    } catch (error) {
+      logger.error(error)
+    }
+
     const decisionBanner1 = await cookiePage.decisionHeaderBanner.getText()
     await expect(decisionBanner1).toMatch('Success')
     await browser.back()
