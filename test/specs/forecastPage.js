@@ -371,9 +371,9 @@ dynlocationValue.forEach(
         await expect(pollutantSummaryFromPage.trim()).toMatch(
           sourcePollutantSummaryUrl.trim()
         )
-
-        // await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
-        await browser.scroll(0, 1500)
+        logger.info('ScrollIntoView')
+        await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
+        // await browser.scroll(0, 1500)
 
         const getPollutantStationStr =
           await ForecastMainPage.pollutantStationName.getText()
