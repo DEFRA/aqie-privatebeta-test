@@ -30,16 +30,7 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [
-    './test/specs/passwordPageLogin.js',
-    './test/specs/cookiesBannerCheck.js',
-    './test/specs/footerValidations.js',
-    './test/specs/forecastPage.js',
-    './test/specs/forecastPageExtra.js',
-    './test/specs/headersValidation.js',
-    './test/specs/staticpagepollutants.js',
-    './test/specs/unhappyPath.js'
-  ],
+  exclude: ['./test/specs/passwordPageLogin.js'],
   // injectGlobals: false,
   //
   // ============
@@ -65,12 +56,12 @@ export const config = {
   //
 
   capabilities: debug
-    ? [{ browserName: 'MicrosoftEdge' }]
+    ? [{ browserName: 'chrome' }]
     : [
         {
           maxInstances: 1,
-          browserName: 'MicrosoftEdge',
-          'goog:MicrosoftEdge': {
+          browserName: 'chrome',
+          'goog:chromeOptions': {
             args: [
               '--no-sandbox',
               '--disable-infobars',
@@ -132,7 +123,7 @@ export const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: [],
+  // services: ['chromedriver'],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
