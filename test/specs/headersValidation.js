@@ -3,13 +3,16 @@ import headersValidation from 'page-objects/headersObject'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
+import createLogger from 'helpers/logger'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
   fs.readFileSync('test/testdata/locationMatchRegion.json')
 )
+const logger = createLogger()
 locationMatchRegion.forEach(({ region }) => {
   describe('Headers Validation', () => {
     it('CrownLink_CLAQ', async () => {
+      logger.info('--- HeadVal StartScenario CrownLink_CLAQ --------')
       await passwordPageLogin.passwordPageLogin()
       const govukLink = await headersValidation.govUKCrownLink.getText()
       await expect(govukLink.split(' ').pop()).toMatch('GOV.UK')
@@ -42,8 +45,10 @@ locationMatchRegion.forEach(({ region }) => {
       await headersValidation.claqLink.click()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
       await browser.deleteCookies()
+      logger.info('--- HeadVal EndScenario CrownLink_CLAQ --------')
     })
     it('Beta-Banner', async () => {
+      logger.info('--- HeadVal StartScenario Beta-Banner --------')
       await passwordPageLogin.passwordPageLogin()
       const betaBannerText = await headersValidation.betaBanner.getText()
       await expect(betaBannerText).toMatch('Beta')
@@ -56,6 +61,7 @@ locationMatchRegion.forEach(({ region }) => {
       )
       await browser.back()
       await browser.deleteCookies()
+      logger.info('--- HeadVal EndScenario Beta-Banner --------')
     })
   })
 })

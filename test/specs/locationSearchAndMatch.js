@@ -30,7 +30,7 @@ const logger = createLogger()
 describe('Location Search', () => {
   locationValue.forEach(({ region }) => {
     it('Start Page', async () => {
-      logger.info('Test Suite locationSearchAndMatch started')
+      logger.info('--- LocSearch StartScenario Start LSMP Page --------')
       // password-block
       await passwordPageLogin.passwordPageLogin()
       const StartPageHeaderText = 'Check local air quality'
@@ -71,9 +71,13 @@ describe('Location Search', () => {
       // Location Match Page
       await LocationMatchPage.clickOnMatchRegionLinks()
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info('--- LocSearch EndScenario Start LSMP Page --------')
     })
   })
   it('Single Location- Two Lang(Eng-Wales)', async () => {
+    logger.info(
+      '--- LocSearch StartScenario Single Location- Two Lang(Eng-Wales) Page --------'
+    )
     await passwordPageLogin.passwordPageLogin()
     await startNowPage.startNowBtnClick()
     await locationSearchPage.clickESWRadiobtn()
@@ -83,9 +87,15 @@ describe('Location Search', () => {
       await ForecastMainPage.regionHeaderDisplay.getText()
     await expect(getForecastHeader).toMatch('Tenby, Sir Benfro - Pembrokeshire')
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info(
+      '--- LocSearch EndScenario Single Location- Two Lang(Eng-Wales) Page --------'
+    )
   })
   nieswlocationValue.forEach(({ region }) => {
     it('NI Location Search', async () => {
+      logger.info(
+        '--- LocSearch StartScenario NI Location Search Page --------'
+      )
       const locationNISearchBoxText = 'Enter a postcode'
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
@@ -104,11 +114,15 @@ describe('Location Search', () => {
         regionToUppercaseText.replace(/\s+/, '')
       )
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info('--- LocSearch EndScenario NI Location Search Page --------')
     })
   })
 
   niRegionsUnhappy.forEach(({ region }) => {
     it('NI Location Search-Unhappy', async () => {
+      logger.info(
+        '--- LocSearch StartScenario NI Location Search-Unhappy Page --------'
+      )
       const locationNISearchBoxText = 'Enter a postcode'
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
@@ -128,11 +142,17 @@ describe('Location Search', () => {
       )
       await errorPageLocationSearch.clickSearchBackLink()
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info(
+        '--- LocSearch EndScenario NI Location Search-Unhappy Page --------'
+      )
     })
   })
 
   regionsCaseSen.forEach(({ region }) => {
     it('region-case-sensitive location search', async () => {
+      logger.info(
+        '--- LocSearch StartScenario region-case-sensitive location search Page --------'
+      )
       await browser.url('/search-location')
       await browser.maximizeWindow()
       // password-block
@@ -157,10 +177,16 @@ describe('Location Search', () => {
       )
       await LocationMatchPage.clickSearchBackLink()
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info(
+        '--- LocSearch EndScenario region-case-sensitive location search Page --------'
+      )
     })
   })
   postalcodeCaseSen.forEach(({ region }) => {
     it('postal-code-sensitive location search', async () => {
+      logger.info(
+        '--- LocSearch StartScenario postal-code-sensitive location search Page --------'
+      )
       const locationESWSearchBoxText = 'Enter a location or postcode'
       await browser.url('/search-location')
       await browser.maximizeWindow()
@@ -184,6 +210,9 @@ describe('Location Search', () => {
         regionToUppercaseText.replace(/\s+/, '')
       )
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info(
+        '--- LocSearch EndScenario postal-code-sensitive location search Page --------'
+      )
     })
   })
 })
