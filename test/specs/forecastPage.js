@@ -255,11 +255,16 @@ dynlocationValue.forEach(
             await ForecastMainPage.daqiForecastHeader.getText()
           await expect(caption2Received).toMatch(caption2InPage)
           const healthParaFirstLine = 'Enjoy your usual outdoor activities.'
-          await ForecastMainPage.daqiForecastPara.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'start'
-          })
+          try {
+            await ForecastMainPage.daqiForecastPara.scrollIntoView({
+              behavior: 'smooth',
+              block: 'nearest',
+              inline: 'start'
+            })
+          } catch (error) {
+            logger.info('ERRORINSCROLLINTOVIEW')
+            logger.error(error)
+          }
           const paraArrayList = []
           for (
             let z = 0;
@@ -353,7 +358,16 @@ dynlocationValue.forEach(
         }
         // Accordian text check
         // await browser.scroll(0, 500)
-        await ForecastMainPage.daqiAccordian.scrollIntoView()
+        try {
+          await ForecastMainPage.daqiAccordian.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start'
+          })
+        } catch (error) {
+          logger.info('ERRORINSCROLLINTOVIEW')
+          logger.error(error)
+        }
         const accordianText =
           'How different levels of air pollution can affect health'
         const accordianTextReceived =
@@ -372,8 +386,17 @@ dynlocationValue.forEach(
         await expect(pollutantSummaryFromPage.trim()).toMatch(
           sourcePollutantSummaryUrl.trim()
         )
-        logger.info('ScrollIntoView')
-        await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
+
+        try {
+          await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start'
+          })
+        } catch (error) {
+          logger.info('ERRORINSCROLLINTOVIEW')
+          logger.error(error)
+        }
         // await browser.scroll(0, 1500)
 
         const getPollutantStationStr =
