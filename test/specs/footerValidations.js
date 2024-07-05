@@ -14,7 +14,7 @@ const locationMatchRegion = JSON.parse(
 )
 const logger = createLogger()
 describe('Footer Validations', () => {
-  xit('Footer-Cookie', async () => {
+  it('Footer-Cookie', async () => {
     logger.info('--- FooVal StartScenario Footer-Cookie --------')
     await browser.url('')
     await browser.maximizeWindow()
@@ -170,7 +170,7 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie-cookie'])
     logger.info('--- FooVal EndScenario OGL-Open Government License --------')
   })
-  xit('Footer-Crown-Logo', async () => {
+  it('Footer-Crown-Logo', async () => {
     logger.info('--- FooVal StartScenario Footer-Crown-Logo --------')
     await browser.url('')
     await browser.maximizeWindow()
@@ -192,7 +192,7 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie-cookie'])
     logger.info('--- FooVal EndScenario Footer-Crown-Logo --------')
   })
-  xit('Footer-Privacy', async () => {
+  it('Footer-Privacy', async () => {
     logger.info('--- FooVal StartScenario Footer-Privacy --------')
     await browser.url('')
     await browser.maximizeWindow()
@@ -215,7 +215,7 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie-cookie'])
     logger.info('--- FooVal EndScenario Footer-Privacy --------')
   })
-  xit('Footer-Accessibility statement', async () => {
+  it('Footer-Accessibility statement', async () => {
     logger.info(
       '--- FooVal StartScenario Footer-Accessibility statement --------'
     )
@@ -243,7 +243,7 @@ describe('Footer Validations', () => {
     )
   })
   locationMatchRegion.forEach(({ region }) => {
-    xit('Footer-Links_In-All-Pages', async () => {
+    it('Footer-Links_In-All-Pages', async () => {
       logger.info('--- FooVal StartScenario Footer-Links_In-All-Pages --------')
       const expectedCookieURL = '/cookies'
       const expectedOGLURL =
