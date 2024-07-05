@@ -15,7 +15,7 @@ const locationMatchRegion = JSON.parse(
 const logger = createLogger()
 describe('Footer Validations', () => {
   it('Footer-Cookie', async () => {
-    logger.info('Test Suite ::::: Footer-Cookie')
+    logger.info('--- FooVal StartScenario Footer-Cookie --------')
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -137,9 +137,10 @@ describe('Footer Validations', () => {
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText1).toMatch(StartPageHeaderText1)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info('--- FooVal EndScenario Footer-Cookie --------')
   })
   it('OGL-Open Government License', async () => {
-    logger.info('Test Suite ::::: Footer-OGL')
+    logger.info('--- FooVal StartScenario OGL-Open Government License --------')
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -158,9 +159,10 @@ describe('Footer Validations', () => {
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info('--- FooVal EndScenario OGL-Open Government License --------')
   })
   it('Footer-Crown-Logo', async () => {
-    logger.info('Test Suite ::::: Crown-Logo')
+    logger.info('--- FooVal StartScenario Footer-Crown-Logo --------')
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -179,9 +181,10 @@ describe('Footer Validations', () => {
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info('--- FooVal EndScenario Footer-Crown-Logo --------')
   })
   it('Footer-Privacy', async () => {
-    logger.info('Test Suite ::::: Footer-Privacy')
+    logger.info('--- FooVal StartScenario Footer-Privacy --------')
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -201,9 +204,12 @@ describe('Footer Validations', () => {
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info('--- FooVal EndScenario Footer-Privacy --------')
   })
   it('Footer-Accessibility statement', async () => {
-    logger.info('Test Suite :::::  Accessibility statement')
+    logger.info(
+      '--- FooVal StartScenario Footer-Accessibility statement --------'
+    )
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -223,10 +229,13 @@ describe('Footer Validations', () => {
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info(
+      '--- FooVal EndScenario Footer-Accessibility statement --------'
+    )
   })
   locationMatchRegion.forEach(({ region }) => {
     it('Footer-Links_In-All-Pages', async () => {
-      logger.info('Test Suite ::::: Footer-Links_In-All-Pages')
+      logger.info('--- FooVal StartScenario Footer-Links_In-All-Pages --------')
       const expectedCookieURL = '/cookies'
       const expectedOGLURL =
         'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
@@ -348,6 +357,7 @@ describe('Footer Validations', () => {
       await expect(getHrefPrivacy4).toMatch(expectedPrivacyURL)
       await expect(getHrefAccStatementURL4).toMatch(expectedAccStatementURL)
       await browser.deleteCookies()
+      logger.info('--- FooVal EndScenario Footer-Links_In-All-Pages --------')
     })
   })
 })

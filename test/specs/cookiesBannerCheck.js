@@ -9,7 +9,7 @@ import { browser, expect } from '@wdio/globals'
 const logger = createLogger()
 describe('Cookies Validation', () => {
   it('Cookies Banner- Accept Cookies', async () => {
-    logger.info('Scenario::::: Cookies Banner- Accept Cookies')
+    logger.info('--- CBC StartScenario Cookies Banner- Accept Cookies --------')
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')
@@ -137,9 +137,10 @@ describe('Cookies Validation', () => {
       await cookieBanner.cookieBannerDialog.isDisplayed()
     await expect(cookieBannerDisplayed.toString()).toMatch('false')
     await browser.deleteCookies()
+    logger.info('--- CBC EndScenario Cookies Banner- Accept Cookies --------')
   })
   it('Cookies Banner- Reject Cookies', async () => {
-    logger.info('Scenario::::: Cookies Banner - Reject Cookies')
+    logger.info('--- CBC StartScenario Cookies Banner- Reject Cookies --------')
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')
@@ -193,9 +194,10 @@ describe('Cookies Validation', () => {
       await cookieBanner.cookieBannerDialog.isDisplayed()
     await expect(cookieBannerDisplayed.toString()).toMatch('false')
     await browser.deleteCookies()
+    logger.info('--- CBC EndScenario Cookies Banner- Reject Cookies --------')
   })
   it('Cookies Banner- View Cookies', async () => {
-    logger.info('Scenario::::: Cookies Banner - View Cookies')
+    logger.info('--- CBC StartScenario Cookies Banner- View Cookies --------')
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')
@@ -229,5 +231,6 @@ describe('Cookies Validation', () => {
       await cookieBanner.cookieBannerDialog.isDisplayed()
     await expect(cookieBannerDisplayed.toString()).toMatch('false')
     await browser.deleteCookies()
+    logger.info('--- CBC EndScenario Cookies Banner- View Cookies --------')
   })
 })

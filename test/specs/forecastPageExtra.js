@@ -11,6 +11,7 @@ const logger = createLogger()
 toolTipData.forEach(({ region, area, areaMessage, NI }) => {
   describe('Forecast Main Page - Extra', () => {
     it('Tool tip', async () => {
+      logger.info('--- FMPEx StartScenario Tool tip --------')
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
       if (NI === 'No') {
@@ -66,6 +67,7 @@ toolTipData.forEach(({ region, area, areaMessage, NI }) => {
         logger.error('No Visible text in tooltip for Level column')
       }
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info('--- FMPEx EndScenario Tool tip --------')
     })
   })
 })

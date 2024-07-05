@@ -97,7 +97,9 @@ async function pollutantsPageNavigations(matchPollutantSubHeader) {
 
 describe('Pollutants Static Page content', () => {
   it('pollutants redirection to its page from forecast', async () => {
-    logger.info('Test Suite staticpagepollutants started')
+    logger.info(
+      '--- StcPoll StartScenario pollutants redirection to its page from forecast --------'
+    )
     await browser.url(' /search-location')
     await browser.maximizeWindow()
     // password-block
@@ -151,5 +153,8 @@ describe('Pollutants Static Page content', () => {
       await pollutantsPageNavigations(pollutantFromTable)
     }
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info(
+      '--- StcPoll EndScenario pollutants redirection to its page from forecast --------'
+    )
   })
 })

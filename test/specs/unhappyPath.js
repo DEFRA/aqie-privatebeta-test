@@ -12,7 +12,7 @@ const logger = createLogger()
 
 describe('AQIE-unhappyPath', () => {
   it('Location Empty Search', async () => {
-    logger.info('Test Suite unhappyPath started')
+    logger.info('--- AQIEUnhap StartScenario Location Empty Search--------')
     await browser.url('/search-location')
     await browser.maximizeWindow()
     // password-block
@@ -50,9 +50,13 @@ describe('AQIE-unhappyPath', () => {
       await locationSearchPage.emptyBoxValidationNI.getText()
     await expect(getNILocationSearchBoxText).toMatch(errorNISubTextValidation)
     await browser.deleteCookies(['airaqie-cookie'])
+    logger.info('--- AQIEUnhap EndScenario Location Empty Search--------')
   })
   locationValue.forEach(({ region }) => {
     it('invalid page search-invalid postcode & special characters', async () => {
+      logger.info(
+        '--- AQIEUnhap StartScenario invalid page search-invalid postcode & special characters--------'
+      )
       // password-block
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
@@ -72,6 +76,9 @@ describe('AQIE-unhappyPath', () => {
       )
       await errorPageLocationSearch.clickSearchBackLink()
       await browser.deleteCookies(['airaqie-cookie'])
+      logger.info(
+        '--- AQIEUnhap EndScenario invalid page search-invalid postcode & special characters--------'
+      )
     })
   })
 })
