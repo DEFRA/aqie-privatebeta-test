@@ -44,10 +44,7 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [
-    './test/specs/passwordPageLogin.js',
-    './test/specs/footerValidations.js'
-  ],
+  exclude: ['./test/specs/passwordPageLogin.js'],
   // injectGlobals: false,
   //
   // ============

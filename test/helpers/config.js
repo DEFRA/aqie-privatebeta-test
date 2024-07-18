@@ -58,7 +58,7 @@ const config = convict({
   daqiePassword: {
     doc: 'password for daqie',
     format: '*',
-    default: 'e3BakXA1Up8PxN3ehAYO',
+    default: 'whatisintheair',
     sensitive: true,
     env: 'DAQIE_PASSWORD'
   },

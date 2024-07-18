@@ -152,7 +152,7 @@ describe('Pollutants Static Page content', () => {
         await ForecastMainPage.pollutantNameCollections[j].getText()
       await pollutantsPageNavigations(pollutantFromTable)
     }
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info(
       '--- StcPoll EndScenario pollutants redirection to its page from forecast --------'
     )

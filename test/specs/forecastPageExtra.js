@@ -66,7 +66,7 @@ toolTipData.forEach(({ region, area, areaMessage, NI }) => {
       } else {
         logger.error('No Visible text in tooltip for Level column')
       }
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- FMPEx EndScenario Tool tip --------')
     })
   })
