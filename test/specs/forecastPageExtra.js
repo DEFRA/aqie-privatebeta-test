@@ -12,6 +12,7 @@ toolTipData.forEach(({ region, area, areaMessage, NI }) => {
   describe('Forecast Main Page - Extra', () => {
     it('Tool tip', async () => {
       logger.info('--- FMPEx StartScenario Tool tip --------')
+      await browser.deleteCookies(['airaqie_cookie'])
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
       if (NI === 'No') {

@@ -13,6 +13,7 @@ const logger = createLogger()
 describe('AQIE-unhappyPath', () => {
   it('Location Empty Search', async () => {
     logger.info('--- AQIEUnhap StartScenario Location Empty Search--------')
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('/search-location')
     await browser.maximizeWindow()
     // password-block
@@ -57,6 +58,7 @@ describe('AQIE-unhappyPath', () => {
       logger.info(
         '--- AQIEUnhap StartScenario invalid page search-invalid postcode & special characters--------'
       )
+      await browser.deleteCookies(['airaqie_cookie'])
       // password-block
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()

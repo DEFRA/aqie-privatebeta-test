@@ -100,6 +100,7 @@ describe('Pollutants Static Page content', () => {
     logger.info(
       '--- StcPoll StartScenario pollutants redirection to its page from forecast --------'
     )
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url(' /search-location')
     await browser.maximizeWindow()
     // password-block

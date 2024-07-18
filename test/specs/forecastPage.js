@@ -223,6 +223,7 @@ dynlocationValue.forEach(
     describe('Forecast Main Page', () => {
       it('daqi value-direct search', async () => {
         logger.info('--- FMP StartScenario daqi value-direct search --------')
+        await browser.deleteCookies(['airaqie_cookie'])
         await passwordPageLogin.passwordPageLogin()
         await startNowPage.startNowBtnClick()
         if (NI === 'No') {

@@ -13,6 +13,7 @@ locationMatchRegion.forEach(({ region }) => {
   describe('Headers Validation', () => {
     it('CrownLink_CLAQ', async () => {
       logger.info('--- HeadVal StartScenario CrownLink_CLAQ --------')
+      await browser.deleteCookies()
       await passwordPageLogin.passwordPageLogin()
       const govukLink = await headersValidation.govUKCrownLink.getText()
       await expect(govukLink.split(' ').pop()).toMatch('GOV.UK')
@@ -49,6 +50,7 @@ locationMatchRegion.forEach(({ region }) => {
     })
     it('Beta-Banner', async () => {
       logger.info('--- HeadVal StartScenario Beta-Banner --------')
+      await browser.deleteCookies()
       await passwordPageLogin.passwordPageLogin()
       const betaBannerText = await headersValidation.betaBanner.getText()
       await expect(betaBannerText).toMatch('Beta')

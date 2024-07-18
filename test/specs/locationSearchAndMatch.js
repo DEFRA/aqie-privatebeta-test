@@ -31,6 +31,7 @@ describe('Location Search', () => {
   locationValue.forEach(({ region }) => {
     it('Start Page', async () => {
       logger.info('--- LocSearch StartScenario Start LSMP Page --------')
+      await browser.deleteCookies(['airaqie_cookie'])
       // password-block
       await passwordPageLogin.passwordPageLogin()
       const StartPageHeaderText = 'Check local air quality'
@@ -78,6 +79,7 @@ describe('Location Search', () => {
     logger.info(
       '--- LocSearch StartScenario Single Location- Two Lang(Eng-Wales) Page --------'
     )
+    await browser.deleteCookies(['airaqie_cookie'])
     await passwordPageLogin.passwordPageLogin()
     await startNowPage.startNowBtnClick()
     await locationSearchPage.clickESWRadiobtn()
@@ -96,6 +98,7 @@ describe('Location Search', () => {
       logger.info(
         '--- LocSearch StartScenario NI Location Search Page --------'
       )
+      await browser.deleteCookies(['airaqie_cookie'])
       const locationNISearchBoxText = 'Enter a postcode'
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
@@ -123,6 +126,7 @@ describe('Location Search', () => {
       logger.info(
         '--- LocSearch StartScenario NI Location Search-Unhappy Page --------'
       )
+      await browser.deleteCookies(['airaqie_cookie'])
       const locationNISearchBoxText = 'Enter a postcode'
       await passwordPageLogin.passwordPageLogin()
       await startNowPage.startNowBtnClick()
@@ -153,6 +157,7 @@ describe('Location Search', () => {
       logger.info(
         '--- LocSearch StartScenario region-case-sensitive location search Page --------'
       )
+      await browser.deleteCookies(['airaqie_cookie'])
       await browser.url('/search-location')
       await browser.maximizeWindow()
       // password-block
@@ -187,6 +192,7 @@ describe('Location Search', () => {
       logger.info(
         '--- LocSearch StartScenario postal-code-sensitive location search Page --------'
       )
+      await browser.deleteCookies(['airaqie_cookie'])
       const locationESWSearchBoxText = 'Enter a location or postcode'
       await browser.url('/search-location')
       await browser.maximizeWindow()
