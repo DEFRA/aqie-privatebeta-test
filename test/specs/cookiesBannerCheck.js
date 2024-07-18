@@ -10,6 +10,7 @@ const logger = createLogger()
 describe('Cookies Validation', () => {
   it('Cookies Banner- Accept Cookies', async () => {
     logger.info('--- CBC StartScenario Cookies Banner- Accept Cookies --------')
+    await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')
@@ -141,6 +142,7 @@ describe('Cookies Validation', () => {
   })
   it('Cookies Banner- Reject Cookies', async () => {
     logger.info('--- CBC StartScenario Cookies Banner- Reject Cookies --------')
+    await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')
@@ -198,6 +200,7 @@ describe('Cookies Validation', () => {
   })
   it('Cookies Banner- View Cookies', async () => {
     logger.info('--- CBC StartScenario Cookies Banner- View Cookies --------')
+    await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
     const getPassword = config.get('daqiePassword')

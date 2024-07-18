@@ -16,6 +16,7 @@ const logger = createLogger()
 describe('Footer Validations', () => {
   it('Footer-Cookie', async () => {
     logger.info('--- FooVal StartScenario Footer-Cookie --------')
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -141,6 +142,7 @@ describe('Footer Validations', () => {
   })
   it('OGL-Open Government License', async () => {
     logger.info('--- FooVal StartScenario OGL-Open Government License --------')
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -172,6 +174,7 @@ describe('Footer Validations', () => {
   })
   it('Footer-Crown-Logo', async () => {
     logger.info('--- FooVal StartScenario Footer-Crown-Logo --------')
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -194,6 +197,7 @@ describe('Footer Validations', () => {
   })
   it('Footer-Privacy', async () => {
     logger.info('--- FooVal StartScenario Footer-Privacy --------')
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -219,6 +223,7 @@ describe('Footer Validations', () => {
     logger.info(
       '--- FooVal StartScenario Footer-Accessibility statement --------'
     )
+    await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
     // password-block
@@ -245,6 +250,7 @@ describe('Footer Validations', () => {
   locationMatchRegion.forEach(({ region }) => {
     it('Footer-Links_In-All-Pages', async () => {
       logger.info('--- FooVal StartScenario Footer-Links_In-All-Pages --------')
+      await browser.deleteCookies(['airaqie_cookie'])
       const expectedCookieURL = '/cookies'
       const expectedOGLURL =
         'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
