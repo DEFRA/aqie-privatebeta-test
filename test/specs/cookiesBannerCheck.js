@@ -112,7 +112,7 @@ describe('Cookies Validation', () => {
       const airaqieCookiesAnalytics1 = await browser.getCookies([
         'airaqie_cookies_analytics'
       ])
-      await expect(airaqieCookiesAnalytics1[0].value).toMatch('false')
+      await expect(airaqieCookiesAnalytics1[0].value).toMatch('true')
       const getGoogleAnalyticsCookieName = await browser.getCookies(['_ga'])
       for (let j = 0; j < allCookies.length; j++) {
         if (

@@ -30,16 +30,7 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [
-    './test/specs/passwordPageLogin.js',
-    './test/specs/cookiesBannerCheck.js',
-    './test/specs/forecastPage.js',
-    './test/specs/forecastPageExtra.js',
-    './test/specs/headersValidation.js',
-    './test/specs/locationSearchAndMatch.js',
-    './test/specs/staticpagepollutants.js',
-    './test/specs/unhappyPath.js'
-  ],
+  exclude: ['./test/specs/passwordPageLogin.js'],
   // injectGlobals: false,
   //
   // ============

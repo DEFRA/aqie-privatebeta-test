@@ -136,7 +136,7 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText1 =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText1).toMatch(StartPageHeaderText1)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario Footer-Cookie --------')
   })
   it('OGL-Open Government License', async () => {
@@ -167,7 +167,7 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario OGL-Open Government License --------')
   })
   it('Footer-Crown-Logo', async () => {
@@ -189,7 +189,7 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario Footer-Crown-Logo --------')
   })
   it('Footer-Privacy', async () => {
@@ -212,7 +212,7 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario Footer-Privacy --------')
   })
   it('Footer-Accessibility statement', async () => {
@@ -237,7 +237,7 @@ describe('Footer Validations', () => {
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info(
       '--- FooVal EndScenario Footer-Accessibility statement --------'
     )

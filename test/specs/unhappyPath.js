@@ -49,7 +49,7 @@ describe('AQIE-unhappyPath', () => {
     const getNILocationSearchBoxText =
       await locationSearchPage.emptyBoxValidationNI.getText()
     await expect(getNILocationSearchBoxText).toMatch(errorNISubTextValidation)
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- AQIEUnhap EndScenario Location Empty Search--------')
   })
   locationValue.forEach(({ region }) => {
@@ -75,7 +75,7 @@ describe('AQIE-unhappyPath', () => {
         'We could not find ' + "'" + region + "'"
       )
       await errorPageLocationSearch.clickSearchBackLink()
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- AQIEUnhap EndScenario invalid page search-invalid postcode & special characters--------'
       )

@@ -70,7 +70,7 @@ describe('Location Search', () => {
       // await browser.pause(3000)
       // Location Match Page
       await LocationMatchPage.clickOnMatchRegionLinks()
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- LocSearch EndScenario Start LSMP Page --------')
     })
   })
@@ -86,7 +86,7 @@ describe('Location Search', () => {
     const getForecastHeader =
       await ForecastMainPage.regionHeaderDisplay.getText()
     await expect(getForecastHeader).toMatch('Tenby, Sir Benfro - Pembrokeshire')
-    await browser.deleteCookies(['airaqie-cookie'])
+    await browser.deleteCookies(['airaqie_cookie'])
     logger.info(
       '--- LocSearch EndScenario Single Location- Two Lang(Eng-Wales) Page --------'
     )
@@ -113,7 +113,7 @@ describe('Location Search', () => {
       expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(
         regionToUppercaseText.replace(/\s+/, '')
       )
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- LocSearch EndScenario NI Location Search Page --------')
     })
   })
@@ -141,7 +141,7 @@ describe('Location Search', () => {
         'We could not find ' + "'" + region + "'"
       )
       await errorPageLocationSearch.clickSearchBackLink()
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- LocSearch EndScenario NI Location Search-Unhappy Page --------'
       )
@@ -176,7 +176,7 @@ describe('Location Search', () => {
         'Locations matching ' + "'" + region + "'"
       )
       await LocationMatchPage.clickSearchBackLink()
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- LocSearch EndScenario region-case-sensitive location search Page --------'
       )
@@ -209,7 +209,7 @@ describe('Location Search', () => {
       expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(
         regionToUppercaseText.replace(/\s+/, '')
       )
-      await browser.deleteCookies(['airaqie-cookie'])
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- LocSearch EndScenario postal-code-sensitive location search Page --------'
       )

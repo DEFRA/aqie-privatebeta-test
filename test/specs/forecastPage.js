@@ -474,7 +474,7 @@ dynlocationValue.forEach(
             )
           }
         }
-        await browser.deleteCookies(['airaqie-cookie'])
+        await browser.deleteCookies(['airaqie_cookie'])
         logger.info('--- FMP EndScenario daqi value-direct search --------')
       })
     })
