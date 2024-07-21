@@ -6,10 +6,12 @@ import ForecastMainPage from 'page-objects/forecastmainpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
 import config from 'helpers/config'
 import { browser, expect } from '@wdio/globals'
-import axios from 'axios'
 import fs from 'node:fs'
 import createLogger from 'helpers/logger'
 import { XMLParser } from 'fast-xml-parser'
+import proxyFetch from 'helpers/proxy-fetch'
+const optionsJson = { method: 'GET', headers: { 'Content-Type': 'text/json' } }
+const options = { method: 'GET', headers: { 'Content-Type': 'text/xml' } }
 const dynlocationValue = JSON.parse(
   fs.readFileSync('test/testdata/dynamicForecast.json')
 )
@@ -18,9 +20,18 @@ const logger = createLogger()
 async function pollutantSummaryUrl() {
   const forecastSummaryUrl = config.get('forecastSummaryUrl')
   logger.info(`forecastSummaryUrl: ${forecastSummaryUrl}`)
-  const response = await axios.get(forecastSummaryUrl)
-  const getTodayForecastMessage = response.data
-  return getTodayForecastMessage.today
+  const response = await proxyFetch(forecastSummaryUrl, optionsJson).catch(
+    (err) => {
+      logger.info(`err ${JSON.stringify(err.message)}`)
+    }
+  )
+
+  let getDailySummary
+  if (response.ok) {
+    getDailySummary = await response.json()
+  }
+  // const getTodayForecastMessage = getDailySummary
+  return getDailySummary.today
 }
 
 function parseForecast(item, place) {
@@ -45,9 +56,16 @@ function parseForecast(item, place) {
 async function fetchForecast(place) {
   const forecastUrl = config.get('forecastUrl')
   logger.info(`forecastSummaryUrl: ${forecastUrl}`)
-  const response = await axios.get(forecastUrl)
+  const response = await proxyFetch(forecastUrl, options).catch((err) => {
+    logger.info(`err ${JSON.stringify(err.message)}`)
+  })
+
+  let rssForecastXMLResponse
+  if (response.ok) {
+    rssForecastXMLResponse = await response
+  }
   const parser = new XMLParser()
-  const body = parser.parse(await response.data)
+  const body = parser.parse(await rssForecastXMLResponse.text())
   // TODO: handle xml parser failures & http response codes
   return body.rss.channel.item
     .map((i) => {
@@ -73,9 +91,16 @@ async function fetchMeasurements(nearestplace) {
   const newpollutants = []
   const measurementsApiUrl = config.get('measurementsApiUrl')
   logger.info(`measurementsApiUrl: ${measurementsApiUrl}`)
-  const response = await axios.get(measurementsApiUrl)
-  const itemResponse = response.data
-  const getMeasurementsArr = itemResponse.measurements
+  const response = await proxyFetch(measurementsApiUrl, optionsJson).catch(
+    (err) => {
+      logger.info(`err ${JSON.stringify(err.message)}`)
+    }
+  )
+  let getPollutantResponse
+  if (response.ok) {
+    getPollutantResponse = await response.json()
+  }
+  const getMeasurementsArr = getPollutantResponse.measurements
   // eslint-disable-next-line array-callback-return
   getMeasurementsArr.filter((item) => {
     const areaName = item.name

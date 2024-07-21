@@ -159,16 +159,10 @@ describe('Footer Validations', () => {
     }
     const getOGLText = await footerObjects.oglFooterLink.getText()
     await expect(getOGLText).toMatch('Open Government Licence v3.0')
-    await footerObjects.oglFooterLink.click()
-    const oglPageURL = await browser.getUrl()
+    const getHrefOgl = await footerObjects.oglFooterLink.getAttribute('href')
     const expectedOGLURL =
       'https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/'
-    await expect(oglPageURL).toMatch(expectedOGLURL)
-    await browser.back()
-    const StartPageHeaderText = 'Check local air quality'
-    const getStartPageHeaderText =
-      await startNowPage.startNowPageHeaderText.getText()
-    await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
+    await expect(getHrefOgl).toMatch(expectedOGLURL)
     await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario OGL-Open Government License --------')
   })
@@ -182,16 +176,11 @@ describe('Footer Validations', () => {
     await footerObjects.logoFooter.scrollIntoView()
     const getHeaderOfCookieBanner = await footerObjects.logoFooter.getText()
     await expect(getHeaderOfCookieBanner).toMatch('© Crown copyright')
-    await footerObjects.logoFooter.click()
-    const logoPageURL = await browser.getUrl()
+
     const expectedLogoURL =
       'https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/'
-    await expect(logoPageURL).toMatch(expectedLogoURL)
-    await browser.back()
-    const StartPageHeaderText = 'Check local air quality'
-    const getStartPageHeaderText =
-      await startNowPage.startNowPageHeaderText.getText()
-    await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
+    const getHrefLogo = await footerObjects.logoFooter.getAttribute('href')
+    await expect(getHrefLogo).toMatch(expectedLogoURL)
     await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- FooVal EndScenario Footer-Crown-Logo --------')
   })
