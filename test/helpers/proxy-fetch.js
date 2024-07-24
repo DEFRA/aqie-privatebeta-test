@@ -17,7 +17,6 @@ const proxyFetch = (url, opts) => {
     return nonProxyFetch(url, opts)
   } else {
     logger.info(`Proxyfetchurl ${url}`)
-    logger.info(`optsProxyfetchurl ${opts}`)
     return undiciFetch(url, {
       ...opts,
       dispatcher: new ProxyAgent({
