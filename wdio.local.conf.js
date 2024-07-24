@@ -34,7 +34,7 @@ export const config = {
     './test/specs/passwordPageLogin.js',
     './test/specs/cookiesBannerCheck.js',
     './test/specs/locationSearchAndMatch.js',
-    './test/specs/forecastPage.js',
+    './test/specs/footerValidations.js',
     './test/specs/forecastPageExtra.js',
     './test/specs/headersValidation.js',
     './test/specs/staticpagepollutants.js',
