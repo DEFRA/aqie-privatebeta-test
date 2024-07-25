@@ -57,7 +57,11 @@ function parseForecast(item, place) {
 async function fetchForecast(place) {
   const forecastUrl = config.get('forecastUrl')
   logger.info(`forecastSummaryUrl: ${forecastUrl}`)
-  const response = await undiciFetch(forecastUrl, options)
+  const response = await proxyFetch(forecastUrl, options).catch(
+    (err) => {
+      logger.info(`err ${JSON.stringify(err.message)}`)
+    }
+  )
 
   let rssForecastXMLResponse
   if (response.ok) {
@@ -89,8 +93,8 @@ async function createSets(array, setSize) {
 async function fetchMeasurements(nearestplace) {
   const newpollutants = []
   const measurementsApiUrl = config.get('measurementsApiUrl')
-  logger.info(`measurementsApiUrl: ${measurementsApiUrl}`)
-  const response = await proxyFetch(measurementsApiUrl, optionsJson).catch(
+  logger.info(`measurementsApiUrl: ${measurementsApiUrl}`)   
+  const response = await fetch(`${measurementsApiUrl}`, optionsJson).catch(
     (err) => {
       logger.info(`err ${JSON.stringify(err.message)}`)
     }

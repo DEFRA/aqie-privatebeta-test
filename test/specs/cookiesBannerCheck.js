@@ -13,7 +13,7 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = config.get('daqiePassword')
+    const getPassword = await config.get('daqiePassword')
     await passwordPage.setPassword(getPassword)
     await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
@@ -145,7 +145,7 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = config.get('daqiePassword')
+    const getPassword = await config.get('daqiePassword')
     await passwordPage.setPassword(getPassword)
     await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
@@ -203,7 +203,7 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = config.get('daqiePassword')
+    const getPassword = await config.get('daqiePassword')
     await passwordPage.setPassword(getPassword)
     await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
