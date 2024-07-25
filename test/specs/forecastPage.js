@@ -56,9 +56,7 @@ function parseForecast(item, place) {
 async function fetchForecast(place) {
   const forecastUrl = config.get('forecastUrl')
   logger.info(`forecastSummaryUrl: ${forecastUrl}`)
-  const response = await proxyFetch(forecastUrl, options).catch((err) => {
-    logger.info(`err ${JSON.stringify(err.message)}`)
-  })
+  const response = await proxyFetch(forecastUrl, options)
 
   let rssForecastXMLResponse
   if (response.ok) {
