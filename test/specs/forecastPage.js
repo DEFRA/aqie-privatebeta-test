@@ -10,6 +10,7 @@ import fs from 'node:fs'
 import createLogger from 'helpers/logger'
 import { XMLParser } from 'fast-xml-parser'
 import proxyFetch from 'helpers/proxy-fetch'
+import { fetch as undiciFetch } from 'undici'
 const optionsJson = { method: 'GET', headers: { 'Content-Type': 'text/json' } }
 const options = { method: 'GET', headers: { 'Content-Type': 'text/xml' } }
 const dynlocationValue = JSON.parse(
@@ -56,7 +57,7 @@ function parseForecast(item, place) {
 async function fetchForecast(place) {
   const forecastUrl = config.get('forecastUrl')
   logger.info(`forecastSummaryUrl: ${forecastUrl}`)
-  const response = await proxyFetch(forecastUrl, options)
+  const response = await undiciFetch(forecastUrl, options)
 
   let rssForecastXMLResponse
   if (response.ok) {
