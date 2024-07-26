@@ -86,7 +86,8 @@ export const config = {
           '--dns-prefetch-disable',
           '--disable-background-networking',
           '--disable-remote-fonts',
-          '--ignore-certificate-errors'
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
         ]
       }
     }
