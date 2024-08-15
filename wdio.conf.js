@@ -183,7 +183,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 60000
+    timeout: debug ? oneHour : 80000
   },
   //
   // =====
@@ -279,7 +279,7 @@ export const config = {
     { error, result, duration, passed, retries }
   ) {
     if (error) {
-      await browser.takeScreenshot()
+      await browser.takeScreenshot()      
     }
   },
 

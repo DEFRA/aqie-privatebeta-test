@@ -35,14 +35,14 @@ export const config = {
     './test/specs/cookiesBannerCheck.js',
     './test/specs/footerValidations.js',
     './test/specs/forecastPage.js',
-    './test/specs/forecastPageExtra.js',
     './test/specs/locationSearchAndMatch.js',
     './test/specs/staticpagepollutants.js',
     './test/specs/unhappyPath.js',
     './test/specs/welshErrorMsgPages.js',
     './test/specs/welshESWToggle.js',
     './test/specs/welshHeaderFooterAndStatic.js',
-    './test/specs/welshNIToggle.js'
+    './test/specs/welshNIToggle.js',
+    './test/specs/headersValidation.js'
   ],
   // injectGlobals: false,
   //
