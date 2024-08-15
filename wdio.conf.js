@@ -279,7 +279,7 @@ export const config = {
     { error, result, duration, passed, retries }
   ) {
     if (error) {
-      await browser.takeScreenshot()      
+      await browser.takeScreenshot()
     }
   },
 
