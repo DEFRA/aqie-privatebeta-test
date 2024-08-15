@@ -32,13 +32,17 @@ export const config = {
   // Patterns to exclude.
   exclude: [
     './test/specs/passwordPageLogin.js',
-    './test/specs/locationSearchAndMatch.js',
-    './test/specs/forecastPageExtra.js',
-    './test/specs/headersValidation.js',
-    './test/specs/footerValidations.js',
-    './test/specs/headersValidation.js',
     './test/specs/cookiesBannerCheck.js',
-    './test/specs/unhappyPath.js'
+    './test/specs/footerValidations.js',
+    './test/specs/forecastPage.js',
+    './test/specs/forecastPageExtra.js',
+    './test/specs/locationSearchAndMatch.js',
+    './test/specs/staticpagepollutants.js',
+    './test/specs/unhappyPath.js',
+    './test/specs/welshErrorMsgPages.js',
+    './test/specs/welshESWToggle.js',
+    './test/specs/welshHeaderFooterAndStatic.js',
+    './test/specs/welshNIToggle.js'
   ],
   // injectGlobals: false,
   //
@@ -63,14 +67,13 @@ export const config = {
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
-
   capabilities: debug
-    ? [{ browserName: 'chrome' }]
+    ? [{ browserName: 'MicrosoftEdge' }]
     : [
         {
           maxInstances: 1,
-          browserName: 'chrome',
-          'goog:chromeOptions': {
+          browserName: 'MicrosoftEdge',
+          'goog:MicrosoftEdge': {
             args: [
               '--no-sandbox',
               '--disable-infobars',

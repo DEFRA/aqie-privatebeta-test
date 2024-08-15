@@ -4,11 +4,15 @@ class ErrorPageLocationSearch {
   }
 
   get searchBackLink() {
-    return $("a[href='/search-location']")
+    return $("a[href*='/search-location']")
   }
 
   async clickSearchBackLink() {
-    await $("a[href='/search-location']").click()
+    await $("a[href*='/search-location']").click()
+  }
+
+  async clickBackToHomePage() {
+    await $("//a[normalize-space()='Ewch yn ôl i ansawdd aer lleol']").click()
   }
 }
 

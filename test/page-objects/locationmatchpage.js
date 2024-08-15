@@ -15,15 +15,15 @@ class LocationMatchPage {
   }
 
   get firstLinkOfLocationMatch() {
-    return this.linksOnMatchRegion[0]
+    return this.linksOnMatchRegion[1]
   }
 
   async clickSearchBackLink() {
-    await $("a[href='/search-location']").click()
+    await $("a[href*='/search-location']").click()
   }
 
   async clickOnMatchRegionLinks() {
-    for (let i = 0; i < (await this.linksOnMatchRegion.length); i++) {
+    for (let i = 1; i < (await this.linksOnMatchRegion.length); i++) {
       const matchLink = await this.linksOnMatchRegion[i].getText()
       const link = await $('=' + matchLink + '')
       await link.click()

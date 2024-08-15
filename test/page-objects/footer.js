@@ -24,6 +24,11 @@ class Footer {
   get logoFooter() {
     return $("a[class='govuk-footer__link govuk-footer__copyright-logo']")
   }
+
+  // Privacy, cookies, acc-stmt page Header Link
+  get getHeaderTextFooter() {
+    return $("h1[class='govuk-heading-xl']")
+  }
 }
 
 export default new Footer()
