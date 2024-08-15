@@ -84,6 +84,27 @@ class LocationSearchPage {
   async clickNIRadiobtn() {
     await this.getRadiobtn[1].click()
   }
+
+  // Welsh Translation
+  get linkButtonEnglish() {
+    return $("a[href='?lang=en']")
+  }
+
+  get linkButtonWelsh() {
+    return $("a[href='?lang=cy']")
+  }
+
+  get linkToggleButtons() {
+    return $$("li[class='dwp-language-toggle__list-item']")
+  }
+
+  get linkToggleButtonsEng() {
+    return this.linkToggleButtons[0]
+  }
+
+  get linkToggleButtonsCy() {
+    return this.linkToggleButtons[1]
+  }
 }
 
 // module.exports=new LocationSearchPage()

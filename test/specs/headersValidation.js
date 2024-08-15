@@ -17,10 +17,13 @@ locationMatchRegion.forEach(({ region }) => {
       await passwordPageLogin.passwordPageLogin()
       const govukLink = await headersValidation.govUKCrownLink.getText()
       await expect(govukLink.split(' ').pop()).toMatch('GOV.UK')
-      await headersValidation.govUKCrownLink.click()
-      const browserURL = await browser.getUrl()
-      await expect(browserURL).toMatch('https://www.gov.uk/')
-      await browser.back()
+      const getGovUKLink =
+        await headersValidation.govUKCrownLink.getAttribute('href')
+      await expect(getGovUKLink).toMatch('https://www.gov.uk/')
+      // Commenting below because cdp not supporting navigation to 3rd party site for now
+      // await headersValidation.govUKCrownLink.click()
+      // const browserURL = await browser.getUrl()
+      // await browser.back()
       const StartPageHeaderText = 'Check local air quality'
       const getStartPageHeaderText =
         await startNowPage.startNowPageHeaderText.getText()
@@ -56,12 +59,15 @@ locationMatchRegion.forEach(({ region }) => {
       await expect(betaBannerText).toMatch('Beta')
       const feedbackLink = await headersValidation.betaBannerFeedback.getText()
       await expect(feedbackLink).toMatch('feedback')
-      await headersValidation.betaBannerFeedback.click()
-      const browserURL = await browser.getUrl()
-      await expect(browserURL).toMatch(
+      const getFeedbackink =
+        await headersValidation.betaBannerFeedback.getAttribute('href')
+      // Commenting below because cdp not supporting navigation to 3rd party site for now
+      // await headersValidation.betaBannerFeedback.click()
+      // const browserURL = await browser.getUrl()
+      // await browser.back()
+      await expect(getFeedbackink).toMatch(
         'https://defragroup.eu.qualtrics.com/jfe/form/SV_dj4wJCoOkFQLXfM'
       )
-      await browser.back()
       await browser.deleteCookies()
       logger.info('--- HeadVal EndScenario Beta-Banner --------')
     })
