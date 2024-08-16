@@ -1,0 +1,58 @@
+[
+  {
+    "region": "Gloucester",
+    "area": "Chepstow A48",
+    "areaType": "Traffic Urban",
+    "areaMessage": "Mae’r ardal fonitro hon wedi’i lleoli mewn dinas neu dref sy’n agos at ffyrdd, traffyrdd neu briffyrdd.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Aberdeen Erroll Park",
+    "area": "Aberdeen Erroll Park",
+    "areaType": "Background Urban",
+    "areaMessage": "Mae'r ardal fonitro hon wedi'i lleoli mewn dinas neu dref. Mae wedi'i leoli fel nad yw mesuriadau llygryddion yn dod o un ffynhonnell benodol.",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Manchester Sharston",
+    "area": "Manchester Sharston",
+    "areaType": "Industrial Suburban",
+    "areaMessage": "Mae'r ardal fonitro hon ar gyrion ardal drefol neu mewn ardal ar ei phen ei hun ac i lawr y gwynt o ffynhonnell ddiwydiannol",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Leominster",
+    "area": "Leominster",
+    "areaType": "Background Suburban",
+    "areaMessage": "Mae'r ardal fonitro hon ar gyrion ardal drefol neu mewn ardal ei hun. Mae wedi'i leoli fel nad yw mesuriadau llygryddion yn dod o un ffynhonnell benodol.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Glazebury",
+    "area": "Glazebury",
+    "areaType": "Background Rural",
+    "areaMessage": "Mae'r ardal fonitro hon mewn aneddiadau bach neu ardaloedd ag ecosystemau, coedwigoedd neu gnydau naturiol. Mae wedi'i leoli fel nad yw mesuriadau llygryddion yn dod o un ffynhonnell benodol.",
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Port Talbot Margam",
+    "area": "Port Talbot Margam",
+    "areaType": "Industrial Urban",
+    "areaMessage": "Mae'r ardal fonitro hon wedi'i lleoli mewn dinas neu dref i lawr y gwynt o ffynhonnell ddiwydiannol.",
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "BT1 1AA",
+    "area": "Belfast Centre",
+    "areaType": "Background Urban",
+    "areaMessage": "Mae'r ardal fonitro hon wedi'i lleoli mewn dinas neu dref. Mae wedi'i leoli fel nad yw mesuriadau llygryddion yn dod o un ffynhonnell benodol.",
+    "locationMatch": "No",
+    "NI": "Yes"
+  }
+]
