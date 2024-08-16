@@ -87,11 +87,11 @@ class LocationSearchPage {
 
   // Welsh Translation
   get linkButtonEnglish() {
-    return $("a[href='?lang=en']")
+    return $("a[href*='lang=en']")
   }
 
   get linkButtonWelsh() {
-    return $("a[href='?lang=cy']")
+    return $("a[href*='lang=cy']")
   }
 
   get linkToggleButtons() {
