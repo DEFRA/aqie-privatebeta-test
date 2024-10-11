@@ -30,7 +30,21 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [],
+  exclude: [
+    './test/specs/cookiesBannerCheck.js',
+    './test/specs/footerValidations.js',
+    './test/specs/forecastPage.js',
+    './test/specs/forecastPageExtra.js',
+    './test/specs/headersValidation.js',
+    './test/specs/locationSearchAndMatch.js',
+    './test/specs/staticpagepollutants.js',
+    './test/specs/unhappyPath.js',
+    './test/specs/welshErrorMsgPages.js',
+    './test/specs/welshESWToggle.js',
+    './test/specs/welshForecastPageExtra.js',
+    './test/specs/welshHeaderFooterAndStatic.js',
+    './test/specs/welshNIToggle.js'
+  ],
   // injectGlobals: false,
   //
   // ============

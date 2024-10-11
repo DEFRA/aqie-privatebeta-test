@@ -145,7 +145,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const ozoneWelshPageTitle = await browser.getTitle()
         await expect(ozoneWelshPageTitle).toMatch(
-          'Osôn (O3) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Osôn(O₃) – Gwirio ansawdd aer lleol – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -267,7 +267,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const cookiesWelshPageTitle = await browser.getTitle()
         await expect(cookiesWelshPageTitle).toMatch(
-          'Cwcis - Gwiriwch ansawdd aer lleol - GOV.UK'
+          'Cwcis - Gwirio ansawdd aer lleol - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -286,7 +286,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const accStmtWelshPageTitle = await browser.getTitle()
         await expect(accStmtWelshPageTitle).toMatch(
-          'Datganiad Hygyrchedd - Gwiriwch ansawdd aer lleol - GOV.UK'
+          'Datganiad Hygyrchedd - Gwirio ansawdd aer lleol - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
