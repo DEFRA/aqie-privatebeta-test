@@ -1,10 +1,10 @@
-import passwordPageLogin from './passwordPageLogin'
 import startNowPage from 'page-objects/startnowpage'
 import headersValidation from 'page-objects/headersObject'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import footerObjects from 'page-objects/footer'
 import { expect } from '@wdio/globals'
 import cookiePage from 'page-objects/cookiePage'
+import cookieBanner from 'page-objects/cookieBanner'
 import createLogger from 'helpers/logger'
 const logger = createLogger()
 async function headerChecks() {
@@ -107,7 +107,13 @@ async function footerChecks() {
 
 describe('Welsh-Header-Footer-Static-Flow', () => {
   it('Welsh-Header', async () => {
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
       const StartPageHeaderText = 'Gwirio ansawdd aer lleol'

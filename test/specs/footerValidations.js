@@ -1,10 +1,10 @@
 import footerObjects from 'page-objects/footer'
 import startNowPage from 'page-objects/startnowpage'
-import passwordPageLogin from './passwordPageLogin'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import cookiePage from 'page-objects/cookiePage'
+import cookieBanner from 'page-objects/cookieBanner'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import createLogger from 'helpers/logger'
 import { browser, expect } from '@wdio/globals'
@@ -19,8 +19,11 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     try {
       await footerObjects.cookieFooterLink.scrollIntoView()
     } catch (error) {
@@ -145,8 +148,11 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     try {
       await footerObjects.oglFooterLink.scrollIntoView({
         behavior: 'smooth',
@@ -171,8 +177,11 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     await footerObjects.logoFooter.scrollIntoView()
     const getHeaderOfCookieBanner = await footerObjects.logoFooter.getText()
     await expect(getHeaderOfCookieBanner).toMatch('© Crown copyright')
@@ -189,8 +198,11 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     await footerObjects.privacyFooterLink.scrollIntoView()
     const getCookieFooterLinkText =
       await footerObjects.privacyFooterLink.getText()
@@ -215,8 +227,11 @@ describe('Footer Validations', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     await footerObjects.AccStmtFooterLink.scrollIntoView()
     const getAccStmtFooterLinkText =
       await footerObjects.AccStmtFooterLink.getText()
@@ -249,8 +264,11 @@ describe('Footer Validations', () => {
       const expectedAccStatementURL = '/accessibility'
       await browser.url('')
       await browser.maximizeWindow()
-      // password-block
-      await passwordPageLogin.passwordPageLogin()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       // Start Now Page
       const StartPageHeaderText = 'Check local air quality'
       const getStartPageHeaderText =

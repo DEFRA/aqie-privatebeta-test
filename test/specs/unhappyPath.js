@@ -1,7 +1,7 @@
 import locationSearchPage from '../page-objects/locationsearchpage.js'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import startNowPage from '../page-objects/startnowpage.js'
-import passwordPageLogin from './passwordPageLogin.js'
+import cookieBanner from 'page-objects/cookieBanner'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
 import createLogger from 'helpers/logger'
@@ -16,8 +16,13 @@ describe('AQIE-unhappyPath', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url('/search-location')
     await browser.maximizeWindow()
-    // password-block
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     // startnow-block
     await startNowPage.startNowBtnClick()
     // location-block
@@ -59,8 +64,13 @@ describe('AQIE-unhappyPath', () => {
         '--- AQIEUnhap StartScenario invalid page search-invalid postcode & special characters--------'
       )
       await browser.deleteCookies(['airaqie_cookie'])
-      // password-block
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       await startNowPage.startNowBtnClick()
       const locationESWSearchBoxText = 'Enter a location or postcode'
       await locationSearchPage.clickESWRadiobtn()

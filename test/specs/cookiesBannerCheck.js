@@ -1,8 +1,6 @@
 import cookieBanner from 'page-objects/cookieBanner'
-import passwordPage from 'page-objects/passwordpage'
 import cookiePage from 'page-objects/cookiePage'
 import startNowPage from '../page-objects/startnowpage.js'
-import config from 'helpers/config'
 import createLogger from 'helpers/logger'
 import { browser, expect } from '@wdio/globals'
 
@@ -13,9 +11,6 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = await config.get('daqiePassword')
-    await passwordPage.setPassword(getPassword)
-    await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
       // Validate _ga cookie not comes until user accepts
       const allCookies = await browser.getCookies()
@@ -145,9 +140,6 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = await config.get('daqiePassword')
-    await passwordPage.setPassword(getPassword)
-    await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
       // validation of the buttons
       const getRejectButtonOfCookieBanner =
@@ -203,9 +195,6 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
-    const getPassword = await config.get('daqiePassword')
-    await passwordPage.setPassword(getPassword)
-    await passwordPage.continueBtnClick()
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
       const viewCookiesLink =
         await cookieBanner.viewYourCookieLinkDialog.getText()

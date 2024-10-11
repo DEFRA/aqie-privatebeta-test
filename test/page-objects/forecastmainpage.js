@@ -11,14 +11,31 @@ class ForecastMainPage {
   get subHeadersinForecastPage() {
     return $$("h2[class='govuk-heading-m']")
   }
+
+  async pollutantsHeaderLinksArrCheck() {
+    const arr = await $$("h2[class='govuk-heading-m']")
+    const arrcheck = Array.isArray(arr)
+    return arrcheck
+  }
+
   // DAQI forecast
 
   get daqiForecastValue() {
-    return $("td[class*='daqi-selected']")
+    return $("[class*='daqi-selected']")
   }
 
   get daqiForecastCaption() {
     return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
+  }
+
+  // Hidden object - accessibility
+  get daqiHiddenForecastCaption() {
+    return $("span[class='govuk-visually-hidden']")
+  }
+
+  // Hidden object - accessibility
+  get daqiHiddenScaleForecastCaption() {
+    return $("span[class='daqi-scale-hidden']")
   }
 
   get daqiForecastHeader() {
@@ -33,6 +50,33 @@ class ForecastMainPage {
   // Health advice para first line
   get daqiForecastPara() {
     return this.forecastMainPagePara[5]
+  }
+
+  // reading measurement para first line
+  get readingMeasuredPara() {
+    return this.forecastMainPagePara[19]
+  }
+
+  // Station areatype para first line
+  get stationAreaTypePara() {
+    return this.forecastMainPagePara[21]
+  }
+
+  // welsh reading measurement para first line
+  get readingMeasuredWelshPara() {
+    return this.forecastMainPagePara[10]
+  }
+
+  // Welsh station areatype para first line
+  get stationAreaTypeWelshPara() {
+    return this.forecastMainPagePara[12]
+  }
+
+  // station name
+  get stationFirstName() {
+    return $(
+      "h3[class='govuk-heading-s govuk-!-margin-bottom-1 pollutant-table']"
+    )
   }
 
   // accordian link
@@ -71,34 +115,6 @@ class ForecastMainPage {
     return $$(
       "button[class='tooltip defra-toggletip__button defra-toggletip-target']"
     )
-  }
-
-  get toolTipButton1() {
-    return this.toolTipButtonArr[0]
-  }
-
-  get toolTipButton2() {
-    return this.toolTipButtonArr[1]
-  }
-
-  get toolTipButton3() {
-    return this.toolTipButtonArr[2]
-  }
-
-  get toolTipMessage1() {
-    return this.toolTipMessageArr[0]
-  }
-
-  get toolTipMessage2() {
-    return this.toolTipMessageArr[1]
-  }
-
-  get toolTipMessage3() {
-    return this.toolTipMessageArr[2]
-  }
-
-  get pollutantStationName() {
-    return this.pollutantStationNamesArr[0]
   }
 
   // Pollutant link
@@ -164,6 +180,26 @@ class ForecastMainPage {
 
   get pollutantNameHeader1() {
     return this.pollutantNameHeader[0]
+  }
+
+  get pollutantsLinkOzone() {
+    return this.pollutantsLink[1]
+  }
+
+  get pollutantsLinkNO2() {
+    return this.pollutantsLink[2]
+  }
+
+  get pollutantsLinkSO2() {
+    return this.pollutantsLink[3]
+  }
+
+  get pollutantsLinkPM25() {
+    return this.pollutantsLink[4]
+  }
+
+  get pollutantsLinkPM10() {
+    return this.pollutantsLink[5]
   }
 
   /* get pollutantNearestRegions() {

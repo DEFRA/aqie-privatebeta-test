@@ -26,7 +26,7 @@ class LocationSearchPage {
   }
 
   get errorMessageNoChoice() {
-    return $("a[href='#itembox']")
+    return $("a[href='#locationType']")
   }
 
   get emptyBoxValidationTitle() {

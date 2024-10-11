@@ -1,12 +1,18 @@
-import passwordPageLogin from './passwordPageLogin'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import { browser, expect } from '@wdio/globals'
+import cookieBanner from 'page-objects/cookieBanner'
 
 describe('Error-Message-Pages', () => {
   it('Errors - Location Search', async () => {
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
       const StartPageHeaderText = 'Gwirio ansawdd aer lleol'
@@ -66,7 +72,13 @@ describe('Error-Message-Pages', () => {
   })
 
   it('Errors - Page Route', async () => {
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
       const StartPageHeaderText = 'Gwirio ansawdd aer lleol'
