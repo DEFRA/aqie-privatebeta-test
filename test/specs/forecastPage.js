@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import passwordPageLogin from './passwordPageLogin'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
 import config from 'helpers/config'
+import cookieBanner from 'page-objects/cookieBanner'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
 import createLogger from 'helpers/logger'
@@ -249,7 +249,13 @@ dynlocationValue.forEach(
       it('daqi value-direct search', async () => {
         logger.info('--- FMP StartScenario daqi value-direct search --------')
         await browser.deleteCookies(['airaqie_cookie'])
-        await passwordPageLogin.passwordPageLogin()
+        await browser.url('')
+        await browser.maximizeWindow()
+        // Handle the cookie banner
+        if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+          await cookieBanner.rejectButtonCookiesDialog.click()
+          await cookieBanner.hideButtonHideDialog.click()
+        }
         await startNowPage.startNowBtnClick()
         if (NI === 'No') {
           await locationSearchPage.clickESWRadiobtn()
@@ -275,7 +281,22 @@ dynlocationValue.forEach(
           const captionInPage = 'The air pollution forecast for today is low'
           const captionReceived =
             await ForecastMainPage.daqiForecastCaption.getText()
-          await expect(captionReceived).toMatch(captionInPage)
+          const hiddenCaptionDaqi =
+            await ForecastMainPage.daqiHiddenForecastCaption.getText()
+          const hiddenScaleCaptionDaqi =
+            await ForecastMainPage.daqiHiddenScaleForecastCaption.getText()
+          const captionReceivedWithoutHidden = captionReceived.replace(
+            hiddenCaptionDaqi,
+            ''
+          )
+          const captionReceivedWithoutHiddenScale =
+            captionReceivedWithoutHidden.replace(hiddenScaleCaptionDaqi, '')
+          const extractDAQIIndex = captionReceivedWithoutHiddenScale.replace(
+            /\n/g,
+            ''
+          )
+          const extractDAQIIndexFinal = extractDAQIIndex.replace('is', 'is ')
+          await expect(extractDAQIIndexFinal).toMatch(captionInPage)
           const caption2InPage = 'Health advice for low levels of air pollution'
           const caption2Received =
             await ForecastMainPage.daqiForecastHeader.getText()
@@ -385,11 +406,7 @@ dynlocationValue.forEach(
         // Accordian text check
         // await browser.scroll(0, 500)
         try {
-          await ForecastMainPage.daqiAccordian.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'start'
-          })
+          await ForecastMainPage.daqiAccordian.scrollIntoView()
         } catch (error) {
           logger.info('ERRORINSCROLLINTOVIEW')
           logger.error(error)
@@ -414,11 +431,7 @@ dynlocationValue.forEach(
         )
 
         try {
-          await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'start'
-          })
+          await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
         } catch (error) {
           logger.info('ERRORINSCROLLINTOVIEW')
           logger.error(error)
@@ -426,14 +439,10 @@ dynlocationValue.forEach(
         // await browser.scroll(0, 1500)
 
         const getPollutantStationStr =
-          await ForecastMainPage.pollutantStationName.getText()
-        const getPollutantStation1 = await getPollutantStationStr.replace(
-          '\ni',
-          ''
-        )
+          await ForecastMainPage.stationFirstName.getText()
 
         // get dynamic pollutant value
-        if (getPollutantStation1 === nearestRegionPollutantsSta1) {
+        if (getPollutantStationStr === nearestRegionPollutantsSta1) {
           const pollutantValues = await fetchMeasurements(
             nearestRegionPollutantsSta1
           )
@@ -455,7 +464,7 @@ dynlocationValue.forEach(
               renamedDynPollutantValues
             )
           }
-        } else if (getPollutantStation1 === nearestRegionPollutantsSta2) {
+        } else if (getPollutantStationStr === nearestRegionPollutantsSta2) {
           const pollutantValues = await fetchMeasurements(
             nearestRegionPollutantsSta2
           )
@@ -477,7 +486,7 @@ dynlocationValue.forEach(
               renamedDynPollutantValues
             )
           }
-        } else if (getPollutantStation1 === nearestRegionPollutantsSta3) {
+        } else if (getPollutantStationStr === nearestRegionPollutantsSta3) {
           const pollutantValues = await fetchMeasurements(
             nearestRegionPollutantsSta3
           )

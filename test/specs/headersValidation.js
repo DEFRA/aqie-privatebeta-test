@@ -1,8 +1,8 @@
-import passwordPageLogin from './passwordPageLogin'
 import headersValidation from 'page-objects/headersObject'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
+import cookieBanner from 'page-objects/cookieBanner'
 import createLogger from 'helpers/logger'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
@@ -14,7 +14,13 @@ locationMatchRegion.forEach(({ region }) => {
     it('CrownLink_CLAQ', async () => {
       logger.info('--- HeadVal StartScenario CrownLink_CLAQ --------')
       await browser.deleteCookies()
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       const govukLink = await headersValidation.govUKCrownLink.getText()
       await expect(govukLink.split(' ').pop()).toMatch('GOV.UK')
       const getGovUKLink =
@@ -54,7 +60,13 @@ locationMatchRegion.forEach(({ region }) => {
     it('Beta-Banner', async () => {
       logger.info('--- HeadVal StartScenario Beta-Banner --------')
       await browser.deleteCookies()
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       const betaBannerText = await headersValidation.betaBanner.getText()
       await expect(betaBannerText).toMatch('Beta')
       const feedbackLink = await headersValidation.betaBannerFeedback.getText()

@@ -4,7 +4,7 @@ import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
-import passwordPageLogin from './passwordPageLogin'
+import cookieBanner from 'page-objects/cookieBanner'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import createLogger from 'helpers/logger'
 import fs from 'node:fs'
@@ -32,8 +32,13 @@ describe('Location Search', () => {
     it('Start Page', async () => {
       logger.info('--- LocSearch StartScenario Start LSMP Page --------')
       await browser.deleteCookies(['airaqie_cookie'])
-      // password-block
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       const StartPageHeaderText = 'Check local air quality'
       const getStartPageHeaderText =
         await startNowPage.startNowPageHeaderText.getText()
@@ -80,7 +85,13 @@ describe('Location Search', () => {
       '--- LocSearch StartScenario Single Location- Two Lang(Eng-Wales) Page --------'
     )
     await browser.deleteCookies(['airaqie_cookie'])
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     await startNowPage.startNowBtnClick()
     await locationSearchPage.clickESWRadiobtn()
     await locationSearchPage.setUserESWRegion(singleRegion[1].region)
@@ -100,7 +111,13 @@ describe('Location Search', () => {
       )
       await browser.deleteCookies(['airaqie_cookie'])
       const locationNISearchBoxText = 'Enter a postcode'
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       await startNowPage.startNowBtnClick()
       await locationSearchPage.clickNIRadiobtn()
       const getNILocationSearchBoxText =
@@ -128,7 +145,13 @@ describe('Location Search', () => {
       )
       await browser.deleteCookies(['airaqie_cookie'])
       const locationNISearchBoxText = 'Enter a postcode'
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       await startNowPage.startNowBtnClick()
       await locationSearchPage.clickNIRadiobtn()
       const getNILocationSearchBoxText =
@@ -160,8 +183,13 @@ describe('Location Search', () => {
       await browser.deleteCookies(['airaqie_cookie'])
       await browser.url('/search-location')
       await browser.maximizeWindow()
-      // password-block
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       await startNowPage.startNowBtnClick()
       const locationESWSearchBoxText = 'Enter a location or postcode'
       await locationSearchPage.clickESWRadiobtn()
@@ -196,8 +224,13 @@ describe('Location Search', () => {
       const locationESWSearchBoxText = 'Enter a location or postcode'
       await browser.url('/search-location')
       await browser.maximizeWindow()
-      // password-block
-      await passwordPageLogin.passwordPageLogin()
+      await browser.url('')
+      await browser.maximizeWindow()
+      // Handle the cookie banner
+      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        await cookieBanner.rejectButtonCookiesDialog.click()
+        await cookieBanner.hideButtonHideDialog.click()
+      }
       await startNowPage.startNowBtnClick()
       // Location-block
       await locationSearchPage.clickESWRadiobtn()

@@ -1,9 +1,9 @@
-import passwordPageLogin from './passwordPageLogin'
 import startNowPage from 'page-objects/startnowpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
 import LocationMatchPage from 'page-objects/locationmatchpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import { browser, expect } from '@wdio/globals'
+import cookieBanner from 'page-objects/cookieBanner'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
   fs.readFileSync('test/testdata/locationMatchRegion.json')
@@ -11,7 +11,13 @@ const locationMatchRegion = JSON.parse(
 
 describe('ESW-Toggle-Flow', () => {
   it('Welsh-English Transalation', async () => {
-    await passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
       const StartPageHeaderText = 'Gwirio ansawdd aer lleol'

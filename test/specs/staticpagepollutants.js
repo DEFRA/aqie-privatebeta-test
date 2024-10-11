@@ -6,7 +6,7 @@ import pm10StaticPage from 'page-objects/pm10staticpage'
 import pm25StaticPage from 'page-objects/pm25staticpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
-import passwordPageLogin from './passwordPageLogin.js'
+import cookieBanner from 'page-objects/cookieBanner'
 import startNowPage from 'page-objects/startnowpage'
 import createLogger from 'helpers/logger'
 import { browser, expect } from '@wdio/globals'
@@ -103,8 +103,13 @@ describe('Pollutants Static Page content', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     await browser.url(' /search-location')
     await browser.maximizeWindow()
-    // password-block
-    passwordPageLogin.passwordPageLogin()
+    await browser.url('')
+    await browser.maximizeWindow()
+    // Handle the cookie banner
+    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
+    }
     // Start-Page-block
     await startNowPage.startNowBtnClick()
     // location-block
