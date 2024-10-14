@@ -41,9 +41,9 @@ export const config = {
     './test/specs/unhappyPath.js',
     './test/specs/welshErrorMsgPages.js',
     './test/specs/welshESWToggle.js',
-    './test/specs/welshForecastPageExtra.js',
     './test/specs/welshHeaderFooterAndStatic.js',
-    './test/specs/welshNIToggle.js'
+    './test/specs/welshNIToggle.js',
+    './test/specs/pageTitle.js'
   ],
   // injectGlobals: false,
   //
