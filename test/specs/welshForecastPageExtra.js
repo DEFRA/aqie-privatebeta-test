@@ -36,20 +36,32 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       }
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
+      // Welsh Accordian link
+      const accordianText =
+        'Sut y gall lefelau gwahanol o lygredd aer effeithio ar iechyd'
+      const accordianTextReceived =
+        await ForecastMainPage.daqiAccordian.getText()
+      await expect(accordianTextReceived).toMatch(accordianText)
+      await ForecastMainPage.daqiAccordian.click()
+      const accordianHeading = 'Mynegai'
+      const accordianHeadingReceived =
+        await ForecastMainPage.daqiAccordianHeaderIndex.getText()
+      await expect(accordianHeadingReceived).toMatch(accordianHeading)
+      await ForecastMainPage.daqiAccordian.click()
+
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
       const LatestIconMessage =
         'Mae’r darlleniadau’n cael eu mesur bob awr.Mae’r uned µg/㎥ yn sefyll am ficrogramau (miliynfed o gram) am bob metr ciwbig o aer.'
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-
       const readingMeasuredWelshPara =
-        await ForecastMainPage.readingMeasuredWelshPara.getText()
+        await ForecastMainPage.readingMeasuredPara.getText()
       await expect(readingMeasuredWelshPara).toMatch(LatestIconMessage)
 
       if (getPollutantStationStr === area) {
         const stationAreaTypeWelshPara =
-          await ForecastMainPage.stationAreaTypeWelshPara.getText()
+          await ForecastMainPage.stationAreaTypePara.getText()
         await expect(stationAreaTypeWelshPara).toMatch(areaMessage)
       } else {
         logger.info(

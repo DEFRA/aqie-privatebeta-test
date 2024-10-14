@@ -62,16 +62,6 @@ class ForecastMainPage {
     return this.forecastMainPagePara[21]
   }
 
-  // welsh reading measurement para first line
-  get readingMeasuredWelshPara() {
-    return this.forecastMainPagePara[10]
-  }
-
-  // Welsh station areatype para first line
-  get stationAreaTypeWelshPara() {
-    return this.forecastMainPagePara[12]
-  }
-
   // station name
   get stationFirstName() {
     return $(
