@@ -12,4 +12,5 @@ if [ $publish_exit_code -ne 0 ]; then
   exit $publish_exit_code
 fi
 
+echo "exiting test suite with code $test_exit_code"
 exit $test_exit_code
