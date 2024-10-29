@@ -8,9 +8,12 @@ import { browser, expect } from '@wdio/globals'
 import createLogger from 'helpers/logger'
 const toolTipData = JSON.parse(fs.readFileSync('test/testdata/toolTip.json'))
 const logger = createLogger()
-toolTipData.forEach(({ region, area, areaMessage, NI }) => {
-  describe('Forecast Main Page - Extra', () => {
-    it('Area-Type and Units', async () => {
+
+describe('Forecast Main Page - Extra', () => {
+  for (const toolTip of toolTipData) {
+    const { region, area, areaMessage, NI } = toolTip
+
+    it(`Area-Type and Units - ${region}`, async () => {
       logger.info('--- FMPEx StartScenario Area type and Units --------')
       await browser.deleteCookies(['airaqie_cookie'])
       await browser.url('')
@@ -56,5 +59,5 @@ toolTipData.forEach(({ region, area, areaMessage, NI }) => {
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- FMPEx EndScenario Area type and Units --------')
     })
-  })
+  }
 })
