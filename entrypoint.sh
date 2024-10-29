@@ -11,9 +11,13 @@ if [ $publish_exit_code -ne 0 ]; then
   exit $publish_exit_code
 fi
 
+# debugging
+pwd
+ls -la
+
 if [ -f FAILED ]; then
   echo "test suite failed"
-  cat FAILED
+  cat ./FAILED
   exit 1
 fi
 

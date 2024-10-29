@@ -322,8 +322,10 @@ export const config = {
    * @param {<Object>} results object containing test results
    */
   onComplete: function (exitCode, config, capabilities, results) {
+    console.log(`TEST RESULTS: ${results}`)
     if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('FAILED', JSON.stringify(results))
+      console.log('writing FAILED file')
+      fs.writeFileSync('./FAILED', JSON.stringify(results))
     }
   }
   /**
