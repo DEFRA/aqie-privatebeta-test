@@ -1,5 +1,4 @@
 const fs = require('node:fs')
-
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 
@@ -322,9 +321,7 @@ export const config = {
    * @param {<Object>} results object containing test results
    */
   onComplete: function (exitCode, config, capabilities, results) {
-    console.log(`TEST RESULTS: ${results}`)
     if (results?.failed && results.failed > 0) {
-      console.log('writing FAILED file')
       fs.writeFileSync('./FAILED', JSON.stringify(results))
     }
   }
