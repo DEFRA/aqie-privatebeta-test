@@ -58,8 +58,10 @@ describe('AQIE-unhappyPath', () => {
     await browser.deleteCookies(['airaqie_cookie'])
     logger.info('--- AQIEUnhap EndScenario Location Empty Search--------')
   })
-  locationValue.forEach(({ region }) => {
-    it('invalid page search-invalid postcode & special characters', async () => {
+
+  for (const location of locationValue) {
+    const { region } = location
+    it(`invalid page search-invalid postcode ${region}`, async () => {
       logger.info(
         '--- AQIEUnhap StartScenario invalid page search-invalid postcode & special characters--------'
       )
@@ -92,5 +94,5 @@ describe('AQIE-unhappyPath', () => {
         '--- AQIEUnhap EndScenario invalid page search-invalid postcode & special characters--------'
       )
     })
-  })
+  }
 })
