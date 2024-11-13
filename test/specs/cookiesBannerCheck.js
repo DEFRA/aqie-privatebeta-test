@@ -31,7 +31,7 @@ describe('Cookies Validation', () => {
       // validation of the header in cookie banner
       const getHeaderOfCookieBanner =
         await cookieBanner.headerCookieBannerDialog.getText()
-      const headerFromApplication = 'Cookies on Check local air quality'
+      const headerFromApplication = 'Cookies on Check air quality'
       await expect(getHeaderOfCookieBanner).toMatch(headerFromApplication)
       // validation of the buttons
       const getAcceptButtonOfCookieBanner =

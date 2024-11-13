@@ -39,7 +39,7 @@ describe('Location Search', () => {
         await cookieBanner.rejectButtonCookiesDialog.click()
         await cookieBanner.hideButtonHideDialog.click()
       }
-      const StartPageHeaderText = 'Check local air quality'
+      const StartPageHeaderText = 'Check air quality'
       const getStartPageHeaderText =
         await startNowPage.startNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)

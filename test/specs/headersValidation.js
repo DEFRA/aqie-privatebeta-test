@@ -30,13 +30,13 @@ locationMatchRegion.forEach(({ region }) => {
       // await headersValidation.govUKCrownLink.click()
       // const browserURL = await browser.getUrl()
       // await browser.back()
-      const StartPageHeaderText = 'Check local air quality'
+      const StartPageHeaderText = 'Check air quality'
       const getStartPageHeaderText =
         await startNowPage.startNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
       await startNowPage.startNowBtnClick()
       const claqLink = await headersValidation.claqLink.getText()
-      await expect(claqLink).toMatch('Check local air quality')
+      await expect(claqLink).toMatch('Check air quality')
       await headersValidation.claqLink.click()
       // target location match page
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
