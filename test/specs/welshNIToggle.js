@@ -21,7 +21,7 @@ describe('NI-Toggle Flow', () => {
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
       if (await startNowPage.toEnglishTranslationLink.isClickable()) {
         await startNowPage.toEnglishTranslationLink.click()
-        const StartPageHeaderText = 'Check local air quality'
+        const StartPageHeaderText = 'Check air quality'
         const getStartPageHeaderText =
           await startNowPage.startNowPageHeaderText.getText()
         await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)

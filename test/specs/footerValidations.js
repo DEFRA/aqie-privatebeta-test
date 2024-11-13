@@ -45,9 +45,9 @@ describe('Footer Validations', () => {
     // back to local air quality page link
     const localAirQualityLink =
       await cookiePage.CookiePageToLAQPageLink.getText()
-    await expect(localAirQualityLink).toMatch('Check local air quality')
+    await expect(localAirQualityLink).toMatch('Check air quality')
     await cookiePage.CookiePageToLAQPageLink.click()
-    const StartPageHeaderText = 'Check local air quality'
+    const StartPageHeaderText = 'Check air quality'
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
@@ -136,7 +136,7 @@ describe('Footer Validations', () => {
       'airaqie_cookies_analytics'
     ])
     await expect(airaqieCookiesAnalytics1[0].value).toMatch('true')
-    const StartPageHeaderText1 = 'Check local air quality'
+    const StartPageHeaderText1 = 'Check air quality'
     const getStartPageHeaderText1 =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText1).toMatch(StartPageHeaderText1)
@@ -213,7 +213,7 @@ describe('Footer Validations', () => {
     const getCookieURLParts = '/' + privacyPageURL.split('/').pop()
     await expect(getCookieURLParts).toMatch(expectedPrivacyURL)
     await browser.back()
-    const StartPageHeaderText = 'Check local air quality'
+    const StartPageHeaderText = 'Check air quality'
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
@@ -242,7 +242,7 @@ describe('Footer Validations', () => {
     const getAccStmtURLParts = '/' + AccStmtPageURL.split('/').pop()
     await expect(getAccStmtURLParts).toMatch(expectedAccStmtURL)
     await browser.back()
-    const StartPageHeaderText = 'Check local air quality'
+    const StartPageHeaderText = 'Check air quality'
     const getStartPageHeaderText =
       await startNowPage.startNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
@@ -270,7 +270,7 @@ describe('Footer Validations', () => {
         await cookieBanner.hideButtonHideDialog.click()
       }
       // Start Now Page
-      const StartPageHeaderText = 'Check local air quality'
+      const StartPageHeaderText = 'Check air quality'
       const getStartPageHeaderText =
         await startNowPage.startNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)

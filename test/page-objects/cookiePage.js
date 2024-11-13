@@ -3,7 +3,7 @@ class CookiePage {
     return $$("div[class='app-cookies-page'] a[class='govuk-link']")
   }
 
-  // Check local air quality -Link
+  // Check air quality -Link
   get CookiePageToLAQPageLink() {
     return this.arrCookiePageToLAQPageLink[0]
   }

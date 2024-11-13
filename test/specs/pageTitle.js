@@ -35,14 +35,12 @@ describe('Page Title', () => {
           await cookieBanner.hideButtonHideDialog.click()
         }
         // start now page
-        const StartPageHeaderText = 'Check local air quality'
+        const StartPageHeaderText = 'Check air quality'
         const getStartPageHeaderText =
           await startNowPage.startNowPageHeaderText.getText()
         await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
         const startNowPageTitle = await browser.getTitle()
-        await expect(startNowPageTitle).toMatch(
-          'Check local air quality - GOV.UK'
-        )
+        await expect(startNowPageTitle).toMatch('Check air quality - GOV.UK')
         // welsh check
         await startNowPage.toWelshTranslationLink.click()
         const startNowWelshPageTitle = await browser.getTitle()
@@ -60,7 +58,7 @@ describe('Page Title', () => {
         await expect(getLocationSearchHeaderText).toMatch(LocationHeaderText)
         const locSearchPageTitle = await browser.getTitle()
         await expect(locSearchPageTitle).toMatch(
-          'Where do you want to check? - Check local air quality - GOV.UK'
+          'Where do you want to check? - Check air quality - GOV.UK'
         )
 
         // Click Welsh Toogle button
@@ -76,7 +74,7 @@ describe('Page Title', () => {
         await locationSearchPage.clickContinueBtn()
         const locSearchErrPageTitle = await browser.getTitle()
         await expect(locSearchErrPageTitle).toMatch(
-          'Error: Where do you want to check? - Check local air quality - GOV.UK'
+          'Error: Where do you want to check? - Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -102,7 +100,7 @@ describe('Page Title', () => {
           await expect(locMatchPageTitle).toMatch(
             'Locations matching ' +
               region.toUpperCase() +
-              ' - Check local air quality - GOV.UK'
+              ' - Check air quality - GOV.UK'
           )
           // Click Welsh Toogle button
           await locationSearchPage.linkButtonWelsh.click()
@@ -121,7 +119,7 @@ describe('Page Title', () => {
           await ForecastMainPage.regionHeaderDisplay.getText()
         const mainPageTitle = await browser.getTitle()
         await expect(mainPageTitle).toMatch(
-          getUserRegion + '-Check local air quality - GOV.UK'
+          getUserRegion + '-Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -139,7 +137,7 @@ describe('Page Title', () => {
         await expect(o3Header).toMatch('Ozone (O₃)')
         const ozonePageTitle = await browser.getTitle()
         await expect(ozonePageTitle).toMatch(
-          'Ozone(O₃) – Check local air quality – GOV.UK'
+          'Ozone(O₃) – Check air quality – GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -160,7 +158,7 @@ describe('Page Title', () => {
         await expect(no2Header).toMatch('Nitrogen dioxide (NO₂)')
         const no2PageTitle = await browser.getTitle()
         await expect(no2PageTitle).toMatch(
-          'Nitrogen dioxide (NO₂) – Check local air quality – GOV.UK'
+          'Nitrogen dioxide (NO₂) – Check air quality – GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -181,7 +179,7 @@ describe('Page Title', () => {
         await expect(so2Header).toMatch('Sulphur dioxide (SO₂)')
         const so2PageTitle = await browser.getTitle()
         await expect(so2PageTitle).toMatch(
-          'Sulphur dioxide (SO₂) – Check local air quality – GOV.UK'
+          'Sulphur dioxide (SO₂) – Check air quality – GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -202,7 +200,7 @@ describe('Page Title', () => {
         await expect(pm25Header).toMatch('Particulate matter (PM2.5)')
         const pm25PageTitle = await browser.getTitle()
         await expect(pm25PageTitle).toMatch(
-          'Particulate matter (PM2.5) – Check local air quality – GOV.UK'
+          'Particulate matter (PM2.5) – Check air quality – GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -223,7 +221,7 @@ describe('Page Title', () => {
         await expect(pm10Header).toMatch('Particulate matter (PM10)')
         const pm10PageTitle = await browser.getTitle()
         await expect(pm10PageTitle).toMatch(
-          'Particulate matter (PM10) – Check local air quality – GOV.UK'
+          'Particulate matter (PM10) – Check air quality – GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -242,7 +240,7 @@ describe('Page Title', () => {
         await footerObjects.privacyFooterLink.click()
         const privacyPageTitle = await browser.getTitle()
         await expect(privacyPageTitle).toMatch(
-          'Privacy - Check local air quality - GOV.UK'
+          'Privacy - Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -261,7 +259,7 @@ describe('Page Title', () => {
         await footerObjects.cookieFooterLink.click()
         const cookiesPageTitle = await browser.getTitle()
         await expect(cookiesPageTitle).toMatch(
-          'Cookies - Check local air quality - GOV.UK'
+          'Cookies - Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
@@ -280,7 +278,7 @@ describe('Page Title', () => {
         await footerObjects.AccStmtFooterLink.click()
         const accStmtPageTitle = await browser.getTitle()
         await expect(accStmtPageTitle).toMatch(
-          'Accessibility Statement - Check local air quality - GOV.UK'
+          'Accessibility Statement - Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()

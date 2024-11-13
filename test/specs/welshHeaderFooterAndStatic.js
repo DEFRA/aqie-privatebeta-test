@@ -63,7 +63,7 @@ async function footerChecks() {
   const getPrivacyFooterHeader =
     await footerObjects.getHeaderTextFooter.getText()
   await expect(getPrivacyFooterHeader).toMatch(
-    'Check local air quality privacy notice'
+    'Check air quality privacy notice'
   )
   // Toggle back to welsh
   await locationSearchPage.linkButtonWelsh.click()
