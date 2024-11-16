@@ -45,7 +45,7 @@ describe('Page Title', () => {
         await startNowPage.toWelshTranslationLink.click()
         const startNowWelshPageTitle = await browser.getTitle()
         await expect(startNowWelshPageTitle).toMatch(
-          'Gwirio ansawdd aer lleol - GOV.UK'
+          'Gwirio ansawdd aer - GOV.UK'
         )
         // back to english
         await startNowPage.toEnglishTranslationLink.click()
@@ -65,7 +65,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const locSearchWelshPageTitle = await browser.getTitle()
         await expect(locSearchWelshPageTitle).toMatch(
-          'Ble hoffech chi wirio? - Gwirio ansawdd aer lleol - GOV.UK'
+          'Ble hoffech chi wirio? - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -81,7 +81,7 @@ describe('Page Title', () => {
         await locationSearchPage.clickContinueBtn()
         const locSearchErrWelshPageTitle = await browser.getTitle()
         await expect(locSearchErrWelshPageTitle).toMatch(
-          'Gwall: Ble hoffech chi wirio? - Gwirio ansawdd aer lleol - GOV.UK'
+          'Gwall: Ble hoffech chi wirio? - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -108,7 +108,7 @@ describe('Page Title', () => {
           await expect(locMatchWelshPageTitle).toMatch(
             'Lleoliadau yn cyfateb ' +
               region.toUpperCase() +
-              ' - Gwirio ansawdd aer lleol - GOV.UK'
+              ' - Gwirio ansawdd aer - GOV.UK'
           )
           // Click English Toogle button
           await locationSearchPage.linkButtonEnglish.click()
@@ -125,7 +125,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const mainPageWelshPageTitle = await browser.getTitle()
         await expect(mainPageWelshPageTitle).toMatch(
-          getUserRegion + '-Gwirio ansawdd aer lleol - GOV.UK'
+          getUserRegion + '-Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -143,7 +143,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const ozoneWelshPageTitle = await browser.getTitle()
         await expect(ozoneWelshPageTitle).toMatch(
-          'Osôn(O₃) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Osôn(O₃) – Gwirio ansawdd aer – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -164,7 +164,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const no2WelshPageTitle = await browser.getTitle()
         await expect(no2WelshPageTitle).toMatch(
-          'Nitrogen deuocsid (NO₂) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Nitrogen deuocsid (NO₂) – Gwirio ansawdd aer – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -185,7 +185,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const so2WelshPageTitle = await browser.getTitle()
         await expect(so2WelshPageTitle).toMatch(
-          'Sylffwr deuocsid (SO₂) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Sylffwr deuocsid (SO₂) – Gwirio ansawdd aer – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -206,7 +206,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const pm25WelshPageTitle = await browser.getTitle()
         await expect(pm25WelshPageTitle).toMatch(
-          'Mater gronynnol (PM2.5) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Mater gronynnol (PM2.5) – Gwirio ansawdd aer – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -227,7 +227,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const pm10WelshPageTitle = await browser.getTitle()
         await expect(pm10WelshPageTitle).toMatch(
-          'Mater gronynnol (PM10) – Gwirio ansawdd aer lleol – GOV.UK'
+          'Mater gronynnol (PM10) – Gwirio ansawdd aer – GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -246,7 +246,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const privacyWelshPageTitle = await browser.getTitle()
         await expect(privacyWelshPageTitle).toMatch(
-          'Preifatrwydd - Gwirio ansawdd aer lleol - GOV.UK'
+          'Preifatrwydd - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -265,7 +265,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const cookiesWelshPageTitle = await browser.getTitle()
         await expect(cookiesWelshPageTitle).toMatch(
-          'Cwcis - Gwirio ansawdd aer lleol - GOV.UK'
+          'Cwcis - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
@@ -284,7 +284,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const accStmtWelshPageTitle = await browser.getTitle()
         await expect(accStmtWelshPageTitle).toMatch(
-          'Datganiad Hygyrchedd - Gwirio ansawdd aer lleol - GOV.UK'
+          'Datganiad Hygyrchedd - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()

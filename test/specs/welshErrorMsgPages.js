@@ -15,7 +15,7 @@ describe('Error-Message-Pages', () => {
     }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
-      const StartPageHeaderText = 'Gwirio ansawdd aer lleol'
+      const StartPageHeaderText = 'Gwirio ansawdd aer'
       const getStartPageHeaderText =
         await startNowPage.welshStartNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
@@ -81,7 +81,7 @@ describe('Error-Message-Pages', () => {
     }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
-      const StartPageHeaderText = 'Gwirio ansawdd aer lleol'
+      const StartPageHeaderText = 'Gwirio ansawdd aer'
       const getStartPageHeaderText =
         await startNowPage.welshStartNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
