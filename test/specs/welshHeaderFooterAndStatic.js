@@ -70,7 +70,7 @@ async function footerChecks() {
   const getPrivacyFooterHeaderWelsh =
     await footerObjects.getHeaderTextFooter.getText()
   await expect(getPrivacyFooterHeaderWelsh).toMatch(
-    'Hysbysiad preifatrwydd Gwirio ansawdd aer lleol'
+    'Hysbysiad preifatrwydd Gwirio ansawdd aer'
   )
   await headersValidation.claqLink.click()
   // Acc-Stmt
@@ -116,7 +116,7 @@ describe('Welsh-Header-Footer-Static-Flow', () => {
     }
     if (await startNowPage.toWelshTranslationLink.isClickable()) {
       await startNowPage.toWelshTranslationLink.click()
-      const StartPageHeaderText = 'Gwirio ansawdd aer lleol'
+      const StartPageHeaderText = 'Gwirio ansawdd aer'
       const getStartPageHeaderText =
         await startNowPage.welshStartNowPageHeaderText.getText()
       await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
