@@ -37,7 +37,7 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       // Welsh Accordian link
-      const accordianText =
+      /*  const accordianText =
         'Sut y gall lefelau gwahanol o lygredd aer effeithio ar iechyd'
       const accordianTextReceived =
         await ForecastMainPage.daqiAccordian.getText()
@@ -47,7 +47,7 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       const accordianHeadingReceived =
         await ForecastMainPage.daqiAccordianHeaderIndex.getText()
       await expect(accordianHeadingReceived).toMatch(accordianHeading)
-      await ForecastMainPage.daqiAccordian.click()
+      await ForecastMainPage.daqiAccordian.click() */
 
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()

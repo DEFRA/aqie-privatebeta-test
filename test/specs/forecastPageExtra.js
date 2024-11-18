@@ -41,7 +41,6 @@ describe('Forecast Main Page - Extra', () => {
         'Readings are measured every hour. The unit µg/㎥ stands for micrograms (one millionth of a gram) per cubic metre of air.'
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-
       const readingMeasuredPara =
         await ForecastMainPage.readingMeasuredPara.getText()
 
