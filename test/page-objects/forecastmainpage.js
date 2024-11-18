@@ -74,9 +74,9 @@ class ForecastMainPage {
   }
 
   // Public Beta - UK Forecast
-  get pollutantsUKSummaryLinks() {
+  /* get pollutantsUKSummaryLinks() {
     return $("h2[class='govuk-heading-m  govuk-!-margin-bottom-6']")
-  }
+  } */
 
   get daqiForecastCaption() {
     return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
@@ -116,14 +116,14 @@ class ForecastMainPage {
     return this.forecastMainPagePara[5]
   }
 
-  // reading measurement para first line
+  // reading measurement para first line //edited from 19
   get readingMeasuredPara() {
-    return this.forecastMainPagePara[19]
+    return this.forecastMainPagePara[9]
   }
 
-  // Station areatype para first line
+  // Station areatype para first line //edited from 21
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[21]
+    return this.forecastMainPagePara[11]
   }
 
   // station name
@@ -177,9 +177,9 @@ class ForecastMainPage {
     return $('//*[@id="1"]/tbody/tr[1]/td[2]')
   }
 
-  /*  get pollutantsUKSummaryLinks() {
+  get pollutantsUKSummaryLinks() {
     return this.subHeadersinForecastPage[0]
-  } */
+  }
 
   get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[1]
@@ -266,7 +266,6 @@ class ForecastMainPage {
     return this.pollutantNearestRegions[0]
   } */
   // public beta
-
   async daqiForecastValue() {
     const count = await $$("div[class*='daqi-selected']").length
     return count.toString()

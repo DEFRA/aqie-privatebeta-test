@@ -38,7 +38,7 @@ export const config = {
     './test/specs/welshNIToggle.js',
     './test/specs/cookiesBannerCheck.js',
     './test/specs/footerValidations.js',
-    './test/specs/forecastPageExtra.js',
+    './test/specs/forecastPage.js',
     './test/specs/headersValidation.js',
     './test/specs/locationSearchAndMatch.js',
     './test/specs/pageTitle.js',
