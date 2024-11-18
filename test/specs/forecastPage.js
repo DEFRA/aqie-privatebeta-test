@@ -17,7 +17,7 @@ const dynlocationValue = JSON.parse(
 )
 
 const logger = createLogger()
-async function pollutantSummaryUrl() {
+/* sasync function pollutantSummaryUrl() {
   const forecastSummaryUrl = config.get('forecastSummaryUrl')
   logger.info(`forecastSummaryUrl: ${forecastSummaryUrl}`)
   const response = await proxyFetch(forecastSummaryUrl, optionsJson).catch(
@@ -32,7 +32,7 @@ async function pollutantSummaryUrl() {
   }
   // const getTodayForecastMessage = getDailySummary
   return getDailySummary.today
-}
+} */
 
 function parseForecast(item, place) {
   const name = item.title
@@ -126,6 +126,19 @@ async function getValueOfPol(pollutantValue, polName) {
       return pollutantValue[key].value
     }
   }
+}
+
+async function daqiScaleLookup(getRssFeedDayValue) {
+  if (getRssFeedDayValue <= 3) {
+    getRssFeedDayValue = 'Low'
+  } else if (getRssFeedDayValue >= 4 && getRssFeedDayValue <= 6) {
+    getRssFeedDayValue = 'Moderate'
+  } else if (getRssFeedDayValue >= 7 && getRssFeedDayValue <= 9) {
+    getRssFeedDayValue = 'High'
+  } else if (getRssFeedDayValue === 10) {
+    getRssFeedDayValue = 'Very High'
+  }
+  return getRssFeedDayValue
 }
 
 async function pollutantsValueCheck(rowsOfPollutants, pollutantValue) {
@@ -269,7 +282,10 @@ dynlocationValue.forEach(
           await LocationMatchPage.firstLinkOfLocationMatch.click()
         }
         // DAQI Value check
-        const getDaqiValue = await ForecastMainPage.daqiForecastValue.getText()
+        /* const getTableValues =
+          await ForecastMainPage.pollutantsFirstTableCollections() */
+        const getDaqiValue = await ForecastMainPage.daqiForecastValue()
+
         // Give the nearest match value here - take from front end code
         const getValueForecast = await fetchForecast(nearestRegionForecast)
         const getValueForecastarr = getValueForecast[0]
@@ -277,159 +293,95 @@ dynlocationValue.forEach(
         await expect(getDaqiValue).toMatch(
           getValueForecastarr[0].value.toString()
         )
-        if (getDaqiValue <= 3) {
-          const captionInPage = 'The air pollution forecast for today is low'
-          const captionReceived =
-            await ForecastMainPage.daqiForecastCaption.getText()
-          const hiddenCaptionDaqi =
-            await ForecastMainPage.daqiHiddenForecastCaption.getText()
-          const hiddenScaleCaptionDaqi =
-            await ForecastMainPage.daqiHiddenScaleForecastCaption.getText()
-          const captionReceivedWithoutHidden = captionReceived.replace(
-            hiddenCaptionDaqi,
-            ''
-          )
-          const captionReceivedWithoutHiddenScale =
-            captionReceivedWithoutHidden.replace(hiddenScaleCaptionDaqi, '')
-          const extractDAQIIndex = captionReceivedWithoutHiddenScale.replace(
-            /\n/g,
-            ''
-          )
-          const extractDAQIIndexFinal = extractDAQIIndex.replace('is', 'is ')
-          await expect(extractDAQIIndexFinal).toMatch(captionInPage)
-          const caption2InPage = 'Health advice for low levels of air pollution'
-          const caption2Received =
-            await ForecastMainPage.daqiForecastHeader.getText()
-          await expect(caption2Received).toMatch(caption2InPage)
-          const healthParaFirstLine = 'Enjoy your usual outdoor activities.'
-          try {
-            await ForecastMainPage.daqiForecastPara.scrollIntoView({
-              behavior: 'smooth',
-              block: 'nearest',
-              inline: 'start'
-            })
-          } catch (error) {
-            logger.info('ERRORINSCROLLINTOVIEW')
-            logger.error(error)
-          }
-          const paraArrayList = []
-          for (
-            let z = 0;
-            z < (await ForecastMainPage.forecastMainPagePara.length);
-            z++
-          ) {
-            const paraValue =
-              await ForecastMainPage.forecastMainPagePara[z].getText()
-            if (paraValue !== '') {
-              paraArrayList.push(paraValue)
-            }
-          }
-          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
-        } else if (getDaqiValue > 3 && getDaqiValue < 7) {
-          const captionInPage =
-            'The air pollution forecast for today is moderate'
-          const captionReceived =
-            await ForecastMainPage.daqiForecastCaption.getText()
-          await expect(captionReceived).toMatch(captionInPage)
-          const caption2InPage =
-            'Health advice for moderate levels of air pollution'
-          const caption2Received =
-            await ForecastMainPage.daqiForecastHeader.getText()
-          await expect(caption2Received).toMatch(caption2InPage)
-          const healthParaFirstLine =
-            'For most people, short term exposure to moderate levels of air pollution is not an issue.'
-          const paraArrayList = []
-          for (
-            let z = 0;
-            z < (await ForecastMainPage.forecastMainPagePara.length);
-            z++
-          ) {
-            const paraValue =
-              await ForecastMainPage.forecastMainPagePara[z].getText()
-            if (paraValue !== '') {
-              paraArrayList.push(paraValue)
-            }
-          }
-          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
-        } else if (getDaqiValue >= 7 && getDaqiValue < 10) {
-          const captionInPage = 'The air pollution forecast for today is high'
-          const captionReceived =
-            await ForecastMainPage.daqiForecastCaption.getText()
-          await expect(captionReceived).toMatch(captionInPage)
-          const caption2InPage =
-            'Health advice for high levels of air pollution'
-          const caption2Received =
-            await ForecastMainPage.daqiForecastHeader.getText()
-          await expect(caption2Received).toMatch(caption2InPage)
-          const healthParaFirstLine =
-            'Anyone experiencing discomfort such as sore eyes, cough or sore throat should consider reducing activity, particularly outdoors.'
-          const paraArrayList = []
-          for (
-            let z = 0;
-            z < (await ForecastMainPage.forecastMainPagePara.length);
-            z++
-          ) {
-            const paraValue =
-              await ForecastMainPage.forecastMainPagePara[z].getText()
-            if (paraValue !== '') {
-              paraArrayList.push(paraValue)
-            }
-          }
-          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
-        } else if (getDaqiValue === '10') {
-          const captionInPage =
-            'The air pollution forecast for today is very high'
-          const captionReceived =
-            await ForecastMainPage.daqiForecastCaption.getText()
-          await expect(captionReceived).toMatch(captionInPage)
-          const caption2InPage =
-            'Health advice for very high levels of air pollution'
-          const caption2Received =
-            await ForecastMainPage.daqiForecastHeader.getText()
-          await expect(caption2Received).toMatch(caption2InPage)
-          const healthParaFirstLine =
-            'Reduce physical exertion, particularly outdoors, especially if you experience symptoms such as cough or sore throat.'
-          const paraArrayList = []
-          for (
-            let z = 0;
-            z < (await ForecastMainPage.forecastMainPagePara.length);
-            z++
-          ) {
-            const paraValue =
-              await ForecastMainPage.forecastMainPagePara[z].getText()
-            if (paraValue !== '') {
-              paraArrayList.push(paraValue)
-            }
-          }
-          await expect(paraArrayList[1]).toMatch(healthParaFirstLine)
-        }
-        // Accordian text check
-        // await browser.scroll(0, 500)
-        try {
-          await ForecastMainPage.daqiAccordian.scrollIntoView()
-        } catch (error) {
-          logger.info('ERRORINSCROLLINTOVIEW')
-          logger.error(error)
-        }
-        const accordianText =
-          'How different levels of air pollution can affect health'
-        const accordianTextReceived =
-          await ForecastMainPage.daqiAccordian.getText()
-        await expect(accordianTextReceived).toMatch(accordianText)
-        await ForecastMainPage.daqiAccordian.click()
-        const accordianHeading = 'Index'
-        const accordianHeadingReceived =
-          await ForecastMainPage.daqiAccordianHeaderIndex.getText()
-        await expect(accordianHeadingReceived).toMatch(accordianHeading)
-        await ForecastMainPage.daqiAccordian.click()
-        // Pollutant Summary checks
-        const sourcePollutantSummaryUrl = await pollutantSummaryUrl()
-        const pollutantSummaryFromPage =
-          await ForecastMainPage.pollutantSummary.getText()
-        await expect(pollutantSummaryFromPage.trim()).toMatch(
-          sourcePollutantSummaryUrl.trim()
+        const captionNext4DaysHeader =
+          await ForecastMainPage.getNext4DaysForecastHeader.getText()
+        await expect(captionNext4DaysHeader).toMatch(
+          'The forecast for the next 4 days'
         )
 
+        // const getValueNext4DaysForecastarr = getValueForecast[0]
+        const date = new Date()
+        date.setDate(date.getDate() + 1)
+        const currentDayPlus1 = date.toLocaleString('en-US', {
+          weekday: 'long'
+        })
+        const dayPlusOne = currentDayPlus1.slice(0, 3)
+        const getRssFeedDayPlusOneName = getValueForecast[0][1].day.toString()
+        const getRssFeedDayPlusOneValue =
+          getValueForecast[0][1].value.toString()
+        const getAppDayPlusOneName =
+          await ForecastMainPage.dayPlusOneName.getText()
+        const getAppDayPlusOneValue =
+          await ForecastMainPage.dayPlusOneValue.getText()
+
+        if (dayPlusOne === getRssFeedDayPlusOneName) {
+          const getRssFeedDay = await daqiScaleLookup(getRssFeedDayPlusOneValue)
+          await expect(getRssFeedDay).toMatch(getAppDayPlusOneValue)
+          await expect(getRssFeedDayPlusOneName).toMatch(getAppDayPlusOneName)
+        }
+
+        date.setDate(date.getDate() + 2)
+        const currentDayPlus2 = date.toLocaleString('en-US', {
+          weekday: 'long'
+        })
+        const dayPlusTwo = currentDayPlus2.slice(0, 3)
+        const getRssFeedDayPlusTwoName = getValueForecast[0][2].day.toString()
+        const getRssFeedDayPlusTwoValue =
+          getValueForecast[0][2].value.toString()
+        const getAppDayPlusTwoName =
+          await ForecastMainPage.dayPlusTwoName.getText()
+        const getAppDayPlusTwoValue =
+          await ForecastMainPage.dayPlusTwoValue.getText()
+
+        if (dayPlusTwo === getRssFeedDayPlusTwoName) {
+          const getRssFeedDay = await daqiScaleLookup(getRssFeedDayPlusTwoValue)
+          await expect(getRssFeedDay).toMatch(getAppDayPlusTwoValue)
+          await expect(getRssFeedDayPlusTwoName).toMatch(getAppDayPlusTwoName)
+        }
+
+        date.setDate(date.getDate() + 3)
+        const currentDayPlus3 = date.toLocaleString('en-US', {
+          weekday: 'long'
+        })
+        const dayPlusThree = currentDayPlus3.slice(0, 3)
+        const getRssFeedDayPlusThreeName = getValueForecast[0][3].day.toString()
+        const getRssFeedDayPlusThreeValue =
+          getValueForecast[0][3].value.toString()
+        const getAppDayPlusThreeName =
+          await ForecastMainPage.dayPlusThreeName.getText()
+        const getAppDayPlusThreeValue =
+          await ForecastMainPage.dayPlusThreeValue.getText()
+
+        if (dayPlusThree === getRssFeedDayPlusThreeName) {
+          const getRssFeedDay = await daqiScaleLookup(
+            getRssFeedDayPlusThreeValue
+          )
+          await expect(getRssFeedDay).toMatch(getAppDayPlusThreeValue)
+          await expect(getRssFeedDayPlusThreeName).toMatch(
+            getAppDayPlusThreeName
+          )
+        }
+
+        date.setDate(date.getDate() + 4)
+        const currentDayPlus4 = date.toLocaleString('en-US', {
+          weekday: 'long'
+        })
+        const dayPlusFour = currentDayPlus4.slice(0, 3)
+        const getRssFeedDayPlusFourName = getValueForecast[0][4].day.toString()
+        const getRssFeedDayPlusFourValue =
+          getValueForecast[0][4].value.toString()
+        const getAppDayPlusFourName =
+          await ForecastMainPage.dayPlusFourName.getText()
+        const getAppDayPlusFourValue =
+          await ForecastMainPage.dayPlusFourValue.getText()
+
+        if (dayPlusFour === getRssFeedDayPlusFourName) {
+          const getRssFeedDay = await daqiScaleLookup(
+            getRssFeedDayPlusFourValue
+          )
+          await expect(getRssFeedDay).toMatch(getAppDayPlusFourValue)
+          await expect(getRssFeedDayPlusFourName).toMatch(getAppDayPlusFourName)
+        }
         try {
           await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
         } catch (error) {

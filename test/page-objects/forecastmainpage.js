@@ -18,15 +18,79 @@ class ForecastMainPage {
     return arrcheck
   }
 
-  // DAQI forecast
+  // public Beta - 4 days forecast
+  get getNext4DaysForecastHeader() {
+    return $("h2[class*='govuk-!-margin-bottom-4']")
+  }
 
-  get daqiForecastValue() {
-    return $("[class*='daqi-selected']")
+  // Public Beta - 4 days values
+  get getNext4DaysForecastValues() {
+    return $$("dd[class*='daqi-tag-']")
+  }
+
+  // Public Beta - 4 days week days text
+  get getNext4DaysForecastWeekDaysText() {
+    return $$("div dt[class='aq-forecast-dt']")
+  }
+
+  // Public Beta
+  get dayPlusOneName() {
+    return this.getNext4DaysForecastWeekDaysText[0]
+  }
+
+  // Public Beta
+  get dayPlusOneValue() {
+    return this.getNext4DaysForecastValues[0]
+  }
+
+  // Public Beta
+  get dayPlusTwoName() {
+    return this.getNext4DaysForecastWeekDaysText[1]
+  }
+
+  // Public Beta
+  get dayPlusTwoValue() {
+    return this.getNext4DaysForecastValues[1]
+  }
+
+  // Public Beta
+  get dayPlusThreeName() {
+    return this.getNext4DaysForecastWeekDaysText[2]
+  }
+
+  // Public Beta
+  get dayPlusThreeValue() {
+    return this.getNext4DaysForecastValues[2]
+  }
+
+  // Public Beta
+  get dayPlusFourName() {
+    return this.getNext4DaysForecastWeekDaysText[3]
+  }
+
+  // Public Beta
+  get dayPlusFourValue() {
+    return this.getNext4DaysForecastValues[3]
+  }
+
+  // Public Beta - UK Forecast
+  get pollutantsUKSummaryLinks() {
+    return $("h2[class='govuk-heading-m  govuk-!-margin-bottom-6']")
   }
 
   get daqiForecastCaption() {
     return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
   }
+
+  // DAQI forecast
+
+  /* get daqiForecastValue() {
+    return $("[class*='daqi-selected']")
+  } */
+
+  /* get daqiForecastCaption() {
+    return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
+  } */
 
   // Hidden object - accessibility
   get daqiHiddenForecastCaption() {
@@ -113,16 +177,16 @@ class ForecastMainPage {
     return $('//*[@id="1"]/tbody/tr[1]/td[2]')
   }
 
-  get pollutantsUKSummaryLinks() {
+  /*  get pollutantsUKSummaryLinks() {
+    return this.subHeadersinForecastPage[0]
+  } */
+
+  get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[1]
   }
 
-  get pollutantsHeaderLinks() {
-    return this.subHeadersinForecastPage[2]
-  }
-
   get pollutantsNameTableLinks() {
-    return this.subHeadersinForecastPage[3]
+    return this.subHeadersinForecastPage[2]
   }
 
   get timestampBlockForecastPage() {
@@ -201,6 +265,12 @@ class ForecastMainPage {
   get pollutantStationName1() {
     return this.pollutantNearestRegions[0]
   } */
+  // public beta
+
+  async daqiForecastValue() {
+    const count = await $$("div[class*='daqi-selected']").length
+    return count.toString()
+  }
 
   async pollutantsFirstTableCollections() {
     const arr = []
