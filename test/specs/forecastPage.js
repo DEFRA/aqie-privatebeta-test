@@ -294,7 +294,7 @@ dynlocationValue.forEach(
           getValueForecastarr[0].value.toString()
         )
         const captionNext4DaysHeader =
-          await ForecastMainPage.getNext4DaysForecastHeader.getText()
+          await ForecastMainPage.daqiOf4DaysHeader.getText()
         await expect(captionNext4DaysHeader).toMatch(
           'The forecast for the next 4 days'
         )

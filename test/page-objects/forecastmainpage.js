@@ -20,7 +20,12 @@ class ForecastMainPage {
 
   // public Beta - 4 days forecast
   get getNext4DaysForecastHeader() {
-    return $("h2[class*='govuk-!-margin-bottom-4']")
+    return $$("h2[class='govuk-heading-m govuk-!-margin-bottom-4']")
+  }
+
+  // public beta
+  get daqiOf4DaysHeader() {
+    return this.getNext4DaysForecastHeader[1]
   }
 
   // Public Beta - 4 days values
