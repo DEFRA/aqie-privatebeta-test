@@ -16,7 +16,7 @@ class ErrorPageLocationSearch {
   }
 
   async clickBackToHomePage() {
-    await $("//a[normalize-space()='Ewch yn ôl i ansawdd aer lleol']").click()
+    await $("//a[normalize-space()='Ewch yn ôl i ansawdd aer']").click()
   }
 }
 
