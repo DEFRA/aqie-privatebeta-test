@@ -90,7 +90,7 @@ describe('Error-Message-Pages', () => {
     await browser.url('/check-lleol-ansawdd-aer-1/cy')
     // await browser.pause(2000)
     const getErrorPageHeaderText =
-      await errorPageLocationSearch.errorHeaderDisplay.getText()
+      await errorPageLocationSearch.welshErrorHeaderDisplay.getText()
     await expect(getErrorPageHeaderText).toMatch(
       'Ni allem ddod o hyd i’r dudalen hon'
     )
