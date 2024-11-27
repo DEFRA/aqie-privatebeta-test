@@ -33,7 +33,6 @@ export const config = {
   exclude: [
     './test/specs/welshErrorMsgPages.js',
     './test/specs/welshESWToggle.js',
-    './test/specs/welshForecastPageExtra.js',
     './test/specs/welshHeaderFooterAndStatic.js',
     './test/specs/welshNIToggle.js',
     './test/specs/cookiesBannerCheck.js',

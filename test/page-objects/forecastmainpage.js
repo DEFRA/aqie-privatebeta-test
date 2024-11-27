@@ -123,12 +123,12 @@ class ForecastMainPage {
 
   // reading measurement para first line //edited from 19
   get readingMeasuredPara() {
-    return this.forecastMainPagePara[9]
+    return this.forecastMainPagePara[19]
   }
 
   // Station areatype para first line //edited from 21
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[11]
+    return this.forecastMainPagePara[21]
   }
 
   // station name
@@ -148,7 +148,7 @@ class ForecastMainPage {
   }
 
   get daqiAccordianHeaderIndex() {
-    return this.daqiAccordianHeader[1]
+    return this.daqiAccordianHeader[0]
   }
 
   // pollutant summary

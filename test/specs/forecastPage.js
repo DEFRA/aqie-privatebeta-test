@@ -17,7 +17,7 @@ const dynlocationValue = JSON.parse(
 )
 
 const logger = createLogger()
-/* sasync function pollutantSummaryUrl() {
+/* async function pollutantSummaryUrl() {
   const forecastSummaryUrl = config.get('forecastSummaryUrl')
   logger.info(`forecastSummaryUrl: ${forecastSummaryUrl}`)
   const response = await proxyFetch(forecastSummaryUrl, optionsJson).catch(
@@ -382,6 +382,24 @@ dynlocationValue.forEach(
           await expect(getRssFeedDay).toMatch(getAppDayPlusFourValue)
           await expect(getRssFeedDayPlusFourName).toMatch(getAppDayPlusFourName)
         }
+        try {
+          await ForecastMainPage.daqiAccordian.scrollIntoView()
+        } catch (error) {
+          logger.info('ERRORINSCROLLINTOVIEW')
+          logger.error(error)
+        }
+        const accordianText =
+          'How different levels of air pollution can affect health'
+        const accordianTextReceived =
+          await ForecastMainPage.daqiAccordian.getText()
+        await expect(accordianTextReceived).toMatch(accordianText)
+        await ForecastMainPage.daqiAccordian.click()
+        const accordianHeading = 'Level'
+        const accordianHeadingReceived =
+          await ForecastMainPage.daqiAccordianHeaderIndex.getText()
+        await expect(accordianHeadingReceived).toMatch(accordianHeading)
+        await ForecastMainPage.daqiAccordian.click()
+
         try {
           await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
         } catch (error) {
