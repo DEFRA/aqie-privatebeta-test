@@ -27,7 +27,7 @@ class Footer {
 
   // Privacy, cookies, acc-stmt page Header Link
   get getHeaderTextFooter() {
-    return $("h1[class='govuk-heading-xl']")
+    return $("h1[class*='govuk-heading-xl']")
   }
 }
 
