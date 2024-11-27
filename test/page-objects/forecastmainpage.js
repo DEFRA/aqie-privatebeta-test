@@ -186,12 +186,16 @@ class ForecastMainPage {
     return this.subHeadersinForecastPage[0]
   }
 
-  get pollutantsHeaderLinks() {
+  get healthAdviseHeaders() {
     return this.subHeadersinForecastPage[1]
   }
 
-  get pollutantsNameTableLinks() {
+  get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[2]
+  }
+
+  get pollutantsNameTableLinks() {
+    return this.subHeadersinForecastPage[3]
   }
 
   get timestampBlockForecastPage() {
