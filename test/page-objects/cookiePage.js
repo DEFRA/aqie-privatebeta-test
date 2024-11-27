@@ -10,7 +10,7 @@ class CookiePage {
 
   // cookie - Header
   get cookiePageHeader() {
-    return $("h1[class='govuk-heading-xl']")
+    return $("h1[class='govuk-heading-xl odd-page']")
   }
 
   // Accept/reject Analytical cookies
