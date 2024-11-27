@@ -1,6 +1,6 @@
 class PM10staticpage {
   get pm10HeaderDisplay() {
-    return $("h1[class='govuk-heading-xl']")
+    return $("h1[class*='govuk-heading-xl']")
   }
 
   get pm10SubHeaderDisplay() {

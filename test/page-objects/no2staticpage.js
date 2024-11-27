@@ -1,6 +1,6 @@
 class NO2staticpage {
   get no2HeaderDisplay() {
-    return $("h1[class='govuk-heading-xl']")
+    return $("h1[class*='govuk-heading-xl']")
   }
 
   get no2SubHeaderDisplay() {
