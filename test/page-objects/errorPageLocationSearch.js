@@ -1,6 +1,6 @@
 class ErrorPageLocationSearch {
   get errorHeaderDisplay() {
-    return $("h1[class='govuk-heading-l']")
+    return $("h1[class*='govuk-heading-l']")
   }
 
   get welshErrorHeaderDisplay() {
