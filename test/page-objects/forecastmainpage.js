@@ -5,7 +5,7 @@ class ForecastMainPage {
   }
 
   get regionHeaderDisplay() {
-    return $('govuk-heading-xl govuk-!-margin-top-4')
+    return $("h1[class='govuk-heading-xl govuk-!-margin-top-4']")
   }
 
   get subHeadersinForecastPage() {
