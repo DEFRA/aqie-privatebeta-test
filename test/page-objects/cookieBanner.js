@@ -64,7 +64,7 @@ class CookieBanner {
   // inside cookie page
   // cookies wording
   get checkForCookiesPage() {
-    return $("h1[class='govuk-heading-xl odd-page']")
+    return $("h1[class*='govuk-heading-xl']")
   }
 
   // essential cookies  wording

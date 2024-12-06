@@ -20,7 +20,7 @@ class StartNowPage {
   }
 
   get welshStartNowPageHeaderText() {
-    return $("h1[class='govuk-heading-xl govuk-!-margin-bottom-2']")
+    return $("h1[class='govuk-heading-xl']")
   }
 
   get toEnglishTranslationLink() {
