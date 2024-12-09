@@ -94,9 +94,11 @@ describe('Error-Message-Pages', () => {
     await expect(getErrorPageHeaderText).toMatch(
       'Ni allem ddod o hyd i’r dudalen hon'
     )
+    // Click on the header to go back to home page
     await errorPageLocationSearch.clickBackToHomePage()
     // Here as disccused with BA and dev welsh translation will move to English due to invalid page route
-    const StartPageHeaderText = 'Check air quality'
+    // Above mentioned issue corrected and on redirection it sticks to same language
+    const StartPageHeaderText = 'Gwirio ansawdd aer'
     const getStartPageHeaderText =
       await startNowPage.welshStartNowPageHeaderText.getText()
     await expect(getStartPageHeaderText).toMatch(StartPageHeaderText)
