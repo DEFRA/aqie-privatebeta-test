@@ -98,17 +98,13 @@ describe('Page Title', () => {
         if (await LocationMatchPage.headerTextMatch.isExisting()) {
           const locMatchPageTitle = await browser.getTitle()
           await expect(locMatchPageTitle).toMatch(
-            'Locations matching ' +
-              region.toUpperCase() +
-              ' - Check air quality - GOV.UK'
+            'Locations matching ' + region + ' - Check air quality - GOV.UK'
           )
           // Click Welsh Toogle button
           await locationSearchPage.linkButtonWelsh.click()
           const locMatchWelshPageTitle = await browser.getTitle()
           await expect(locMatchWelshPageTitle).toMatch(
-            'Lleoliadau yn cyfateb ' +
-              region.toUpperCase() +
-              ' - Gwirio ansawdd aer - GOV.UK'
+            'Lleoliadau yn cyfateb ' + region + ' - Gwirio ansawdd aer - GOV.UK'
           )
           // Click English Toogle button
           await locationSearchPage.linkButtonEnglish.click()
@@ -119,7 +115,7 @@ describe('Page Title', () => {
           await ForecastMainPage.regionHeaderDisplay.getText()
         const mainPageTitle = await browser.getTitle()
         await expect(mainPageTitle).toMatch(
-          getUserRegion + '-Check air quality - GOV.UK'
+          getUserRegion + ' - Check air quality - GOV.UK'
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()

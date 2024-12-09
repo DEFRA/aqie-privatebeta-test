@@ -16,7 +16,7 @@ class ErrorPageLocationSearch {
   }
 
   async clickBackToHomePage() {
-    await $("//a[normalize-space()='Ewch yn ôl i ansawdd aer']").click()
+    await $("a[class='govuk-header__link govuk-header__service-name']").click()
   }
 }
 
