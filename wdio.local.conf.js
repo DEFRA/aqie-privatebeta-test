@@ -30,8 +30,23 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: ['./test/specs/pageTitle.js'],
-  // injectGlobals: false,
+  exclude: [
+    './test/specs/cookiesBannerCheck.js',
+    './test/specs/footerValidations.js',
+    './test/specs/forecastPage.js',
+    './test/specs/forecastPageExtra.js',
+    './test/specs/headersValidation.js',
+    './test/specs/locationSearchAndMatch.js',
+    './test/specs/pageTitle.js',
+    './test/specs/staticpagepollutants.js',
+    './test/specs/unhappyPath.js',
+    './test/specs/welshErrorMsgPages.js',
+    './test/specs/welshESWToggle.js',
+    './test/specs/welshForecastPageExtra.js',
+    './test/specs/welshHeaderFooterAndStatic.js',
+    './test/specs/welshNIToggle.js'
+  ],
+  // injectGlobals: true,
   //
   // ============
   // Capabilities
@@ -209,7 +224,10 @@ export const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {},
+  /* before: function () {
+    require('expect-webdriverio').setOptions({ wait: 5000 });
+  },
+  */
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
