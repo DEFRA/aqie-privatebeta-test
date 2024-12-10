@@ -121,7 +121,7 @@ describe('Page Title', () => {
         await locationSearchPage.linkButtonWelsh.click()
         const mainPageWelshPageTitle = await browser.getTitle()
         await expect(mainPageWelshPageTitle).toMatch(
-          getUserRegion + '-Gwirio ansawdd aer - GOV.UK'
+          getUserRegion + ' - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()
