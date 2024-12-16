@@ -65,12 +65,12 @@ async function timeStampUKSummary() {
     const englishDate = `${formattedDateSummary[0]} ${calendarEnglish[getMonthSummary]} ${formattedDateSummary[2]}`
     const welshDate = `${formattedDateSummary[0]} ${calendarWelsh[getMonthSummary]} ${formattedDateSummary[2]}`
 
-    const getTimeOfSummary1 = ukForecastSummary.issue_date.split(' ')
-    const getTimeOfSummary2 = getTimeOfSummary1[1].split(':')
-    const getDateInCorrectFormat = getTimeOfSummary2[0].replace(/^0+/, '')
+    // const getTimeOfSummary1 = ukForecastSummary.issue_date.split(' ')
+    // const getTimeOfSummary2 = getTimeOfSummary1[1].split(':')
+    // const getDateInCorrectFormat = getTimeOfSummary2[0].replace(/^0+/, '')
     const finalValue = {
-      englishDate: `Latest at ${getDateInCorrectFormat}am on ${englishDate}`,
-      welshDate: `Y diweddaraf am ${getDateInCorrectFormat}am ymlaen ${welshDate}`
+      englishDate: `Latest at 5am on ${englishDate}`,
+      welshDate: `Y diweddaraf am 5am ymlaen ${welshDate}`
     }
     return finalValue
   }
