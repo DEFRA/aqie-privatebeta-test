@@ -15,6 +15,10 @@ class ErrorPageLocationSearch {
     await $("a[href*='/search-location']").click()
   }
 
+  get airQualityTeamMailTo() {
+    return $("a[href='mailto:checklocalairquality@defra.gov.uk']")
+  }
+
   async clickBackToHomePage() {
     await $("a[class='govuk-header__link govuk-header__service-name']").click()
   }

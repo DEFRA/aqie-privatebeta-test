@@ -1,4 +1,5 @@
 const allure = require('allure-commandline')
+
 // import allure from 'allure-commandline'
 
 const debug = process.env.DEBUG
@@ -37,9 +38,9 @@ export const config = {
     './test/specs/forecastPageExtra.js',
     './test/specs/headersValidation.js',
     './test/specs/locationSearchAndMatch.js',
+    './test/specs/timeStampValidation.js',
     './test/specs/pageTitle.js',
     './test/specs/staticpagepollutants.js',
-    './test/specs/unhappyPath.js',
     './test/specs/welshErrorMsgPages.js',
     './test/specs/welshESWToggle.js',
     './test/specs/welshForecastPageExtra.js',
@@ -161,8 +162,17 @@ export const config = {
   // see also: https://webdriver.io/docs/dot-reporter
   // disableMochaHooks: true
   reporters: [
-    'spec',
     [
+      // Spec reporter provides rolling output to the logger so you can see it in-progress
+      'spec',
+      {
+        addConsoleLogs: true,
+        realtimeReporting: true,
+        color: false
+      }
+    ],
+    [
+      // Allure is used to generate the final HTML report
       'allure',
       {
         outputDir: 'allure-results'
@@ -267,18 +277,40 @@ export const config = {
    * @param {boolean} result.passed    true if test has passed, otherwise false
    * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
+  /* before: function (config, capabilities) {
+    const parentFolderName = './screenshots';
+    const date = new Date();
+    const folderName = `./screenshots/${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}_${date.getHours().toString().padStart(2, '0')}-${date.getMinutes().toString().padStart(2, '0')}-${date.getSeconds().toString().padStart(2, '0')}`;
+    
+    if (fs.existsSync(parentFolderName)) {
+      fs.rmdirSync(parentFolderName, { recursive: true });
+    }
+
+    if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName, { recursive: true });
+    }    
+    global.screenshotFolder = folderName;
+}, */
+
   afterTest: async function (
     test,
     context,
     { error, result, duration, passed, retries }
   ) {
-    await browser.takeScreenshot()
-
-    if (error) {
+    // await browser.takeScreenshot()
+    // await browser.saveScreenshot()
+    /*  if (error) {
       browser.executeScript(
         'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "At least 1 assertion failed"}}'
       )
-    }
+    } */
+    /*  if (!passed) {
+      const timestamp = new Date().toISOString().replace(/:/g, '-');
+      await browser.saveScreenshot(`./screenshots/${test.title}-${timestamp}.png`);
+  } */
+    // const screenshotPath = path.join(global.screenshotFolder, `${test.title.replace(/ /g, '_')}.png`);
+    // await browser.saveScreenshot(screenshotPath);
+    await browser.takeScreenshot()
   },
 
   /**
