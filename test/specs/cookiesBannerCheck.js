@@ -19,7 +19,7 @@ describe('Cookies Validation', () => {
         if (
           allCookies[i].name === '_ga' ||
           allCookies[i].name === '_gid' ||
-          allCookies[i].name === '_gat_UA-[G-8CMZBTDQBC]'
+          allCookies[i].name === '_ga_8CMZBTDQBC'
         ) {
           setGAValue = 'true'
           logger.error('Google Analytics cookie logged - Not Expected')
@@ -51,7 +51,7 @@ describe('Cookies Validation', () => {
         if (
           allCookies[k].name === '_ga' ||
           allCookies[k].name === '_gid' ||
-          allCookies[k].name === '_gat_UA-[G-8CMZBTDQBC]'
+          allCookies[k].name === '_ga_8CMZBTDQBC'
         ) {
           setGAValue1 = 'true'
           logger.info(
@@ -114,7 +114,7 @@ describe('Cookies Validation', () => {
         if (
           allCookies[j].name === '_ga' ||
           allCookies[j].name === '_gid' ||
-          allCookies[j].name === '_gat_UA-[G-8CMZBTDQBC]'
+          allCookies[j].name === '_ga_8CMZBTDQBC'
         ) {
           logger.info('Google Analytics cookie logs as expected')
           expect(getGoogleAnalyticsCookieName[0].name).toMatch('_ga')
@@ -171,7 +171,7 @@ describe('Cookies Validation', () => {
         if (
           allCookies[i].name === '_ga' ||
           allCookies[i].name === '_gid' ||
-          allCookies[i].name === '_gat_UA-[G-8CMZBTDQBC]'
+          allCookies[i].name === '_ga_8CMZBTDQBC'
         ) {
           setGAValue = 'true'
           await expect(setGAValue).toMatch('false')

@@ -118,6 +118,7 @@ dynlocationValue.forEach(
 
         // Check pollutant table
         await ForecastMainPage.timestandPollutantTable1.scrollIntoView()
+        // await browser.saveScreenshot(path.join(global.screenshotFolder, 'timestandPollutantTable1.png'));
         // const getTimeStampEnglishPollutantTable1 =
         // await ForecastMainPage.timestandPollutantTable1.getText()
         // await expect(getTimeStampEnglishPollutantTable1).toMatch(`Latest measurement at (\d+)pm on (\d+) December (\d+)`)

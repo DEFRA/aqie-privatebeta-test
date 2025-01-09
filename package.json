@@ -19,6 +19,7 @@
     "postinstall": "npm run setup:husky",
     "setup:husky": "node -e \"try { require('husky').install() } catch (e) {if (e.code !== 'MODULE_NOT_FOUND') throw e}\"",
     "report": "allure generate allure-results --clean",
+    "reportSingleFile": "allure generate allure-results --clean --single-file -o allure-report",
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
   "dependencies": {
@@ -38,6 +39,7 @@
     "fast-xml-parser": "4.3.5",
     "https-proxy-agent": "7.0.4",
     "moment": "2.30.1",
+    "path": "0.12.7",
     "pino": "8.20.0",
     "pino-pretty": "11.0.0",
     "undici": "6.12.0",
