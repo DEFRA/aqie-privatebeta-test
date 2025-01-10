@@ -6,16 +6,34 @@ import pm10StaticPage from 'page-objects/pm10staticpage'
 import pm25StaticPage from 'page-objects/pm25staticpage'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import locationSearchPage from 'page-objects/locationsearchpage'
+import LocationMatchPage from 'page-objects/locationmatchpage'
 import cookieBanner from 'page-objects/cookieBanner'
 import startNowPage from 'page-objects/startnowpage'
 import createLogger from 'helpers/logger'
 import { browser, expect } from '@wdio/globals'
 // import defraPrototype from './defraPrototype.js'
 import fs from 'node:fs'
-const singleRegion = JSON.parse(
-  fs.readFileSync('test/testdata/singleRegion.json')
+const dynlocationValue = JSON.parse(
+  fs.readFileSync('test/testdata/dynamicForecast.json')
 )
 const logger = createLogger()
+async function checkPositions(array) {
+  const expectedOrder = [
+    'PM2.5',
+    'PM10',
+    'Nitrogen dioxide',
+    'Ozone',
+    'Sulphur dioxide'
+  ]
+  const filteredExpectedOrder = expectedOrder.filter((item) =>
+    array.includes(item)
+  )
+  const resultMatchingPosition = filteredExpectedOrder.every(
+    (element, index) => element === array[index]
+  )
+  return resultMatchingPosition
+}
+
 async function pollutantsPageNavigations(matchPollutantSubHeader) {
   if (matchPollutantSubHeader === 'Ozone') {
     const link = await $('=' + matchPollutantSubHeader + '')
@@ -96,71 +114,108 @@ async function pollutantsPageNavigations(matchPollutantSubHeader) {
 }
 
 describe('Pollutants Static Page content', () => {
-  it('pollutants redirection to its page from forecast', async () => {
-    logger.info(
-      '--- StcPoll StartScenario pollutants redirection to its page from forecast --------'
-    )
-    await browser.deleteCookies(['airaqie_cookie'])
-    await browser.url(' /search-location')
-    await browser.maximizeWindow()
-    await browser.url('')
-    await browser.maximizeWindow()
-    // Handle the cookie banner
-    if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
-      await cookieBanner.rejectButtonCookiesDialog.click()
-      await cookieBanner.hideButtonHideDialog.click()
-    }
-    // Start-Page-block
-    await startNowPage.startNowBtnClick()
-    // location-block
-    const LocationHeaderText = 'Where do you want to check?'
-    const locationESWSearchBoxText = 'Enter a location or postcode'
-    // Location-block
-    const getLocationSearchHeaderText =
-      await locationSearchPage.getLocationSearchHeader.getText()
-    await expect(getLocationSearchHeaderText).toMatch(LocationHeaderText)
-    await locationSearchPage.clickESWRadiobtn()
-    const getESWLocationSearchBoxText =
-      await locationSearchPage.eswLocationBoxText.getText()
-    await expect(getESWLocationSearchBoxText).toMatch(locationESWSearchBoxText)
-    await locationSearchPage.setUserESWRegion(singleRegion[0].region)
-    await locationSearchPage.clickContinueBtn()
-    const pollutantSubHeader = 'How air pollutants can affect your health'
-    await ForecastMainPage.timestampBlockForecastPage.scrollIntoView()
-    // for the sub header "How air pollutants can affect your health"
-    const matchPollutantSubHeader =
-      await ForecastMainPage.pollutantsHeaderLinks.getText()
-    await expect(pollutantSubHeader).toMatch(matchPollutantSubHeader)
-    for (let i = 0; i < (await ForecastMainPage.pollutantsLink.length); i++) {
-      const matchPollutantSubHeader =
-        await ForecastMainPage.pollutantsLink[i].getText()
-      await pollutantsPageNavigations(matchPollutantSubHeader)
-    }
+  dynlocationValue.forEach(
+    ({
+      region,
+      nearestRegionForecast,
+      nearestRegionPollutantsSta1,
+      nearestRegionPollutantsSta2,
+      nearestRegionPollutantsSta3,
+      NI
+    }) => {
+      it(`pollutants redirection to its page from forecast '${region}'`, async () => {
+        logger.info(
+          '--- StcPoll StartScenario pollutants redirection to its page from forecast --------'
+        )
+        await browser.deleteCookies(['airaqie_cookie'])
+        await browser.url(' /search-location')
+        await browser.maximizeWindow()
+        await browser.url('')
+        await browser.maximizeWindow()
+        // Handle the cookie banner
+        if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+          await cookieBanner.rejectButtonCookiesDialog.click()
+          await cookieBanner.hideButtonHideDialog.click()
+        }
+        // Start-Page-block
+        await startNowPage.startNowBtnClick()
+        // location-block
+        const LocationHeaderText = 'Where do you want to check?'
+        const locationESWSearchBoxText = 'Enter a location or postcode'
+        // Location-block
+        const getLocationSearchHeaderText =
+          await locationSearchPage.getLocationSearchHeader.getText()
+        await expect(getLocationSearchHeaderText).toMatch(LocationHeaderText)
+        await locationSearchPage.clickESWRadiobtn()
+        const getESWLocationSearchBoxText =
+          await locationSearchPage.eswLocationBoxText.getText()
+        await expect(getESWLocationSearchBoxText).toMatch(
+          locationESWSearchBoxText
+        )
+        await locationSearchPage.setUserESWRegion(region)
+        if (NI === 'No') {
+          await locationSearchPage.clickESWRadiobtn()
+          await locationSearchPage.setUserESWRegion(region)
+        } else if (NI === 'Yes') {
+          await locationSearchPage.clickNIRadiobtn()
+          await locationSearchPage.setUserNIRegion(region)
+        }
+        await locationSearchPage.clickContinueBtn()
+        if (await LocationMatchPage.headerTextMatch.isExisting()) {
+          await LocationMatchPage.firstLinkOfLocationMatch.click()
+        }
+        const pollutantSubHeader = 'How air pollutants can affect your health'
+        await ForecastMainPage.timestampBlockForecastPage.scrollIntoView()
+        // for the sub header "How air pollutants can affect your health"
+        const matchPollutantSubHeader =
+          await ForecastMainPage.pollutantsHeaderLinks.getText()
+        await expect(pollutantSubHeader).toMatch(matchPollutantSubHeader)
+        for (
+          let i = 0;
+          i < (await ForecastMainPage.pollutantsLink.length);
+          i++
+        ) {
+          const matchPollutantSubHeader =
+            await ForecastMainPage.pollutantsLink[i].getText()
+          await pollutantsPageNavigations(matchPollutantSubHeader)
+        }
 
-    await browser.execute(() => {
-      document.body.style.zoom = '20%' // Adjust the percentage as needed
-    })
-    // await ForecastMainPage.pollutantNameHeader1.scrollIntoView();
+        await browser.execute(() => {
+          document.body.style.zoom = '20%' // Adjust the percentage as needed
+        })
+        // await ForecastMainPage.pollutantNameHeader1.scrollIntoView();
 
-    await browser.execute(() => {
-      document.body.style.zoom = '100%' // Adjust the percentage as needed
-    })
-    // await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView({ block: 'start'});
-    // await browser.pause(1000)
+        await browser.execute(() => {
+          document.body.style.zoom = '100%' // Adjust the percentage as needed
+        })
+        // await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView({ block: 'start'});
+        // await browser.pause(1000)
+        for (
+          let j = 0;
+          j < (await ForecastMainPage.pollutantNameCollections.length);
+          j++
+        ) {
+          await ForecastMainPage.pollutantNameCollections[j].scrollIntoView()
+          const pollutantFromTable =
+            await ForecastMainPage.pollutantNameCollections[j].getText()
+          await pollutantsPageNavigations(pollutantFromTable)
+        }
+        const arrayStaticPollutant = []
+        const getTableValues =
+          await ForecastMainPage.pollutantsFirstTableCollections()
+        for (let k = 0; k < getTableValues.length; k += 3) {
+          const splitArray = getTableValues[k].split('\n')
+          arrayStaticPollutant.push(splitArray[0])
+        }
+        // Check for the position of pollutant of first pollutant table
+        const isCorrectOrder = await checkPositions(arrayStaticPollutant)
+        await expect(isCorrectOrder.toString()).toMatch('true')
 
-    for (
-      let j = 0;
-      j < (await ForecastMainPage.pollutantNameCollections.length);
-      j++
-    ) {
-      await ForecastMainPage.pollutantNameCollections[j].scrollIntoView()
-      const pollutantFromTable =
-        await ForecastMainPage.pollutantNameCollections[j].getText()
-      await pollutantsPageNavigations(pollutantFromTable)
+        await browser.deleteCookies(['airaqie_cookie'])
+        logger.info(
+          '--- StcPoll EndScenario pollutants redirection to its page from forecast --------'
+        )
+      })
     }
-    await browser.deleteCookies(['airaqie_cookie'])
-    logger.info(
-      '--- StcPoll EndScenario pollutants redirection to its page from forecast --------'
-    )
-  })
+  )
 })
