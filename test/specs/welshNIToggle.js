@@ -39,12 +39,12 @@ describe('NI-Toggle Flow', () => {
       await locationSearchPage.clickContinueBtn()
       const getUKSummaryTitle =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('Crynodeb o lygredd aer y UK')
+      await expect(getUKSummaryTitle).toMatch('Rhagolwg y DU')
       // Click English Toogle button
       await locationSearchPage.linkButtonEnglish.click()
       const getUKSummaryTitlebk =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitlebk).toMatch('UK air pollution summary')
+      await expect(getUKSummaryTitlebk).toMatch('UK forecast')
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       const welshChangeSearchLocation =

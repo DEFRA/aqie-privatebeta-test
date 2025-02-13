@@ -30,6 +30,7 @@
     "@elastic/ecs-pino-format": "1.5.0",
     "@wdio/spec-reporter": "8.29.0",
     "allure-commandline": "2.26.0",
+    "assert": "2.1.0",
     "await-reduce": "1.2.3",
     "axios": "1.6.8",
     "babel-plugin-module-resolver": "5.0.0",

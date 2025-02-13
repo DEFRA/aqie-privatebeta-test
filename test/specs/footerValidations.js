@@ -336,7 +336,7 @@ describe('Footer Validations', () => {
       await ForecastMainPage.pollutantsUKSummaryLinks.scrollIntoView()
       const getUKSummaryTitle =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('UK air pollution summary')
+      await expect(getUKSummaryTitle).toMatch('UK forecast')
       await footerObjects.privacyFooterLink.scrollIntoView()
       const getHrefCookies3 =
         await footerObjects.cookieFooterLink.getAttribute('href')

@@ -28,7 +28,7 @@ class LocationMatchPage {
       const link = await $('=' + matchLink + '')
       await link.click()
       const getUserRegion = await ForecastMainPage.regionHeaderDisplay.getText()
-      await expect(getUserRegion).toMatch(matchLink)
+      await expect(getUserRegion).toMatch('Air quality in ' + matchLink)
       await browser.back()
     }
   }
