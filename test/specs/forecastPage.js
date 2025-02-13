@@ -17,7 +17,7 @@ const dynlocationValue = JSON.parse(
 )
 
 const logger = createLogger()
-/* async function pollutantSummaryUrl() {
+async function pollutantSummaryUrl() {
   const forecastSummaryUrl = config.get('forecastSummaryUrl')
   logger.info(`forecastSummaryUrl: ${forecastSummaryUrl}`)
   const response = await proxyFetch(forecastSummaryUrl, optionsJson).catch(
@@ -31,8 +31,8 @@ const logger = createLogger()
     getDailySummary = await response.json()
   }
   // const getTodayForecastMessage = getDailySummary
-  return getDailySummary.today
-} */
+  return getDailySummary
+}
 
 function parseForecast(item, place) {
   const name = item.title
@@ -149,7 +149,9 @@ async function pollutantsValueCheck(rowsOfPollutants, pollutantValue) {
     const polValueCheck = Number(getpollutantValueTrimmed[0].trim())
     // evaluate value
     const apiValue = await getValueOfPol(pollutantValue, 'Ozone')
-    await expect(polValueCheck.toString()).toMatch(apiValue.toString())
+    await expect(getpollutantValueTrimmed[0].trim()).toMatch(
+      apiValue.toString()
+    )
 
     if (polValueCheck <= 100) {
       await expect(rowsOfPollutants[2]).toMatch('Low')
@@ -240,6 +242,21 @@ async function pollutantsValueCheck(rowsOfPollutants, pollutantValue) {
       await expect(rowsOfPollutants[2]).toMatch('Very high')
     }
   }
+}
+
+function getFutureDay(currentDay, daysToAdd) {
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ]
+  const currentIndex = days.indexOf(currentDay)
+  const futureIndex = (currentIndex + daysToAdd) % days.length
+  return days[futureIndex]
 }
 
 function renameKeys(obj, newKeys) {
@@ -382,6 +399,63 @@ dynlocationValue.forEach(
           await expect(getRssFeedDay).toMatch(getAppDayPlusFourValue)
           await expect(getRssFeedDayPlusFourName).toMatch(getAppDayPlusFourName)
         }
+        await ForecastMainPage.pollutantsUKSummaryLinks.scrollIntoView()
+
+        // UK Forecast
+
+        const sourcePollutantSummaryUrl = await pollutantSummaryUrl()
+        const sourcePollutantSummaryURlToday =
+          await sourcePollutantSummaryUrl.today
+        const sourcePollutantSummaryURlTomorrow =
+          await sourcePollutantSummaryUrl.tomorrow
+        const sourcePollutantSummaryURlOutlook =
+          await sourcePollutantSummaryUrl.outlook
+
+        const todayPollutantSummaryTitle =
+          await ForecastMainPage.todayPollutantSummaryTitle.getText()
+        const tomorrowPollutantSummaryTitle =
+          await ForecastMainPage.tomorrowPollutantSummaryTitle.getText()
+        const outlookPollutantSummaryTitle =
+          await ForecastMainPage.outlookPollutantSummaryTitle.getText()
+        await expect(todayPollutantSummaryTitle).toMatch('Today')
+        const days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+        ]
+        const today = new Date()
+        const todayGetDay = days[today.getDay()]
+        const tomorowDayName = getFutureDay(todayGetDay, 1)
+        await expect(tomorrowPollutantSummaryTitle).toMatch(tomorowDayName)
+        const outlookDayNameRange1 = getFutureDay(todayGetDay, 2)
+        const outlookDayNameRange2 = getFutureDay(todayGetDay, 6)
+        await expect(outlookPollutantSummaryTitle).toMatch(
+          `${outlookDayNameRange1} to ${outlookDayNameRange2}`
+        )
+        const ukForecastTodayPara =
+          await ForecastMainPage.todayPollutantSummary.getText()
+        await expect(ukForecastTodayPara.trim()).toMatch(
+          sourcePollutantSummaryURlToday.trim()
+        )
+
+        // Tomorrow Forecast
+        const ukForecastTomorrowPara =
+          await ForecastMainPage.tomorowPollutantSummary.getText()
+        await expect(ukForecastTomorrowPara.trim()).toMatch(
+          sourcePollutantSummaryURlTomorrow.trim()
+        )
+
+        // Outlook Forecast
+        const ukForecastOutlookPara =
+          await ForecastMainPage.outlookPollutantSummary.getText()
+        await expect(ukForecastOutlookPara.trim()).toMatch(
+          sourcePollutantSummaryURlOutlook.trim()
+        )
+
         try {
           await ForecastMainPage.daqiAccordian.scrollIntoView()
         } catch (error) {

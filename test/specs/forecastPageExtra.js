@@ -43,7 +43,6 @@ describe('Forecast Main Page - Extra', () => {
         await ForecastMainPage.stationFirstName.getText()
       const readingMeasuredPara =
         await ForecastMainPage.readingMeasuredPara.getText()
-
       await expect(readingMeasuredPara).toMatch(LatestIconMessage)
 
       if (getPollutantStationStr === area) {

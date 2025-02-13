@@ -130,9 +130,16 @@ describe('Location Search', () => {
       const getUserRegion = await ForecastMainPage.regionHeaderDisplay.getText()
       const getUserRegionSplit = getUserRegion.split(',')
       const regionToUppercaseText = region.toUpperCase()
-      expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(
-        regionToUppercaseText.replace(/\s+/, '')
+      const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
+      const addAirQualityTxt = 'Air quality in ' + regionRemoveSpace
+      const receivedAreaOnly = getUserRegionSplit[0].replace(
+        'Air quality in ',
+        ''
       )
+      const removeSpaceinReceivedAreaOnly = receivedAreaOnly.replace(/\s+/, '')
+      const addBackAirQuality =
+        'Air quality in ' + removeSpaceinReceivedAreaOnly
+      await expect(addBackAirQuality).toMatch(addAirQualityTxt)
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- LocSearch EndScenario NI Location Search Page --------')
     })
@@ -245,9 +252,9 @@ describe('Location Search', () => {
       const getUserRegion = await ForecastMainPage.regionHeaderDisplay.getText()
       const getUserRegionSplit = getUserRegion.split(',')
       const regionToUppercaseText = region.toUpperCase()
-      expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(
-        regionToUppercaseText.replace(/\s+/, '')
-      )
+      const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
+      const addAirQualityTxt = 'Airquality in ' + regionRemoveSpace
+      expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(addAirQualityTxt)
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- LocSearch EndScenario postal-code-sensitive location search Page --------'

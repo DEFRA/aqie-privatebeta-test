@@ -78,10 +78,24 @@ class ForecastMainPage {
     return this.getNext4DaysForecastValues[3]
   }
 
-  // Public Beta - UK Forecast
-  /* get pollutantsUKSummaryLinks() {
-    return $("h2[class='govuk-heading-m  govuk-!-margin-bottom-6']")
-  } */
+  get ukForecastArraylist() {
+    return $$("h2[class='govuk-heading-s govuk-!-margin-bottom-1']")
+  }
+
+  // Public Beta
+  get todayPollutantSummaryTitle() {
+    return this.ukForecastArraylist[0]
+  }
+
+  // Public Beta
+  get tomorrowPollutantSummaryTitle() {
+    return this.ukForecastArraylist[1]
+  }
+
+  // Public Beta
+  get outlookPollutantSummaryTitle() {
+    return this.ukForecastArraylist[2]
+  }
 
   get daqiForecastCaption() {
     return $("h2[class='govuk-heading-m govuk-!-margin-bottom-6']")
@@ -108,7 +122,7 @@ class ForecastMainPage {
   }
 
   get daqiForecastHeader() {
-    return this.subHeadersinForecastPage[0]
+    return this.subHeadersinForecastPage[1]
   }
 
   // All para in forecastpage
@@ -121,14 +135,27 @@ class ForecastMainPage {
     return this.forecastMainPagePara[5]
   }
 
+  // UK forecast
+  get todayPollutantSummary() {
+    return this.forecastMainPagePara[5]
+  }
+
+  get tomorowPollutantSummary() {
+    return this.forecastMainPagePara[6]
+  }
+
+  get outlookPollutantSummary() {
+    return this.forecastMainPagePara[7]
+  }
+
   // reading measurement para first line //edited from 19
   get readingMeasuredPara() {
-    return this.forecastMainPagePara[19]
+    return this.forecastMainPagePara[21]
   }
 
   // Station areatype para first line //edited from 21
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[21]
+    return this.forecastMainPagePara[23]
   }
 
   // station name
@@ -183,19 +210,19 @@ class ForecastMainPage {
   }
 
   get pollutantsUKSummaryLinks() {
-    return this.subHeadersinForecastPage[0]
+    return this.getNext4DaysForecastHeader[2]
   }
 
   get healthAdviseHeaders() {
-    return this.subHeadersinForecastPage[1]
+    return this.subHeadersinForecastPage[0]
   }
 
   get pollutantsHeaderLinks() {
-    return this.subHeadersinForecastPage[2]
+    return this.subHeadersinForecastPage[1]
   }
 
   get pollutantsNameTableLinks() {
-    return this.subHeadersinForecastPage[3]
+    return this.subHeadersinForecastPage[2]
   }
 
   get timestampBlockForecastPage() {

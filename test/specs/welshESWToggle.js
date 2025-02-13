@@ -86,12 +86,12 @@ describe('ESW-Toggle-Flow', () => {
       await locationSearchPage.linkButtonWelsh.click()
       const getWelshUKSummary =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getWelshUKSummary).toMatch('Crynodeb o lygredd aer y UK')
+      await expect(getWelshUKSummary).toMatch('Rhagolwg y DU')
       // Click English Toogle button
       await locationSearchPage.linkButtonEnglish.click()
       const getUKSummaryTitle =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('UK air pollution summary')
+      await expect(getUKSummaryTitle).toMatch('UK forecast')
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       const welshChangeSearchLocation =
@@ -108,7 +108,7 @@ describe('ESW-Toggle-Flow', () => {
       await locationSearchPage.clickContinueBtn()
       const getUKSummaryTitlebk =
         await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitlebk).toMatch('Crynodeb o lygredd aer y UK')
+      await expect(getUKSummaryTitlebk).toMatch('Rhagolwg y DU')
       await browser.deleteCookies(['airaqie_cookie'])
     })
   })
