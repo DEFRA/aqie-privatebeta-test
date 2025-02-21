@@ -273,34 +273,29 @@ class ForecastMainPage {
   }
 
   get pollutantsLinkOzone() {
-    return this.pollutantsLink[1]
-  }
-
-  get pollutantsLinkNO2() {
-    return this.pollutantsLink[2]
-  }
-
-  get pollutantsLinkSO2() {
-    return this.pollutantsLink[3]
-  }
-
-  get pollutantsLinkPM25() {
     return this.pollutantsLink[4]
   }
 
-  get pollutantsLinkPM10() {
+  get pollutantsLinkNO2() {
+    return this.pollutantsLink[3]
+  }
+
+  get pollutantsLinkSO2() {
     return this.pollutantsLink[5]
   }
 
-  /* get pollutantNearestRegions() {
-    return $$(
-      "h3 div[class='defra-toggletip defra-toggletip--open defra-toggletip--up']"
-    )
+  get pollutantsLinkPM25() {
+    return this.pollutantsLink[1]
   }
 
-  get pollutantStationName1() {
-    return this.pollutantNearestRegions[0]
-  } */
+  get pollutantsLinkPM10() {
+    return this.pollutantsLink[2]
+  }
+
+  get pageNotFoundHeader() {
+    return $("h1[class='govuk-heading-xl']")
+  }
+
   // public beta
   async daqiForecastValue() {
     const count = await $$("div[class*='daqi-selected']").length

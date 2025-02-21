@@ -119,9 +119,11 @@ describe('Page Title', () => {
         )
         // Click Welsh Toogle button
         await locationSearchPage.linkButtonWelsh.click()
+        const getUserRegionWelsh =
+          await ForecastMainPage.regionHeaderDisplay.getText()
         const mainPageWelshPageTitle = await browser.getTitle()
         await expect(mainPageWelshPageTitle).toMatch(
-          getUserRegion + ' - Gwirio ansawdd aer - GOV.UK'
+          getUserRegionWelsh + ' - Gwirio ansawdd aer - GOV.UK'
         )
         // Click English Toogle button
         await locationSearchPage.linkButtonEnglish.click()

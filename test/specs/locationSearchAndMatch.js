@@ -251,10 +251,16 @@ describe('Location Search', () => {
       await locationSearchPage.clickContinueBtn()
       const getUserRegion = await ForecastMainPage.regionHeaderDisplay.getText()
       const getUserRegionSplit = getUserRegion.split(',')
+      const getUserRegionSplitNoSpace = getUserRegionSplit[0]
+        .toString()
+        .replace(/\s+/g, '')
       const regionToUppercaseText = region.toUpperCase()
       const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
-      const addAirQualityTxt = 'Airquality in ' + regionRemoveSpace
-      expect(getUserRegionSplit[0].replace(/\s+/, '')).toMatch(addAirQualityTxt)
+      const addAirQualityTxt = 'Airqualityin' + regionRemoveSpace
+      const addAirQualityTxtString = addAirQualityTxt.toString()
+      expect(getUserRegionSplitNoSpace).toMatch(
+        addAirQualityTxtString.replace(/\s+/g, '')
+      )
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info(
         '--- LocSearch EndScenario postal-code-sensitive location search Page --------'
