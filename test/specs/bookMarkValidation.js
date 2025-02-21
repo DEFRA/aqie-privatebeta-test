@@ -16,14 +16,9 @@ bookMarkUrl.forEach(({ region, headerRegionText }) => {
         await cookieBanner.rejectButtonCookiesDialog.click()
         await cookieBanner.hideButtonHideDialog.click()
       }
-      try {
-        const getForecastHeader =
-          await ForecastMainPage.regionHeaderDisplay.getText()
-        await expect(getForecastHeader).toMatch(headerRegionText)
-      } catch (error) {
-        logger.error('Error Region: ' + region)
-        logger.error('An error occurred: ' + error.message)
-      }
+      const getForecastHeader =
+        await ForecastMainPage.regionHeaderDisplay.getText()
+      await expect(getForecastHeader).toMatch(headerRegionText)
       await browser.deleteCookies()
       logger.info('--- bookmark EndScenario--------')
     })
