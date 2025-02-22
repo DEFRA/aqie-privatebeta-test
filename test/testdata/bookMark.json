@@ -143,20 +143,5 @@
     "region": "/lleoliad/n8",
     "headerRegionText": "Ansawdd aer – N8, London",
     "NI": "No"
-  },
-  {
-    "region": "/lleoliad/bt1 1fb",
-    "headerRegionText": "Page not found",
-    "NI": "No"
-  },
-  {
-    "region": "/location/BT11EB",
-    "headerRegionText": "Page not found",
-    "NI": "No"
-  },
-  {
-    "region": "/location/ABC123",
-    "headerRegionText": "Page not found",
-    "NI": "No"
   }
 ]
