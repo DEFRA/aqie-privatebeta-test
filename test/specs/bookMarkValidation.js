@@ -2,10 +2,13 @@ import cookieBanner from 'page-objects/cookieBanner'
 import ForecastMainPage from 'page-objects/forecastmainpage'
 import createLogger from 'helpers/logger'
 import fs from 'node:fs'
-const bookMarkUrl = JSON.parse(fs.readFileSync('test/testdata/bookMark.json'))
+const bookMarkUrlData = JSON.parse(
+  fs.readFileSync('test/testdata/bookMark.json')
+)
 const logger = createLogger()
-bookMarkUrl.forEach(({ region, headerRegionText }) => {
-  describe('Bookmark Validation', () => {
+describe('Bookmark Validation', () => {
+  for (const bookMarkUrl of bookMarkUrlData) {
+    const { region, headerRegionText } = bookMarkUrl
     it('bookmark', async () => {
       logger.info('--- bookmark StartScenario--------')
       await browser.deleteCookies()
@@ -22,5 +25,5 @@ bookMarkUrl.forEach(({ region, headerRegionText }) => {
       await browser.deleteCookies()
       logger.info('--- bookmark EndScenario--------')
     })
-  })
+  }
 })
