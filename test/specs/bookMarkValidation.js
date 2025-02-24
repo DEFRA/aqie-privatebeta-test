@@ -9,7 +9,7 @@ const logger = createLogger()
 describe('Bookmark Validation', () => {
   for (const bookMarkUrl of bookMarkUrlData) {
     const { region, headerRegionText } = bookMarkUrl
-    it('bookmark', async () => {
+    it(`Bookmark for ${region}`, async () => {
       logger.info('--- bookmark StartScenario--------')
       await browser.deleteCookies()
       await browser.url(region)
