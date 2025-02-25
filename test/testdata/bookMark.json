@@ -95,11 +95,6 @@
     "happyFlow": "Yes"
   },
   {
-    "region": "/location/bt1?lang=en",
-    "headerRegionText": "Air quality in BT1, Belfast",
-    "happyFlow": "Yes"
-  },
-  {
     "region": "/lleoliad/cr26xh/?lang=cy",
     "headerRegionText": "Ansawdd aer – CR26XH, Croydon",
     "happyFlow": "Yes"
