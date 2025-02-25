@@ -27,6 +27,11 @@ const postalcodeCaseSen = JSON.parse(
 
 const logger = createLogger()
 
+// Function to capitalize the first letter and lowercase the rest
+const capitalizeFirstLetter = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+}
+
 describe('Location Search', () => {
   locationValue.forEach(({ region }) => {
     it('Start Page', async () => {
@@ -171,8 +176,9 @@ describe('Location Search', () => {
       // Location Match Page
       const errorPageHeader =
         await errorPageLocationSearch.errorHeaderDisplay.getText()
+      const transformedRegion = capitalizeFirstLetter(region)
       await expect(errorPageHeader).toMatch(
-        'We could not find ' + "'" + region + "'"
+        'We could not find ' + "'" + transformedRegion + "'"
       )
       await errorPageLocationSearch.clickSearchBackLink()
       await browser.deleteCookies(['airaqie_cookie'])
