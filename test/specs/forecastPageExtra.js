@@ -35,6 +35,7 @@ describe('Forecast Main Page - Extra', () => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
+
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
       const LatestIconMessage =

@@ -56,12 +56,12 @@ export const config = {
   // https://saucelabs.com/platform/platform-configurator
   //
   capabilities: debug
-    ? [{ browserName: 'chrome' }]
+    ? [{ browserName: 'MicrosoftEdge' }]
     : [
         {
           maxInstances: 1,
-          browserName: 'chrome',
-          'goog:chromeOptions': {
+          browserName: 'MicrosoftEdge',
+          'ms:edgeOptions': {
             args: [
               '--no-sandbox',
               '--disable-infobars',

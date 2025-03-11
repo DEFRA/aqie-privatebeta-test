@@ -40,7 +40,7 @@ describe('Bookmark Validation', () => {
         }
       } else if (happyFlow === 'No') {
         const errorPageHeader =
-          await errorPageLocationSearch.errorHeaderDisplay.getText()
+          await errorPageLocationSearch.welshErrorHeaderDisplay.getText()
         await expect(errorPageHeader).toMatch(headerRegionText)
       }
       await browser.deleteCookies()
