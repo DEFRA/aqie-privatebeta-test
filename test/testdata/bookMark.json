@@ -54,12 +54,6 @@
     "language": "English"
   },
   {
-    "region": "/location/south-glamorgan_bro-morgannwg-the-vale-of-glamorgan",
-    "headerRegionText": "Air quality in South Glamorgan, Bro Morgannwg - the Vale of Glamorgan",
-    "happyFlow": "Yes",
-    "language": "English"
-  },
-  {
     "region": "/location/walesby_west-lindsey",
     "headerRegionText": "Air quality in Walesby, West Lindsey",
     "happyFlow": "Yes",
@@ -92,12 +86,6 @@
   {
     "region": "/lleoliad/millbrook_city-of-southampton/?lang=cy",
     "headerRegionText": "Ansawdd aer – Millbrook, City of Southampton",
-    "happyFlow": "Yes",
-    "language": "Welsh"
-  },
-  {
-    "region": "/lleoliad/south-glamorgan_bro-morgannwg-the-vale-of-glamorgan/?lang=cy",
-    "headerRegionText": "Ansawdd aer – South Glamorgan, Bro Morgannwg - the Vale of Glamorgan",
     "happyFlow": "Yes",
     "language": "Welsh"
   },
@@ -138,27 +126,27 @@
     "language": "English"
   },
   {
-    "region": "/location/ll207aq",
-    "headerRegionText": "Air quality in LL20 7AQ, Bootle",
+    "region": "/location/l207aq",
+    "headerRegionText": "Air quality in L20 7AQ, Bootle",
     "happyFlow": "Yes",
     "language": "English"
   },
   {
     "region": "/location/sw1a",
-    "headerRegionText": "Air quality in SW1A, City of Westminster",
-    "happyFlow": "Yes",
+    "headerRegionText": "Page not found",
+    "happyFlow": "No",
     "language": "English"
   },
   {
     "region": "/lleoliad/en1",
-    "headerRegionText": "Ansawdd aer – EN1, London",
-    "happyFlow": "Yes",
+    "headerRegionText": "Page not found",
+    "happyFlow": "No",
     "language": "Welsh"
   },
   {
     "region": "/location/nw1w",
-    "headerRegionText": "Air quality in NW1W, London",
-    "happyFlow": "Yes",
+    "headerRegionText": "Page not found",
+    "happyFlow": "No",
     "language": "English"
   },
   {
@@ -196,5 +184,17 @@
     "headerRegionText": "Page not found",
     "happyFlow": "No",
     "language": "English"
+  },
+  {
+    "region": "/location/southerndown_bro-morgannwg-the-vale-of-glamorgan",
+    "headerRegionText": "Air quality in Southerndown, Bro Morgannwg - the Vale of Glamorgan",
+    "happyFlow": "Yes",
+    "language": "English"
+  },
+  {
+    "region": "/lleoliad/southerndown_bro-morgannwg-the-vale-of-glamorgan/?lang=cy",
+    "headerRegionText": "Ansawdd aer – Southerndown, Bro Morgannwg - the Vale of Glamorgan",
+    "happyFlow": "Yes",
+    "language": "Welsh"
   }
 ]
