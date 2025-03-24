@@ -52,7 +52,7 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
       const LatestIconMessage =
-        'Mae’r darlleniadau’n cael eu mesur bob awr.Mae’r uned µg/㎥ yn sefyll am ficrogramau (miliynfed o gram) am bob metr ciwbig o aer.'
+        'Mae’r darlleniadau’n cael eu mesur bob awr.Mae’r uned µg/m3 yn sefyll am ficrogramau (miliynfed o gram) am bob metr ciwbig o aer.'
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
       const readingMeasuredWelshPara =
