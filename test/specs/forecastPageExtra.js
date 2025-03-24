@@ -35,21 +35,40 @@ describe('Forecast Main Page - Extra', () => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
-
+      // Function to get the last word in a sentence
+      const getLastWord = (sentence) => {
+        const fullSentence = sentence.split('\n')
+        const words = fullSentence[0].split(' ')
+        return words[words.length - 1] // Get the last word
+      }
+      const currentDayDaqiIndex =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      const currentIndexValue = getLastWord(currentDayDaqiIndex)
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
-      const LatestIconMessage =
-        'Readings are measured every hour. The unit µg/m3 stands for micrograms (one millionth of a gram) per cubic metre of air.'
+      const LatestIconMessage = `Readings are measured every hour. The unit µg/m3 stands for micrograms (one millionth of a gram) per cubic metre of air.`
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-      const readingMeasuredPara =
-        await ForecastMainPage.readingMeasuredPara.getText()
-      await expect(readingMeasuredPara).toMatch(LatestIconMessage)
+      if (currentIndexValue === 'low') {
+        const readingMeasuredPara =
+          await ForecastMainPage.readingMeasuredPara.getText()
+        await expect(readingMeasuredPara).toMatch(LatestIconMessage)
+      } else {
+        const readingMeasuredModeratePara =
+          await ForecastMainPage.readingMeasuredModeratePara.getText()
+        await expect(readingMeasuredModeratePara).toMatch(LatestIconMessage)
+      }
 
       if (getPollutantStationStr === area) {
-        const stationAreaTypeText =
-          await ForecastMainPage.stationAreaTypePara.getText()
-        await expect(stationAreaTypeText).toMatch(areaMessage)
+        if (currentIndexValue === 'low') {
+          const stationAreaTypeText =
+            await ForecastMainPage.stationAreaTypePara.getText()
+          await expect(stationAreaTypeText).toMatch(areaMessage)
+        } else {
+          const stationAreaTypeText =
+            await ForecastMainPage.stationAreaTypeModeratePara.getText()
+          await expect(stationAreaTypeText).toMatch(areaMessage)
+        }
       } else {
         logger.info(
           'Temporarily the expected first station was not displayed!!!'

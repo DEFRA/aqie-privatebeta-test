@@ -24,6 +24,11 @@ class ForecastMainPage {
   }
 
   // public beta
+  get daqiOfCurrentDaysHeader() {
+    return this.getNext4DaysForecastHeader[0]
+  }
+
+  // public beta
   get daqiOf4DaysHeader() {
     return this.getNext4DaysForecastHeader[1]
   }
@@ -153,9 +158,17 @@ class ForecastMainPage {
     return this.forecastMainPagePara[21]
   }
 
+  get readingMeasuredModeratePara() {
+    return this.forecastMainPagePara[24]
+  }
+
   // Station areatype para first line //edited from 21
   get stationAreaTypePara() {
     return this.forecastMainPagePara[23]
+  }
+
+  get stationAreaTypeModeratePara() {
+    return this.forecastMainPagePara[26]
   }
 
   // station name
