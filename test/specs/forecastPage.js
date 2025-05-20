@@ -244,6 +244,20 @@ async function pollutantsValueCheck(rowsOfPollutants, pollutantValue) {
   }
 }
 
+async function tabIterations(arrPollutants) {
+  for (let i = 0; i < arrPollutants.length; i++) {
+    if (i > 0) {
+      await arrPollutants[i].click()
+    }
+    const tabAreaName = await arrPollutants[i].getText()
+    const first14CharsTabs = tabAreaName.slice(0, 14)
+    const arrAreaPollutantName = await ForecastMainPage.tabPollutantsAreaName()
+    const getTextOfPollutantArea = await arrAreaPollutantName[i].getText()
+    const first14CharsInsideTabs = getTextOfPollutantArea.slice(0, 14)
+    await expect(first14CharsTabs).toMatch(first14CharsInsideTabs)
+  }
+}
+
 function getFutureDay(currentDay, daysToAdd) {
   const days = [
     'Sunday',
@@ -484,7 +498,27 @@ dynlocationValue.forEach(
 
         const getPollutantStationStr =
           await ForecastMainPage.stationFirstName.getText()
-
+        // Evaluate the tab redesign tabPollutantsNameLength
+        const tabPollutantsNameArrCheck =
+          await ForecastMainPage.tabPollutantsNameArrayCheck()
+        if (tabPollutantsNameArrCheck) {
+          const tabPollutantsNameLength =
+            await ForecastMainPage.tabPollutantsAreaNameLength()
+          if (tabPollutantsNameLength > 1) {
+            const arrPollutants =
+              await ForecastMainPage.tabPollutantsAreaNameAll()
+            // tab redesign iterations
+            await tabIterations(arrPollutants)
+            // Click Welsh Toogle button
+            await locationSearchPage.linkButtonWelsh.scrollIntoView()
+            await locationSearchPage.linkButtonWelsh.click()
+            await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
+            await tabIterations(arrPollutants)
+            // Click English Toogle button
+            await locationSearchPage.linkButtonEnglish.scrollIntoView()
+            await locationSearchPage.linkButtonEnglish.click()
+          }
+        }
         // get dynamic pollutant value
         if (getPollutantStationStr === nearestRegionPollutantsSta1) {
           const pollutantValues = await fetchMeasurements(
@@ -553,6 +587,7 @@ dynlocationValue.forEach(
             )
           }
         }
+
         await browser.deleteCookies(['airaqie_cookie'])
         logger.info('--- FMP EndScenario daqi value-direct search --------')
       })

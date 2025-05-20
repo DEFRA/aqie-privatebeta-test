@@ -261,6 +261,30 @@ class ForecastMainPage {
     )
   }
 
+  // Get tab pollutants
+  async tabPollutantsNameArrayCheck() {
+    const countOfTab = await $$("a[class='govuk-tabs__tab']")
+    // const arrcheck = Array.isArray(countOfTab)
+    const isArrayValid = countOfTab.length > 0 ? countOfTab : false
+    return isArrayValid
+  }
+
+  async tabPollutantsAreaNameLength() {
+    const countOfTab = await $$("a[class='govuk-tabs__tab']").length
+    return countOfTab
+  }
+
+  async tabPollutantsAreaNameAll() {
+    return $$("a[class='govuk-tabs__tab']")
+  }
+
+  // get tab pollutant values
+  async tabPollutantsAreaName() {
+    return $$(
+      "h3[class='govuk-heading-s govuk-!-margin-bottom-1 pollutant-table']"
+    )
+  }
+
   get pollutantValueCollections() {
     return $$(
       "td[class='defra-aq-levels-table__cell defra-aq-levels-table__cell--reading']"
