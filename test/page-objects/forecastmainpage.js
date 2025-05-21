@@ -164,11 +164,11 @@ class ForecastMainPage {
 
   // Station areatype para first line //edited from 21
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[23]
+    return this.forecastMainPagePara[22]
   }
 
   get stationAreaTypeModeratePara() {
-    return this.forecastMainPagePara[26]
+    return this.forecastMainPagePara[25]
   }
 
   // station name
