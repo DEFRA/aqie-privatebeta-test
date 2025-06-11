@@ -8,10 +8,8 @@ import cookieBanner from 'page-objects/cookieBanner'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
 import createLogger from 'helpers/logger'
-import { XMLParser } from 'fast-xml-parser'
 import proxyFetch from 'helpers/proxy-fetch'
 const optionsJson = { method: 'GET', headers: { 'Content-Type': 'text/json' } }
-const options = { method: 'GET', headers: { 'Content-Type': 'text/xml' } }
 const dynlocationValue = JSON.parse(
   fs.readFileSync('test/testdata/dynamicForecast.json')
 )
@@ -34,49 +32,28 @@ async function pollutantSummaryUrl() {
   return getDailySummary
 }
 
-function parseForecast(item, place) {
-  const name = item.title
-  const forecasts = item.description.split('<br />')[2]
-  const days = forecasts.match(/\w{3}/g)
-  const values = forecasts.match(/\d+/g)
-  if (!days || !values || days.length !== values.length) {
-    throw new Error(`Failed to parse readings: ${forecasts}`)
-  }
-  const forecast = days.map((day, i) => ({
-    day,
-    value: parseInt(values[i], 10)
-  }))
-  if (name.toUpperCase() === place.toUpperCase()) {
-    return forecast
-  } else {
-    return null
-  }
-}
-
 async function fetchForecast(place) {
   const forecastUrl = config.get('forecastUrl')
   logger.info(`forecastSummaryUrl: ${forecastUrl}`)
-  const response = await proxyFetch(forecastUrl, options).catch((err) => {
+
+  const response = await proxyFetch(forecastUrl, optionsJson).catch((err) => {
     logger.info(`err ${JSON.stringify(err.message)}`)
+    return null
   })
 
-  let rssForecastXMLResponse
-  if (response.ok) {
-    rssForecastXMLResponse = await response
+  if (!response || !response.ok) {
+    logger.error('Failed to fetch forecast data')
+    return null
   }
-  const parser = new XMLParser()
-  const body = parser.parse(await rssForecastXMLResponse.text())
-  // TODO: handle xml parser failures & http response codes
-  return body.rss.channel.item
-    .map((i) => {
-      try {
-        return parseForecast(i, place)
-      } catch (error) {
-        logger.error(`Error Validation: ${error}`)
-        return null
-      }
-    })
-    .filter((i) => i !== null)
+
+  const metOfficeForecastJsonResponse = await response.json()
+  const metOfficeJsonData = metOfficeForecastJsonResponse.forecasts
+
+  const matchedForecast = metOfficeJsonData.find((item) => {
+    return item.name.toUpperCase() === place.toUpperCase()
+  })
+
+  return matchedForecast || null
 }
 
 async function createSets(array, setSize) {
@@ -319,7 +296,9 @@ dynlocationValue.forEach(
 
         // Give the nearest match value here - take from front end code
         const getValueForecast = await fetchForecast(nearestRegionForecast)
-        const getValueForecastarr = getValueForecast[0]
+        const getValueForecastarr = getValueForecast.forecast
+
+        // const getValueForecastarr = firstForecast
         // const getDaqiValueStr = getDaqiValue.toString()
         await expect(getDaqiValue).toMatch(
           getValueForecastarr[0].value.toString()
@@ -337,9 +316,9 @@ dynlocationValue.forEach(
           weekday: 'long'
         })
         const dayPlusOne = currentDayPlus1.slice(0, 3)
-        const getRssFeedDayPlusOneName = getValueForecast[0][1].day.toString()
+        const getRssFeedDayPlusOneName = getValueForecastarr[1].day.toString()
         const getRssFeedDayPlusOneValue =
-          getValueForecast[0][1].value.toString()
+          getValueForecastarr[1].value.toString()
         const getAppDayPlusOneName =
           await ForecastMainPage.dayPlusOneName.getText()
         const getAppDayPlusOneValue =
@@ -356,9 +335,9 @@ dynlocationValue.forEach(
           weekday: 'long'
         })
         const dayPlusTwo = currentDayPlus2.slice(0, 3)
-        const getRssFeedDayPlusTwoName = getValueForecast[0][2].day.toString()
+        const getRssFeedDayPlusTwoName = getValueForecastarr[2].day.toString()
         const getRssFeedDayPlusTwoValue =
-          getValueForecast[0][2].value.toString()
+          getValueForecastarr[2].value.toString()
         const getAppDayPlusTwoName =
           await ForecastMainPage.dayPlusTwoName.getText()
         const getAppDayPlusTwoValue =
@@ -375,9 +354,9 @@ dynlocationValue.forEach(
           weekday: 'long'
         })
         const dayPlusThree = currentDayPlus3.slice(0, 3)
-        const getRssFeedDayPlusThreeName = getValueForecast[0][3].day.toString()
+        const getRssFeedDayPlusThreeName = getValueForecastarr[3].day.toString()
         const getRssFeedDayPlusThreeValue =
-          getValueForecast[0][3].value.toString()
+          getValueForecastarr[3].value.toString()
         const getAppDayPlusThreeName =
           await ForecastMainPage.dayPlusThreeName.getText()
         const getAppDayPlusThreeValue =
@@ -398,9 +377,9 @@ dynlocationValue.forEach(
           weekday: 'long'
         })
         const dayPlusFour = currentDayPlus4.slice(0, 3)
-        const getRssFeedDayPlusFourName = getValueForecast[0][4].day.toString()
+        const getRssFeedDayPlusFourName = getValueForecastarr[4].day.toString()
         const getRssFeedDayPlusFourValue =
-          getValueForecast[0][4].value.toString()
+          getValueForecastarr[4].value.toString()
         const getAppDayPlusFourName =
           await ForecastMainPage.dayPlusFourName.getText()
         const getAppDayPlusFourValue =

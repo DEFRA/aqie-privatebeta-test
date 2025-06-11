@@ -71,7 +71,7 @@ const config = convict({
   forecastUrl: {
     doc: 'URL to the forecast data service',
     format: String,
-    default: 'https://uk-air.defra.gov.uk/assets/rss/forecast.xml',
+    default: `https://aqie-forecast-api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/forecast`,
     env: 'FORECAST_URL'
   },
   measurementsApiUrl: {
