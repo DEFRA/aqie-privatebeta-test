@@ -196,5 +196,41 @@
     "headerRegionText": "Ansawdd aer – Southerndown, Bro Morgannwg - the Vale of Glamorgan",
     "happyFlow": "Yes",
     "language": "Welsh"
+  },
+  {
+    "region": "/location/st200ey",
+    "headerRegionText": "Air quality in ST20 0EY, Gnosall",
+    "happyFlow": "Yes",
+    "language": "English"
+  },
+  {
+    "region": "/lleoliad/st200ey/?lang=cy",
+    "headerRegionText": "Ansawdd aer – ST20 0EY, Gnosall",
+    "happyFlow": "Yes",
+    "language": "Welsh"
+  },
+  {
+    "region": "/location/bs11bu",
+    "headerRegionText": "Air quality in BS1 1BU, Bristol",
+    "happyFlow": "Yes",
+    "language": "English"
+  },
+  {
+    "region": "/location/tn156nq",
+    "headerRegionText": "Air quality in TN15 6NQ, Sevenoaks",
+    "happyFlow": "Yes",
+    "language": "English"
+  },
+  {
+    "region": "/location/sp84ua",
+    "headerRegionText": "Air quality in SP8 4UA, Gillingham",
+    "happyFlow": "Yes",
+    "language": "English"
+  },
+  {
+    "region": "/lleoliad/tn158qt",
+    "headerRegionText": "Ansawdd aer – TN15 8QT, Tonbridge and Malling",
+    "happyFlow": "Yes",
+    "language": "English"
   }
 ]
