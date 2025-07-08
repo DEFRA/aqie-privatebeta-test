@@ -1,10 +1,10 @@
 import locationSearchPage from '../page-objects/locationsearchpage.js'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import startNowPage from '../page-objects/startnowpage.js'
-import cookieBanner from 'page-objects/cookieBanner'
+import cookieBanner from '../page-objects/cookieBanner.js'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
-import createLogger from 'helpers/logger'
+import createLogger from '../helpers/logger.js'
 const locationValue = JSON.parse(
   fs.readFileSync('test/testdata/regionsUnhappy.json')
 )

@@ -1,7 +1,7 @@
-import cookieBanner from 'page-objects/cookieBanner'
-import cookiePage from 'page-objects/cookiePage'
+import cookieBanner from '../page-objects/cookieBanner.js'
+import cookiePage from '../page-objects/cookiePage.js'
 import startNowPage from '../page-objects/startnowpage.js'
-import createLogger from 'helpers/logger'
+import createLogger from '../helpers/logger.js'
 import { browser, expect } from '@wdio/globals'
 
 const logger = createLogger()

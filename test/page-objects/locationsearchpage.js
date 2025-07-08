@@ -107,5 +107,4 @@ class LocationSearchPage {
   }
 }
 
-// module.exports=new LocationSearchPage()
 export default new LocationSearchPage()

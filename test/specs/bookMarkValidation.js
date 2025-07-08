@@ -1,14 +1,25 @@
-import cookieBanner from 'page-objects/cookieBanner'
-import ForecastMainPage from 'page-objects/forecastmainpage'
-import errorPageLocationSearch from 'page-objects/errorPageLocationSearch.js'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import createLogger from 'helpers/logger'
+import { before, describe, it, expect } from '@wdio/globals'
+import cookieBanner from '../page-objects/cookieBanner.js'
+import ForecastMainPage from '../page-objects/forecastmainpage.js'
+import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
 import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import createLogger from '../helpers/logger.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 const bookMarkUrlData = JSON.parse(
-  fs.readFileSync('test/testdata/bookMark.json')
+  fs.readFileSync(path.join(__dirname, '../../test/testdata/bookMark.json'))
 )
-const logger = createLogger()
+let logger
+
 describe('Bookmark Validation', () => {
+  before(() => {
+    logger = createLogger()
+  })
   for (const bookMarkUrl of bookMarkUrlData) {
     const { region, headerRegionText, happyFlow, language } = bookMarkUrl
     it(`Bookmark for ${region}`, async () => {
