@@ -1,9 +1,10 @@
-import headersValidation from 'page-objects/headersObject'
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import LocationMatchPage from 'page-objects/locationmatchpage'
-import cookieBanner from 'page-objects/cookieBanner'
-import createLogger from 'helpers/logger'
+import headersValidation from '../page-objects/headersObject.js'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import LocationMatchPage from '../page-objects/locationmatchpage.js'
+import cookieBanner from '../page-objects/cookieBanner.js'
+import createLogger from '../helpers/logger.js'
+import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
   fs.readFileSync('test/testdata/locationMatchRegion.json')

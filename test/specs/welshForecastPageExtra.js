@@ -1,11 +1,11 @@
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import ForecastMainPage from 'page-objects/forecastmainpage'
-import LocationMatchPage from 'page-objects/locationmatchpage'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import ForecastMainPage from '../page-objects/forecastmainpage.js'
+import LocationMatchPage from '../page-objects/locationmatchpage.js'
 import fs from 'node:fs'
 import { browser, expect } from '@wdio/globals'
-import cookieBanner from 'page-objects/cookieBanner'
-import createLogger from 'helpers/logger'
+import cookieBanner from '../page-objects/cookieBanner.js'
+import createLogger from '../helpers/logger.js'
 const welshToolTipData = JSON.parse(
   fs.readFileSync('test/testdata/welshToolTip.json')
 )

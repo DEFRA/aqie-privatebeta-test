@@ -1,11 +1,11 @@
-import startNowPage from 'page-objects/startnowpage'
-import headersValidation from 'page-objects/headersObject'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import footerObjects from 'page-objects/footer'
+import startNowPage from '../page-objects/startnowpage.js'
+import headersValidation from '../page-objects/headersObject.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import footerObjects from '../page-objects/footer.js'
 import { expect } from '@wdio/globals'
-import cookiePage from 'page-objects/cookiePage'
-import cookieBanner from 'page-objects/cookieBanner'
-import createLogger from 'helpers/logger'
+import cookiePage from '../page-objects/cookiePage.js'
+import cookieBanner from '../page-objects/cookieBanner.js'
+import createLogger from '../helpers/logger.js'
 const logger = createLogger()
 async function headerChecks() {
   // UK crown link header

@@ -1,4 +1,4 @@
-const fs = require('node:fs')
+import fs from 'node:fs'
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
 

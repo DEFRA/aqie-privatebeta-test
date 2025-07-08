@@ -1,8 +1,8 @@
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import ForecastMainPage from 'page-objects/forecastmainpage'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import ForecastMainPage from '../page-objects/forecastmainpage.js'
 import { browser, expect } from '@wdio/globals'
-import cookieBanner from 'page-objects/cookieBanner'
+import cookieBanner from '../page-objects/cookieBanner.js'
 
 describe('NI-Toggle Flow', () => {
   it('NI-Welsh-English Transalation', async () => {

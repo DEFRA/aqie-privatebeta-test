@@ -1,8 +1,8 @@
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
 import { browser, expect } from '@wdio/globals'
-import cookieBanner from 'page-objects/cookieBanner'
+import cookieBanner from '../page-objects/cookieBanner.js'
 
 describe('Error-Message-Pages', () => {
   it('Errors - Location Search', async () => {

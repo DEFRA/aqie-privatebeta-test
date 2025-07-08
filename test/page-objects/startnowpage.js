@@ -28,5 +28,4 @@ class StartNowPage {
   }
 }
 
-// module.exports=new StartNowPage()
 export default new StartNowPage()

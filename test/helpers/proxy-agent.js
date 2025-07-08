@@ -16,5 +16,4 @@ const proxyAgent = () => {
   }
 }
 
-// export { proxyAgent }
-module.exports = proxyAgent
+export default proxyAgent

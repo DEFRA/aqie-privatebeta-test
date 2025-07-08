@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import ForecastMainPage from 'page-objects/forecastmainpage'
-import LocationMatchPage from 'page-objects/locationmatchpage'
-import config from 'helpers/config'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import ForecastMainPage from '../page-objects/forecastmainpage.js'
+import LocationMatchPage from '../page-objects/locationmatchpage.js'
+import config from '../helpers/config.js'
 import moment from 'moment-timezone'
-import cookieBanner from 'page-objects/cookieBanner'
+import cookieBanner from '../page-objects/cookieBanner.js'
 import { browser, expect } from '@wdio/globals'
 import fs from 'node:fs'
-import createLogger from 'helpers/logger'
-import proxyFetch from 'helpers/proxy-fetch'
+import createLogger from '../helpers/logger.js'
+import proxyFetch from '../helpers/proxy-fetch.js'
 const optionsJson = { method: 'GET', headers: { 'Content-Type': 'text/json' } }
 const dynlocationValue = JSON.parse(
   fs.readFileSync('test/testdata/dynamicForecast.json')

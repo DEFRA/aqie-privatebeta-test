@@ -1,6 +1,9 @@
 /* eslint-disable prettier/prettier */
 import convict from 'convict'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const config = convict({
   env: {
@@ -84,4 +87,4 @@ const config = convict({
 
 config.validate({ allowed: 'strict' })
 
-module.exports = config
+export default config

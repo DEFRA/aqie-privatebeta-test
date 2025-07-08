@@ -1,9 +1,9 @@
-import startNowPage from 'page-objects/startnowpage'
-import locationSearchPage from 'page-objects/locationsearchpage'
-import LocationMatchPage from 'page-objects/locationmatchpage'
-import ForecastMainPage from 'page-objects/forecastmainpage'
+import startNowPage from '../page-objects/startnowpage.js'
+import locationSearchPage from '../page-objects/locationsearchpage.js'
+import LocationMatchPage from '../page-objects/locationmatchpage.js'
+import ForecastMainPage from '../page-objects/forecastmainpage.js'
 import { browser, expect } from '@wdio/globals'
-import cookieBanner from 'page-objects/cookieBanner'
+import cookieBanner from '../page-objects/cookieBanner.js'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
   fs.readFileSync('test/testdata/locationMatchRegion.json')
