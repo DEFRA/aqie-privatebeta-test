@@ -1,4 +1,4 @@
-import { before, describe, it, expect } from '@wdio/globals'
+import { browser, expect } from '@wdio/globals'
 import cookieBanner from '../page-objects/cookieBanner.js'
 import ForecastMainPage from '../page-objects/forecastmainpage.js'
 import errorPageLocationSearch from '../page-objects/errorPageLocationSearch.js'
@@ -14,12 +14,9 @@ const __dirname = path.dirname(__filename)
 const bookMarkUrlData = JSON.parse(
   fs.readFileSync(path.join(__dirname, '../../test/testdata/bookMark.json'))
 )
-let logger
+const logger = createLogger()
 
 describe('Bookmark Validation', () => {
-  before(() => {
-    logger = createLogger()
-  })
   for (const bookMarkUrl of bookMarkUrlData) {
     const { region, headerRegionText, happyFlow, language } = bookMarkUrl
     it(`Bookmark for ${region}`, async () => {
