@@ -2,36 +2,24 @@
   {
     "region": "Gloucester",
     "nearestRegionForecast": "Gloucester",
-    "nearestRegionPollutantsSta1": "Chepstow A48",
-    "nearestRegionPollutantsSta2": "Swindon Walcot",
-    "nearestRegionPollutantsSta3": "Bristol St Paul's",
     "locationMatch": "No",
     "NI": "No"
   },
   {
     "region": "London",
     "nearestRegionForecast": "CITY OF LONDON YOUTH HOSTEL",
-    "nearestRegionPollutantsSta1": "London Bloomsbury",
-    "nearestRegionPollutantsSta2": "London Westminster",
-    "nearestRegionPollutantsSta3": "Tower Hamlets Roadside",
     "locationMatch": "Yes",
     "NI": "No"
   },
   {
     "region": "BS1 1BU",
     "nearestRegionForecast": "BRISTOL",
-    "nearestRegionPollutantsSta1": "Bristol Temple Way",
-    "nearestRegionPollutantsSta2": "Bristol St Paul's",
-    "nearestRegionPollutantsSta3": "Bath A4 Roadside",
     "locationMatch": "No",
     "NI": "No"
   },
   {
     "region": "BT1 1FB",
     "nearestRegionForecast": "BELFAST",
-    "nearestRegionPollutantsSta1": "Belfast Centre",
-    "nearestRegionPollutantsSta2": "Belfast Stockman's Lane",
-    "nearestRegionPollutantsSta3": "Ballymena Ballykeel",
     "locationMatch": "No",
     "NI": "Yes"
   }
