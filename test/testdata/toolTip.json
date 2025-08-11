@@ -5,7 +5,9 @@
     "areaType": "Traffic Urban",
     "areaMessage": "This monitoring area is located in a city or a town close to roads, motorways or highways.",
     "locationMatch": "No",
-    "NI": "No"
+    "NI": "No",
+    "latitude": 51.867071,
+    "longitude": -2.247342
   },
   {
     "region": "Aberdeen Erroll Park",

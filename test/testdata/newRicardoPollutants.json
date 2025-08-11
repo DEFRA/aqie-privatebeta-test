@@ -1,0 +1,30 @@
+[
+  {
+    "region": "BT11FB",
+    "latitude": 54.599572,
+    "longitude": -5.928503,
+    "locationMatch": "No",
+    "NI": "Yes"
+  },
+  {
+    "region": "Tenby",
+    "latitude": 51.671761,
+    "longitude": -4.704608,
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Gloucester",
+    "latitude": 51.867071,
+    "longitude": -2.247342,
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "London",
+    "latitude": 51.502243,
+    "longitude": -0.143113,
+    "locationMatch": "Yes",
+    "NI": "No"
+  }
+]

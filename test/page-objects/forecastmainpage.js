@@ -252,12 +252,36 @@ class ForecastMainPage {
 
   // pollutant tables
   get pollutantNameCollections() {
-    return $$("a[class='govuk-!-margin-bottom-1']")
+    return $$("a[class*='govuk-!-margin-bottom-1']")
   }
 
   get pollutantNameHeader() {
     return $$(
       "th[class='defra-aq-levels-table__cell defra-aq-levels-table__cell--pollutant']"
+    )
+  }
+
+  get pollutantAreaNames() {
+    return $$(
+      "h3[class='govuk-heading-s govuk-!-margin-bottom-1 pollutant-table']"
+    )
+  }
+
+  get pollutantTabsNameItself() {
+    return $$("a[class='govuk-tabs__tab']")
+  }
+
+  get pollutantNameTabs() {
+    return $$("a[class*='govuk-!-margin-bottom-1']")
+  }
+
+  get pollutantValueTabs() {
+    return $$("span[class='govuk-!-font-weight-bold']")
+  }
+
+  get pollutantRangeTabs() {
+    return $$(
+      "td[class='govuk-table__cell align-middle'] strong[class*='daqi-tag']"
     )
   }
 
