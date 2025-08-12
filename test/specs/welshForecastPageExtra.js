@@ -11,7 +11,7 @@ const welshToolTipData = JSON.parse(
 )
 const logger = createLogger()
 welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
-  describe('Welsh - Forecast Main Page - Extra', () => {
+  describe(`Welsh - Forecast Main Page - Extra region ${region}`, () => {
     it('Welsh Area type and Units', async () => {
       logger.info('--- FMPEx Welsh StartScenario Area type and Units --------')
       await browser.deleteCookies(['airaqie_cookie'])
