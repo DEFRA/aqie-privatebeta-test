@@ -275,7 +275,7 @@ function pollutantsValueCheck(pollutantNameInsideTab, pollutantValueTabs) {
   }
 }
 
-describe('new ricardo validation', () => {
+describe(`new ricardo validation `, () => {
   const newRicardoData = path.resolve(
     __dirname,
     '../testdata/newRicardoPollutants.json'

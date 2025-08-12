@@ -99,7 +99,7 @@ function getFutureDay(currentDay, daysToAdd) {
 }
 
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
-  describe('Forecast Main Page', () => {
+  describe(`Forecast Main Page - ${region}`, () => {
     it('daqi value-direct search', async () => {
       logger.info('--- FMP StartScenario daqi value-direct search --------')
       await browser.deleteCookies(['airaqie_cookie'])
