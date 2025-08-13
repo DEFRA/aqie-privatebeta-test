@@ -34,6 +34,7 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
+      const getDaqiValue = await ForecastMainPage.daqiForecastValue()
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       // Welsh Accordian link
@@ -55,13 +56,33 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
         'Mae’r darlleniadau’n cael eu mesur bob awr. Mae’r uned µg/m3 yn sefyll am ficrogramau (miliynfed o gram) am bob metr ciwbig o aer.'
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-      const readingMeasuredWelshPara =
-        await ForecastMainPage.readingMeasuredPara.getText()
+      let readingMeasuredWelshPara
+      if (getDaqiValue >= 1 && getDaqiValue <= 3) {
+        readingMeasuredWelshPara =
+          await ForecastMainPage.readingMeasuredPara.getText()
+      } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
+        readingMeasuredWelshPara =
+          await ForecastMainPage.readingMeasuredModeratePara.getText()
+      } else {
+        readingMeasuredWelshPara =
+          await ForecastMainPage.readingMeasuredPara.getText()
+      }
+
+      // Output each value from forecastMainPagePara array
       await expect(readingMeasuredWelshPara).toMatch(LatestIconMessage)
 
       if (getPollutantStationStr === area) {
-        const stationAreaTypeWelshPara =
-          await ForecastMainPage.stationAreaTypePara.getText()
+        let stationAreaTypeWelshPara
+        if (getDaqiValue >= 1 && getDaqiValue <= 3) {
+          stationAreaTypeWelshPara =
+            await ForecastMainPage.stationAreaTypePara.getText()
+        } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
+          stationAreaTypeWelshPara =
+            await ForecastMainPage.stationAreaTypeModeratePara.getText()
+        } else {
+          stationAreaTypeWelshPara =
+            await ForecastMainPage.stationAreaTypePara.getText()
+        }
         await expect(stationAreaTypeWelshPara).toMatch(areaMessage)
       } else {
         logger.info(
