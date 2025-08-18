@@ -26,5 +26,47 @@
     "longitude": -0.143113,
     "locationMatch": "Yes",
     "NI": "No"
+  },
+  {
+    "region": "Aberdeen",
+    "latitude": 57.149651,
+    "longitude": -2.099075,
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Cardiff",
+    "latitude": 51.481581,
+    "longitude": -3.17909,
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Norwich",
+    "latitude": 52.630886,
+    "longitude": 1.297355,
+    "locationMatch": "Yes",
+    "NI": "No"
+  },
+  {
+    "region": "Plymouth",
+    "latitude": 50.375456,
+    "longitude": -4.142656,
+    "locationMatch": "No",
+    "NI": "No"
+  },
+  {
+    "region": "Sheffield",
+    "latitude": 53.381129,
+    "longitude": -1.470085,
+    "locationMatch": "yes",
+    "NI": "No"
+  },
+  {
+    "region": "Inverness",
+    "latitude": 57.477773,
+    "longitude": -4.224721,
+    "locationMatch": "Yes",
+    "NI": "No"
   }
 ]
