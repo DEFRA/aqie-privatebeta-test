@@ -9,7 +9,6 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import config from '../helpers/config.js'
-import forecastmainpage from '../page-objects/forecastmainpage.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -431,11 +430,11 @@ describe(`new ricardo validation `, () => {
         const distanceValues = []
         for (
           let k = 0;
-          k < (await forecastmainpage.distanceOfStations.length);
+          k < (await ForecastMainPage.distanceOfStations.length);
           k++
         ) {
           const distanceText =
-            await forecastmainpage.distanceOfStations[k].getText()
+            await ForecastMainPage.distanceOfStations[k].getText()
           const numericValue = parseFloat(
             distanceText.replace(' miles away', '').trim()
           )

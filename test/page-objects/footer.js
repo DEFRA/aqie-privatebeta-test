@@ -4,7 +4,7 @@ class Footer {
     return $$("a[class='govuk-footer__link']")
   }
 
-  get footerCrown(){
+  get footerCrown() {
     return $("svg[class='govuk-footer__crown']")
   }
 
