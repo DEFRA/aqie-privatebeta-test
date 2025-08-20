@@ -9,6 +9,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import config from '../helpers/config.js'
+import forecastmainpage from '../page-objects/forecastmainpage.js'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -423,6 +424,27 @@ describe(`new ricardo validation `, () => {
             tabItem.pollutantValueTabs
           )
           await expect(bucket).toMatch(tabItem.pollutantRangeTabs)
+        }
+      }
+
+      if (tabPollutantsNameArrCheck) {
+        const distanceValues = []
+        for (
+          let k = 0;
+          k < (await forecastmainpage.distanceOfStations.length);
+          k++
+        ) {
+          const distanceText =
+            await forecastmainpage.distanceOfStations[k].getText()
+          const numericValue = parseFloat(
+            distanceText.replace(' miles away', '').trim()
+          )
+          distanceValues.push(numericValue)
+        }
+
+        // Validate distances are in ascending order
+        for (let i = 1; i < distanceValues.length; i++) {
+          await expect(distanceValues[i]).toBeGreaterThan(distanceValues[i - 1])
         }
       }
 

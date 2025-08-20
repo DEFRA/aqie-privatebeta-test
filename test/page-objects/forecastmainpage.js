@@ -23,6 +23,11 @@ class ForecastMainPage {
     return $$("h2[class='govuk-heading-m govuk-!-margin-bottom-4']")
   }
 
+  // distance of stations
+  get distanceOfStations() {
+    return $$("span[class='defra-aq-tabs__label-distance']")
+  }
+
   // public beta
   get daqiOfCurrentDaysHeader() {
     return this.getNext4DaysForecastHeader[0]
