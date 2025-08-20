@@ -251,6 +251,20 @@ describe('Footer Validations', () => {
       '--- FooVal EndScenario Footer-Accessibility statement --------'
     )
   })
+  it('Footer-Crown-Logo', async () => {
+    logger.info('--- FooVal StartScenario Footer-Crown-Logo --------')
+    await browser.deleteCookies(['airaqie_cookie'])
+    await browser.url('')
+    await browser.maximizeWindow()
+    const imageElement = await footerObjects.footerCrown
+    // Wait for the image to be present in the DOM
+    await imageElement.waitForExist({ timeout: 5000 })
+
+    // Assert that the image is displayed
+    const isDisplayed = await imageElement.isDisplayed()
+    expect(isDisplayed).toBe(true) // Using Jest-style assertion
+    logger.info('--- FooVal EndScenario Footer-Crown-Logo --------')
+  })
   locationMatchRegion.forEach(({ region }) => {
     it('Footer-Links_In-All-Pages', async () => {
       logger.info('--- FooVal StartScenario Footer-Links_In-All-Pages --------')

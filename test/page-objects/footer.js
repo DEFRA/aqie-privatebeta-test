@@ -4,6 +4,10 @@ class Footer {
     return $$("a[class='govuk-footer__link']")
   }
 
+  get footerCrown() {
+    return $("svg[class='govuk-footer__crown']")
+  }
+
   get privacyFooterLink() {
     return this.allFooterLinks[0]
   }
