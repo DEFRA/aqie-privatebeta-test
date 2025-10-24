@@ -169,7 +169,7 @@ describe('Pollutants Static Page content', () => {
         // for the sub header "How air pollutants can affect your health"
         const matchPollutantSubHeader =
           await ForecastMainPage.pollutantsHeaderLinks.getText()
-        await expect(pollutantSubHeader).toMatch(matchPollutantSubHeader)
+        await expect(matchPollutantSubHeader).toMatch(pollutantSubHeader)
         for (
           let i = 0;
           i < (await ForecastMainPage.pollutantsLink.length);

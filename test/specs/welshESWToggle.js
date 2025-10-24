@@ -4,10 +4,12 @@ import LocationMatchPage from '../page-objects/locationmatchpage.js'
 import ForecastMainPage from '../page-objects/forecastmainpage.js'
 import { browser, expect } from '@wdio/globals'
 import cookieBanner from '../page-objects/cookieBanner.js'
+import createLogger from '../helpers/logger.js'
 import fs from 'node:fs'
 const locationMatchRegion = JSON.parse(
   fs.readFileSync('test/testdata/locationMatchRegion.json')
 )
+const logger = createLogger()
 
 describe('ESW-Toggle-Flow', () => {
   it('Welsh-English Transalation', async () => {
@@ -84,14 +86,30 @@ describe('ESW-Toggle-Flow', () => {
       await LocationMatchPage.firstLinkOfLocationMatch.click()
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
-      const getWelshUKSummary =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getWelshUKSummary).toMatch('Rhagolwg y DU')
+      try {
+        await ForecastMainPage.airPollutantsMonitoredHeader.scrollIntoView()
+      } catch (error) {
+        logger.info('Error scrolling to subheader pollutants')
+        logger.error(error)
+      }
+      const getWelshAirPollutantsMonitoredHeader =
+        await ForecastMainPage.airPollutantsMonitoredHeader.getText()
+      await expect(getWelshAirPollutantsMonitoredHeader).toMatch(
+        'Llygryddion aer sy’n cael eu monitro gerllaw'
+      )
       // Click English Toogle button
       await locationSearchPage.linkButtonEnglish.click()
-      const getUKSummaryTitle =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('UK forecast')
+      try {
+        await ForecastMainPage.airPollutantsMonitoredHeader.scrollIntoView()
+      } catch (error) {
+        logger.info('Error scrolling to subheader pollutants')
+        logger.error(error)
+      }
+      const getEngAirPollutantsMonitoredHeader =
+        await ForecastMainPage.airPollutantsMonitoredHeader.getText()
+      await expect(getEngAirPollutantsMonitoredHeader).toMatch(
+        'Air pollutants monitored near by'
+      )
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       const welshChangeSearchLocation =
@@ -106,9 +124,17 @@ describe('ESW-Toggle-Flow', () => {
       await locationSearchPage.clickESWRadiobtn()
       await locationSearchPage.setUserESWRegion('GL43YX')
       await locationSearchPage.clickContinueBtn()
+      try {
+        await ForecastMainPage.airPollutantsMonitoredHeader.scrollIntoView()
+      } catch (error) {
+        logger.info('Error scrolling to subheader pollutants')
+        logger.error(error)
+      }
       const getUKSummaryTitlebk =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitlebk).toMatch('Rhagolwg y DU')
+        await ForecastMainPage.airPollutantsMonitoredHeader.getText()
+      await expect(getUKSummaryTitlebk).toMatch(
+        'Llygryddion aer sy’n cael eu monitro gerllaw'
+      )
       await browser.deleteCookies(['airaqie_cookie'])
     })
   })

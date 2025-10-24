@@ -35,21 +35,35 @@ describe('Forecast Main Page - Extra', () => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
-      // Function to get the last word in a sentence
-      const getLastWord = (sentence) => {
-        const fullSentence = sentence.split('\n')
-        const words = fullSentence[0].split(' ')
-        return words[words.length - 1] // Get the last word
+
+      // Convert DAQI numeric value to text description
+      function getDaqiDescription(daqiValue) {
+        const numericValue = parseInt(daqiValue, 10)
+
+        if (numericValue >= 1 && numericValue <= 3) {
+          return 'Low'
+        } else if (numericValue >= 4 && numericValue <= 6) {
+          return 'Moderate'
+        } else if (numericValue >= 7 && numericValue <= 9) {
+          return 'High'
+        } else if (numericValue === 10) {
+          return 'Very High'
+        } else {
+          return 'Unknown' // For values outside the expected range
+        }
       }
-      const currentDayDaqiIndex =
-        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
-      const currentIndexValue = getLastWord(currentDayDaqiIndex)
+
+      // ...existing code...
+
+      //  const currentDayDaqiIndex = await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      const currentIndexValueNum = await ForecastMainPage.daqiForecastValue()
+      const currentIndexValue = await getDaqiDescription(currentIndexValueNum)
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
       const LatestIconMessage = `Readings are measured every hour. The unit µg/m3 stands for micrograms (one millionth of a gram) per cubic metre of air.`
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-      if (currentIndexValue === 'low') {
+      if (currentIndexValue === 'Low') {
         const readingMeasuredPara =
           await ForecastMainPage.readingMeasuredPara.getText()
         await expect(readingMeasuredPara).toMatch(LatestIconMessage)
@@ -58,9 +72,8 @@ describe('Forecast Main Page - Extra', () => {
           await ForecastMainPage.readingMeasuredModeratePara.getText()
         await expect(readingMeasuredModeratePara).toMatch(LatestIconMessage)
       }
-
       if (getPollutantStationStr === area) {
-        if (currentIndexValue === 'low') {
+        if (currentIndexValue === 'Low') {
           const stationAreaTypeText =
             await ForecastMainPage.stationAreaTypePara.getText()
           await expect(stationAreaTypeText).toMatch(areaMessage)

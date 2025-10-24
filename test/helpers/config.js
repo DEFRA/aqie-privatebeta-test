@@ -68,43 +68,43 @@ const config = convict({
   forecastSummaryUrl: {
     doc: 'Summary forecast url',
     format: String,
-    default: 'https://uk-air.defra.gov.uk/ajax/forecast_text_summary.php',
+    default: 'https://aqie-forecast-api.dev.cdp-int.defra.cloud/forecast',
     env: 'FORECAST_SUMMARY_URL'
   },
   forecastUrl: {
     doc: 'URL to the forecast data service',
     format: String,
-    default: `https://aqie-forecast-api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/forecast`,
+    default: `https://aqie-forecast-api.dev.cdp-int.defra.cloud/forecast`,
     env: 'FORECAST_URL'
   },
   newRicardoSiteMetaData: {
     doc: 'Ricardo API url',
     format: String,
-    default: `https://uk-air-api.staging.rcdo.co.uk/api/site_meta_datas`,
+    default: `https://api-ukair.defra.gov.uk/api/site_meta_datas`,
     env: 'NEW_RICARDO_SITE_META_DATA'
   },
   pollutantsMeasurementsUrl: {
     doc: 'Pollutants measurements API url',
     format: String,
-    default: `https://uk-air-api.staging.rcdo.co.uk/api/pollutant_measurement_datas`,
+    default: `https://api-ukair.defra.gov.uk/api/pollutant_measurement_datas`,
     env: 'POLLUTANTS_MEASUREMENTS_URL'
   },
   newRicardoApiPwd: {
     doc: 'New Ricardo API password',
     format: String,
-    default: `Mr5e7TFseqzD8Mt#`,
+    default: `f$jXx$$rBe34yg`,
     env: 'NEW_RICARDO_API_PWD'
   },
   newRicardoApiEmail: {
     doc: 'New Ricardo API email',
     format: String,
-    default: `maruthi.chokkanathan@cognizant.com`,
+    default: `TQxYFXbx`,
     env: 'NEW_RICARDO_API_EMAIL'
   },
   siteMetaDataLoginUrl: {
     doc: 'Site Meta Data Login URL',
     format: String,
-    default: `https://uk-air-api.staging.rcdo.co.uk/api/login_check`,
+    default: `https://api-ukair.defra.gov.uk/api/login_check`,
     env: 'SITE_META_DATA_LOGIN_URL'
   }
 })

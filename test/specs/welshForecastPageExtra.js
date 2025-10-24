@@ -59,15 +59,14 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       let readingMeasuredWelshPara
       if (getDaqiValue >= 1 && getDaqiValue <= 3) {
         readingMeasuredWelshPara =
-          await ForecastMainPage.readingMeasuredPara.getText()
+          await ForecastMainPage.readingMeasuredParaWelsh.getText()
       } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
         readingMeasuredWelshPara =
           await ForecastMainPage.readingMeasuredModeratePara.getText()
       } else {
         readingMeasuredWelshPara =
-          await ForecastMainPage.readingMeasuredPara.getText()
+          await ForecastMainPage.readingMeasuredParaWelsh.getText()
       }
-
       // Output each value from forecastMainPagePara array
       await expect(readingMeasuredWelshPara).toMatch(LatestIconMessage)
 
@@ -75,7 +74,7 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
         let stationAreaTypeWelshPara
         if (getDaqiValue >= 1 && getDaqiValue <= 3) {
           stationAreaTypeWelshPara =
-            await ForecastMainPage.stationAreaTypePara.getText()
+            await ForecastMainPage.stationAreaTypeParaWelsh.getText()
         } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
           stationAreaTypeWelshPara =
             await ForecastMainPage.stationAreaTypeModeratePara.getText()

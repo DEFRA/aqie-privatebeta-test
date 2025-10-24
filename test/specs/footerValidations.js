@@ -347,10 +347,12 @@ describe('Footer Validations', () => {
       await expect(getHrefAccStatementURL2).toMatch(expectedAccStatementURL)
       await LocationMatchPage.firstLinkOfLocationMatch.click()
       // forecast main page
-      await ForecastMainPage.pollutantsUKSummaryLinks.scrollIntoView()
+      await ForecastMainPage.airPollutantsMonitoredHeader.scrollIntoView()
       const getUKSummaryTitle =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('UK forecast')
+        await ForecastMainPage.airPollutantsMonitoredHeader.getText()
+      await expect(getUKSummaryTitle).toMatch(
+        'Air pollutants monitored near by'
+      )
       await footerObjects.privacyFooterLink.scrollIntoView()
       const getHrefCookies3 =
         await footerObjects.cookieFooterLink.getAttribute('href')

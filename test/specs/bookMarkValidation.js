@@ -42,9 +42,18 @@ describe('Bookmark Validation', () => {
         } else if (language === 'Welsh') {
           // Click English Toogle button
           await locationSearchPage.linkButtonEnglish.click()
+          // Test accordion functionality
+          try {
+            await ForecastMainPage.airPollutantsMonitoredHeader.scrollIntoView()
+          } catch (error) {
+            logger.info('Error scrolling to subheader pollutants')
+            logger.error(error)
+          }
           const getUKSummaryTitle =
-            await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-          await expect(getUKSummaryTitle).toMatch('UK forecast')
+            await ForecastMainPage.airPollutantsMonitoredHeader.getText()
+          await expect(getUKSummaryTitle).toMatch(
+            'Air pollutants monitored near by'
+          )
         }
       } else if (happyFlow === 'No') {
         const errorPageHeader =

@@ -18,6 +18,71 @@ class ForecastMainPage {
     return arrcheck
   }
 
+  // New DAQI Redeisgn
+  get todayDAQITab() {
+    return $('#tab_today')
+  }
+
+  // Tomorow DAQI tab
+  get tomorrowDAQITab() {
+    return $('#tab_day2')
+  }
+
+  // Day after tomorow DAQI tab
+  get dayThreeDAQITab() {
+    return $('#tab_day3')
+  }
+
+  // Day 4 of DAQI tab
+  get dayFourDAQITab() {
+    return $('#tab_day4')
+  }
+
+  // Day 5 of DAQI tab
+  get dayFiveDAQITab() {
+    return $('#tab_day5')
+  }
+
+  get headerOfDAQITab() {
+    return $("span[class='govuk-caption-s govuk-!-margin-bottom-4']")
+  }
+
+  // title of tabs day2
+  async headerOfDAQITabSecondDay() {
+    const container = await $('#day2')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day3
+  async headerOfDAQITabThirdDay() {
+    const container = await $('#day3')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day4
+  async headerOfDAQITabFourthDay() {
+    const container = await $('#day4')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day5
+  async headerOfDAQITabFiveDay() {
+    const container = await $('#day5')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
   // public Beta - 4 days forecast
   get getNext4DaysForecastHeader() {
     return $$("h2[class='govuk-heading-m govuk-!-margin-bottom-4']")
@@ -131,7 +196,7 @@ class ForecastMainPage {
     return $("span[class='daqi-scale-hidden']")
   }
 
-  get daqiForecastHeader() {
+  get airPollutantsMonitoredHeader() {
     return this.subHeadersinForecastPage[1]
   }
 
@@ -141,13 +206,33 @@ class ForecastMainPage {
   }
 
   // Health advice para first line
-  get daqiForecastPara() {
+  /*  get daqiForecastPara() {
     return this.forecastMainPagePara[5]
-  }
+  } */
 
   // UK forecast
   get todayPollutantSummary() {
     return this.forecastMainPagePara[5]
+  }
+
+  // 2nd tab of DAQI
+  get tomorowDAQIPollutantSummary() {
+    return this.forecastMainPagePara[8]
+  }
+
+  // outlook DAQI Summary -day3
+  get outlookDay3DAQIPollutantSummary() {
+    return this.forecastMainPagePara[11]
+  }
+
+  // outlook DAQI Summary -day4
+  get outlookDay4DAQIPollutantSummary() {
+    return this.forecastMainPagePara[14]
+  }
+
+  // outlook DAQI Summary -day5
+  get outlookDay5DAQIPollutantSummary() {
+    return this.forecastMainPagePara[17]
   }
 
   get tomorowPollutantSummary() {
@@ -158,22 +243,34 @@ class ForecastMainPage {
     return this.forecastMainPagePara[7]
   }
 
-  // reading measurement para first line //edited from 19
+  // reading measurement para first line //edited from 21
   get readingMeasuredPara() {
-    return this.forecastMainPagePara[21]
+    return this.forecastMainPagePara[32]
   }
 
+  // Welsh reading para
+  get readingMeasuredParaWelsh() {
+    return this.forecastMainPagePara[29]
+  }
+
+  // current 24 to 32
   get readingMeasuredModeratePara() {
-    return this.forecastMainPagePara[24]
+    return this.forecastMainPagePara[34]
   }
 
-  // Station areatype para first line //edited from 22
+  // Station areatype para first line //edited from 23
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[23]
+    return this.forecastMainPagePara[34]
   }
 
+  // Welsh
+  get stationAreaTypeParaWelsh() {
+    return this.forecastMainPagePara[31]
+  }
+
+  // tentatively given 34 to 36
   get stationAreaTypeModeratePara() {
-    return this.forecastMainPagePara[25]
+    return this.forecastMainPagePara[36]
   }
 
   // station name
@@ -232,15 +329,17 @@ class ForecastMainPage {
   }
 
   get healthAdviseHeaders() {
+    return $("h2[class='govuk-heading-m govuk-!-margin-top-9']")
+  }
+
+  // this one now used as pollutnatsNameTableLinks
+  get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[0]
   }
 
-  get pollutantsHeaderLinks() {
-    return this.subHeadersinForecastPage[1]
-  }
-
+  // this one throwing exception as only 2 values available
   get pollutantsNameTableLinks() {
-    return this.subHeadersinForecastPage[2]
+    return this.subHeadersinForecastPage[1]
   }
 
   get timestampBlockForecastPage() {
@@ -273,7 +372,7 @@ class ForecastMainPage {
   }
 
   get pollutantTabsNameItself() {
-    return $$("a[class='govuk-tabs__tab']")
+    return $$("[id*='tab_tab-']")
   }
 
   get pollutantNameTabs() {
@@ -304,7 +403,7 @@ class ForecastMainPage {
   }
 
   async tabPollutantsAreaNameAll() {
-    return $$("a[class='govuk-tabs__tab']")
+    return $$("a[href*='#tab-']")
   }
 
   // get tab pollutant values
@@ -364,8 +463,10 @@ class ForecastMainPage {
 
   // public beta
   async daqiForecastValue() {
-    const count = await $$("div[class*='daqi-selected']").length
-    return count.toString()
+    const activeSegment = await $('div[aria-label*=", active"]')
+    const daqiNumberElement = await activeSegment.$('.daqi-number')
+    const daqiNumber = await daqiNumberElement.getText()
+    return daqiNumber.toString()
   }
 
   async pollutantsFirstTableCollections() {
