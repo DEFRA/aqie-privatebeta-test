@@ -74,7 +74,7 @@ const config = convict({
   forecastUrl: {
     doc: 'URL to the forecast data service',
     format: String,
-    default: `https://aqie-forecast-api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/forecast`,
+    default: `https://aqie-forecast-api.prod.cdp-int.defra.cloud/forecast`,
     env: 'FORECAST_URL'
   },
   newRicardoSiteMetaData: {
