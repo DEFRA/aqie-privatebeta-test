@@ -145,35 +145,63 @@ class ForecastMainPage {
     return this.forecastMainPagePara[5]
   }
 
-  // UK forecast
+  // UK Forecast Pollutant Summary
   get todayPollutantSummary() {
     return this.forecastMainPagePara[5]
   }
 
-  get tomorowPollutantSummary() {
+  // 2nd tab of DAQI
+  get tomorowDAQIPollutantSummary() {
     return this.forecastMainPagePara[6]
   }
 
-  get outlookPollutantSummary() {
+  // outlook DAQI Summary -day3
+  get outlookDay3DAQIPollutantSummary() {
     return this.forecastMainPagePara[7]
+  }
+
+  // outlook DAQI Summary -day4
+  get outlookDay4DAQIPollutantSummary() {
+    return this.forecastMainPagePara[8]
+  }
+
+  // outlook DAQI Summary -day5
+  get outlookDay5DAQIPollutantSummary() {
+    return this.forecastMainPagePara[9]
   }
 
   // reading measurement para first line //edited from 19
   get readingMeasuredPara() {
-    return this.forecastMainPagePara[21]
+    return this.forecastMainPagePara[24]
   }
 
   get readingMeasuredModeratePara() {
-    return this.forecastMainPagePara[24]
+    return this.forecastMainPagePara[21]
+  }
+
+  get readingMeasuredHighPara() {
+    return this.forecastMainPagePara[21]
+  }
+
+  get readingMeasuredVeryHighPara() {
+    return this.forecastMainPagePara[21]
   }
 
   // Station areatype para first line //edited from 22
   get stationAreaTypePara() {
-    return this.forecastMainPagePara[23]
+    return this.forecastMainPagePara[26]
   }
 
   get stationAreaTypeModeratePara() {
-    return this.forecastMainPagePara[25]
+    return this.forecastMainPagePara[23]
+  }
+
+  get stationAreaTypeHighPara() {
+    return this.forecastMainPagePara[23]
+  }
+
+  get stationAreaTypeVeryHighPara() {
+    return this.forecastMainPagePara[23]
   }
 
   // station name
@@ -231,20 +259,24 @@ class ForecastMainPage {
     return this.getNext4DaysForecastHeader[2]
   }
 
-  get healthAdviseHeaders() {
+  /* get healthAdviseHeaders() {
+    return this.subHeadersinForecastPage[0]
+  } */
+
+  get pollutantsHeaderLinks() {
     return this.subHeadersinForecastPage[0]
   }
 
-  get pollutantsHeaderLinks() {
+  get pollutantsNameTableLinks() {
     return this.subHeadersinForecastPage[1]
   }
 
-  get pollutantsNameTableLinks() {
+  get getHowAirPollutantsheader() {
     return this.subHeadersinForecastPage[2]
   }
 
   get timestampBlockForecastPage() {
-    return $("p[class='govuk-caption-s govuk-!-margin-bottom-4']")
+    return $("p[class='govuk-caption-s daqi-health-summary-date']")
   }
 
   get pollutantsLink() {
@@ -272,8 +304,12 @@ class ForecastMainPage {
     )
   }
 
-  get pollutantTabsNameItself() {
+  /*  get pollutantTabsNameItself() {
     return $$("a[class='govuk-tabs__tab']")
+  } */
+
+  get pollutantTabsNameItself() {
+    return $$("a[href*='#tab-']")
   }
 
   get pollutantNameTabs() {
@@ -304,7 +340,7 @@ class ForecastMainPage {
   }
 
   async tabPollutantsAreaNameAll() {
-    return $$("a[class='govuk-tabs__tab']")
+    return $$("a[href*='#tab-']")
   }
 
   // get tab pollutant values
@@ -362,10 +398,84 @@ class ForecastMainPage {
     return $("h1[class='govuk-heading-xl']")
   }
 
-  // public beta
-  async daqiForecastValue() {
-    const count = await $$("div[class*='daqi-selected']").length
-    return count.toString()
+  // New DAQI Redeisgn
+  get todayDAQITab() {
+    return $('#tab_today')
+  }
+
+  // Tomorow DAQI tab
+  get tomorrowDAQITab() {
+    return $('#tab_day2')
+  }
+
+  // Day after tomorow DAQI tab
+  get dayThreeDAQITab() {
+    return $('#tab_day3')
+  }
+
+  // Day 4 of DAQI tab
+  get dayFourDAQITab() {
+    return $('#tab_day4')
+  }
+
+  // Day 5 of DAQI tab
+  get dayFiveDAQITab() {
+    return $('#tab_day5')
+  }
+
+  get headerOfDAQITab() {
+    return $("span[class='govuk-caption-s govuk-!-margin-bottom-4']")
+  }
+
+  // title of tabs day2
+  async headerOfDAQITabSecondDay() {
+    const container = await $('#day2')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day3
+  async headerOfDAQITabThirdDay() {
+    const container = await $('#day3')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day4
+  async headerOfDAQITabFourthDay() {
+    const container = await $('#day4')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  // title of tabs day5
+  async headerOfDAQITabFiveDay() {
+    const container = await $('#day5')
+    const daqiElement = await container.$(
+      "span[class='govuk-caption-s govuk-!-margin-bottom-4']"
+    )
+    return daqiElement.getText()
+  }
+
+  async daqiForecastSegmentValue() {
+    const coloredValue = await $("div[class*='daqi-selected']").getText()
+    return coloredValue.toString()
+  }
+
+  // getAllDAQISelectedValues
+  get getAllDAQISelectedValues() {
+    return $$("div[class*='daqi-selected']")
+  }
+
+  // High level alert message symbol
+  get highLevelAlertMessageSymbol() {
+    return $("span[class='govuk-warning-text__icon']")
   }
 
   async pollutantsFirstTableCollections() {

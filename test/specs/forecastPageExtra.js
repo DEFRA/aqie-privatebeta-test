@@ -35,44 +35,34 @@ describe('Forecast Main Page - Extra', () => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
-      // Function to get the last word in a sentence
-      const getLastWord = (sentence) => {
-        const fullSentence = sentence.split('\n')
-        const words = fullSentence[0].split(' ')
-        return words[words.length - 1] // Get the last word
-      }
-      const currentDayDaqiIndex =
-        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
-      const currentIndexValue = getLastWord(currentDayDaqiIndex)
       // await browser.scroll(0, 1500)
       await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
       const LatestIconMessage = `Readings are measured every hour. The unit µg/m3 stands for micrograms (one millionth of a gram) per cubic metre of air.`
+      // Get all <p> elements
+      const paragraphs = await ForecastMainPage.forecastMainPagePara
+      let setReadingMeasuredPara = false
+      // Loop through each paragraph and log index and text
+      for (let i = 0; i < paragraphs.length; i++) {
+        const readingMeasuredPara = await paragraphs[i].getText()
+        if (readingMeasuredPara === LatestIconMessage) {
+          setReadingMeasuredPara = true
+          break
+        }
+      }
+      await expect(setReadingMeasuredPara).toBe(true)
+      let setStationAreaTypeText = false
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-      if (currentIndexValue === 'low') {
-        const readingMeasuredPara =
-          await ForecastMainPage.readingMeasuredPara.getText()
-        await expect(readingMeasuredPara).toMatch(LatestIconMessage)
-      } else {
-        const readingMeasuredModeratePara =
-          await ForecastMainPage.readingMeasuredModeratePara.getText()
-        await expect(readingMeasuredModeratePara).toMatch(LatestIconMessage)
-      }
 
       if (getPollutantStationStr === area) {
-        if (currentIndexValue === 'low') {
-          const stationAreaTypeText =
-            await ForecastMainPage.stationAreaTypePara.getText()
-          await expect(stationAreaTypeText).toMatch(areaMessage)
-        } else {
-          const stationAreaTypeText =
-            await ForecastMainPage.stationAreaTypeModeratePara.getText()
-          await expect(stationAreaTypeText).toMatch(areaMessage)
+        for (let i = 0; i < paragraphs.length; i++) {
+          const stationAreaTypeText = await paragraphs[i].getText()
+          if (stationAreaTypeText === areaMessage) {
+            setStationAreaTypeText = true
+            break
+          }
         }
-      } else {
-        logger.info(
-          'Temporarily the expected first station was not displayed!!!'
-        )
+        await expect(setStationAreaTypeText).toBe(true)
       }
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- FMPEx EndScenario Area type and Units --------')

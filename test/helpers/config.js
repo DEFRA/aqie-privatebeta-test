@@ -72,10 +72,23 @@ const config = convict({
     env: 'FORECAST_SUMMARY_URL'
   },
   forecastUrl: {
-    doc: 'URL to the forecast data service',
+    doc: 'URL to the forecast data service (primary)',
     format: String,
     default: `https://aqie-forecast-api.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/forecast`,
     env: 'FORECAST_URL'
+  },
+  ephemeralForecastUrl: {
+    doc: 'Ephemeral protected URL to the forecast data service (fallback)',
+    format: String,
+    default: `https://ephemeral-protected.api.dev.cdp-int.defra.cloud/aqie-forecast-api/forecast`,
+    env: 'EPHEMERAL_FORECAST_URL'
+  },
+  ephemeralApiKey: {
+    doc: 'API key for ephemeral forecast service',
+    format: String,
+    default: 'rV7vhAlP0dpu9P6SN9qptMf4DRMGWYS1',
+    sensitive: true,
+    env: 'EPHEMERAL_API_KEY'
   },
   newRicardoSiteMetaData: {
     doc: 'Ricardo API url',

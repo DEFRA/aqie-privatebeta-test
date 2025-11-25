@@ -84,14 +84,17 @@ describe('ESW-Toggle-Flow', () => {
       await LocationMatchPage.firstLinkOfLocationMatch.click()
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
-      const getWelshUKSummary =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getWelshUKSummary).toMatch('Rhagolwg y DU')
+      const getDaqiHeaderText =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      const getDaqiHeader = getDaqiHeaderText.split('\n')[0]
+      await expect(getDaqiHeader).toMatch('Lefelau llygredd aer a ragwelir')
       // Click English Toogle button
       await locationSearchPage.linkButtonEnglish.click()
-      const getUKSummaryTitle =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('UK forecast')
+      const getDaqiHeaderTextEng =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      await expect(getDaqiHeaderTextEng).toMatch(
+        'Predicted air pollution levels'
+      )
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       const welshChangeSearchLocation =
@@ -106,9 +109,10 @@ describe('ESW-Toggle-Flow', () => {
       await locationSearchPage.clickESWRadiobtn()
       await locationSearchPage.setUserESWRegion('GL43YX')
       await locationSearchPage.clickContinueBtn()
-      const getUKSummaryTitlebk =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitlebk).toMatch('Rhagolwg y DU')
+      const getDaqiHeaderTextWel =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      const getDaqiHeaderWel = getDaqiHeaderTextWel.split('\n')[0]
+      await expect(getDaqiHeaderWel).toMatch('Lefelau llygredd aer a ragwelir')
       await browser.deleteCookies(['airaqie_cookie'])
     })
   })
