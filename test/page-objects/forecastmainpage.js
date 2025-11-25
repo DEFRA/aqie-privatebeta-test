@@ -187,7 +187,7 @@ class ForecastMainPage {
     return this.forecastMainPagePara[21]
   }
 
-  // Station areatype para first line //edited from 22
+  // Station areatype para first line //edited from 23
   get stationAreaTypePara() {
     return this.forecastMainPagePara[26]
   }
