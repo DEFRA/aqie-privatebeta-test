@@ -34,60 +34,47 @@ welshToolTipData.forEach(({ region, area, areaMessage, NI }) => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
-      const getDaqiValue = await ForecastMainPage.daqiForecastValue()
+
+      const getAllDaqiValuesOfTab =
+        await ForecastMainPage.getAllDAQISelectedValues
+      for (const visibleTab of getAllDaqiValuesOfTab) {
+        if (await visibleTab.isDisplayed()) {
+          await visibleTab.getText()
+          break // stop after finding the visible one
+        }
+      }
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
-      // Welsh Accordian link
-      const accordianText =
-        'Sut y gall lefelau gwahanol o lygredd aer effeithio ar iechyd'
-      const accordianTextReceived =
-        await ForecastMainPage.daqiAccordian.getText()
-      await expect(accordianTextReceived).toMatch(accordianText)
-      await ForecastMainPage.daqiAccordian.click()
-      const accordianHeading = 'Lefel'
-      const accordianHeadingReceived =
-        await ForecastMainPage.daqiAccordianHeaderIndex.getText()
-      await expect(accordianHeadingReceived).toMatch(accordianHeading)
-      await ForecastMainPage.daqiAccordian.click()
-
       // await browser.scroll(0, 1500)
-      await ForecastMainPage.pollutantsNameTableLinks.scrollIntoView()
+      await ForecastMainPage.getHowAirPollutantsheader.scrollIntoView()
       const LatestIconMessage =
         'Mae’r darlleniadau’n cael eu mesur bob awr. Mae’r uned µg/m3 yn sefyll am ficrogramau (miliynfed o gram) am bob metr ciwbig o aer.'
+
+      // Get all <p> elements
+      const paragraphs = await ForecastMainPage.forecastMainPagePara
+      let setReadingMeasuredPara = false
+      // Loop through each paragraph and log index and text
+      for (let i = 0; i < paragraphs.length; i++) {
+        const readingMeasuredPara = await paragraphs[i].getText()
+        if (readingMeasuredPara === LatestIconMessage) {
+          setReadingMeasuredPara = true
+          break
+        }
+      }
+      await expect(setReadingMeasuredPara).toBe(true)
       const getPollutantStationStr =
         await ForecastMainPage.stationFirstName.getText()
-      let readingMeasuredWelshPara
-      if (getDaqiValue >= 1 && getDaqiValue <= 3) {
-        readingMeasuredWelshPara =
-          await ForecastMainPage.readingMeasuredPara.getText()
-      } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
-        readingMeasuredWelshPara =
-          await ForecastMainPage.readingMeasuredModeratePara.getText()
-      } else {
-        readingMeasuredWelshPara =
-          await ForecastMainPage.readingMeasuredPara.getText()
-      }
 
-      // Output each value from forecastMainPagePara array
-      await expect(readingMeasuredWelshPara).toMatch(LatestIconMessage)
-
+      let setStationAreaTypeText = false
       if (getPollutantStationStr === area) {
-        let stationAreaTypeWelshPara
-        if (getDaqiValue >= 1 && getDaqiValue <= 3) {
-          stationAreaTypeWelshPara =
-            await ForecastMainPage.stationAreaTypePara.getText()
-        } else if (getDaqiValue >= 4 && getDaqiValue <= 6) {
-          stationAreaTypeWelshPara =
-            await ForecastMainPage.stationAreaTypeModeratePara.getText()
-        } else {
-          stationAreaTypeWelshPara =
-            await ForecastMainPage.stationAreaTypePara.getText()
+        for (let i = 0; i < paragraphs.length; i++) {
+          const stationAreaTypeText = await paragraphs[i].getText()
+          if (stationAreaTypeText === areaMessage) {
+            setStationAreaTypeText = true
+            break
+          }
         }
-        await expect(stationAreaTypeWelshPara).toMatch(areaMessage)
-      } else {
-        logger.info(
-          'Temporarily the expected first station was not displayed!!!'
-        )
+        await expect(setStationAreaTypeText).toBe(true)
       }
 
       await browser.deleteCookies(['airaqie_cookie'])

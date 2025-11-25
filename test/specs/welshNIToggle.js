@@ -37,14 +37,17 @@ describe('NI-Toggle Flow', () => {
       const getSubmitTextWelsh = await locationSearchPage.continueBtn.getText()
       await expect(getSubmitTextWelsh).toMatch('Parhau')
       await locationSearchPage.clickContinueBtn()
-      const getUKSummaryTitle =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitle).toMatch('Rhagolwg y DU')
+      const getDaqiHeaderText =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      const getDaqiHeader = getDaqiHeaderText.split('\n')[0]
+      await expect(getDaqiHeader).toMatch('Lefelau llygredd aer a ragwelir')
       // Click English Toogle button
       await locationSearchPage.linkButtonEnglish.click()
-      const getUKSummaryTitlebk =
-        await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-      await expect(getUKSummaryTitlebk).toMatch('UK forecast')
+      const getDaqiHeaderTextEng =
+        await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+      await expect(getDaqiHeaderTextEng).toMatch(
+        'Predicted air pollution levels'
+      )
       // Click Welsh Toogle button
       await locationSearchPage.linkButtonWelsh.click()
       const welshChangeSearchLocation =

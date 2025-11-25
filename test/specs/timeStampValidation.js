@@ -46,18 +46,81 @@ const calendarWelsh = [
 ]
 
 async function timeStampUKSummary() {
-  const forecastSummaryUrl = config.get('forecastSummaryUrl')
-  const response = await proxyFetch(`${forecastSummaryUrl}`, optionsJson).catch(
-    (err) => {
-      logger.info(`err ${JSON.stringify(err.message)}`)
+  const primaryUrl = config.get('forecastUrl')
+  const fallbackUrl = config.get('ephemeralForecastUrl')
+  const fallbackApiKey = config.get('ephemeralApiKey')
+
+  logger.info(`[fetchForecast] Attempting primary URL: ${primaryUrl}`)
+
+  // Try primary URL first
+  let response = await proxyFetch(primaryUrl, optionsJson).catch((err) => {
+    logger.info(
+      `[fetchForecast] Primary URL error: ${JSON.stringify(err.message)}`
+    )
+    return null
+  })
+
+  // Check if primary URL returned 200 OK
+  if (!response || response.status !== 200) {
+    logger.info(
+      `[fetchForecast] Primary URL failed with status: ${response?.status || 'no response'}. Trying fallback URL...`
+    )
+
+    // Use fallback URL with API key
+    const optionsWithApiKey = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept-Encoding': '*',
+        'x-api-key': fallbackApiKey
+      }
     }
-  )
-  let ukForecastSummary
-  if (response.ok) {
-    ukForecastSummary = await response.json()
-    const formattedDateSummary = moment(ukForecastSummary.issue_date)
-      .format('DD MMMM YYYY')
-      .split(' ')
+
+    logger.info(`[fetchForecast] Attempting fallback URL: ${fallbackUrl}`)
+    response = await proxyFetch(fallbackUrl, optionsWithApiKey).catch((err) => {
+      logger.error(
+        `[fetchForecast] Fallback URL error: ${JSON.stringify(err.message)}`
+      )
+      return null
+    })
+
+    if (!response || !response.ok) {
+      logger.error(
+        `[fetchForecast] Fallback URL also failed with status: ${response?.status || 'no response'}`
+      )
+      return null
+    }
+
+    logger.info('[fetchForecast] Successfully fetched data from fallback URL')
+  } else {
+    logger.info('[fetchForecast] Successfully fetched data from primary URL')
+  }
+
+  try {
+    const metOfficeForecastJsonResponse = await response.json()
+
+    if (
+      !metOfficeForecastJsonResponse ||
+      !metOfficeForecastJsonResponse['forecast-summary']
+    ) {
+      logger.error(
+        '[fetchForecast] Invalid response format: missing forecast-summary data'
+      )
+      return null
+    }
+
+    // Store the full response globally so getDailySummary can access forecast-summary
+    const ukForecastSummary = metOfficeForecastJsonResponse['forecast-summary']
+
+    // Parse the issue_date to extract date and time
+    const issueDateTime = moment(ukForecastSummary.issue_date)
+    const formattedDateSummary = issueDateTime.format('DD MMMM YYYY').split(' ')
+
+    // Extract time in 12-hour format with am/pm
+    const hours = issueDateTime.format('h')
+    const minutes = issueDateTime.format('mm')
+    const ampm = issueDateTime.format('a')
+    const formattedTime = `${hours}:${minutes}${ampm}`
 
     const getMonthSummary = calendarEnglish.findIndex(function (item) {
       return item.indexOf(formattedDateSummary[1]) !== -1
@@ -65,14 +128,14 @@ async function timeStampUKSummary() {
     const englishDate = `${formattedDateSummary[0]} ${calendarEnglish[getMonthSummary]} ${formattedDateSummary[2]}`
     const welshDate = `${formattedDateSummary[0]} ${calendarWelsh[getMonthSummary]} ${formattedDateSummary[2]}`
 
-    // const getTimeOfSummary1 = ukForecastSummary.issue_date.split(' ')
-    // const getTimeOfSummary2 = getTimeOfSummary1[1].split(':')
-    // const getDateInCorrectFormat = getTimeOfSummary2[0].replace(/^0+/, '')
     const finalValue = {
-      englishDate: `Latest at 5am on ${englishDate}`,
-      welshDate: `Y diweddaraf am 5am ymlaen ${welshDate}`
+      englishDate: `Latest at ${formattedTime} on ${englishDate}`,
+      welshDate: `Y diweddaraf am ${formattedTime} ymlaen ${welshDate}`
     }
     return finalValue
+  } catch (err) {
+    logger.error(`[fetchForecast] Error parsing response: ${err.message}`)
+    return null
   }
 }
 

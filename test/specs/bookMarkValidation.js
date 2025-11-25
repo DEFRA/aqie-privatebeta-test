@@ -42,9 +42,11 @@ describe('Bookmark Validation', () => {
         } else if (language === 'Welsh') {
           // Click English Toogle button
           await locationSearchPage.linkButtonEnglish.click()
-          const getUKSummaryTitle =
-            await ForecastMainPage.pollutantsUKSummaryLinks.getText()
-          await expect(getUKSummaryTitle).toMatch('UK forecast')
+          const getAirPollutantTitle =
+            await ForecastMainPage.daqiOfCurrentDaysHeader.getText()
+          await expect(getAirPollutantTitle).toMatch(
+            'Predicted air pollution levels'
+          )
         }
       } else if (happyFlow === 'No') {
         const errorPageHeader =
