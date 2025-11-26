@@ -80,13 +80,13 @@ const config = convict({
   ephemeralForecastUrl: {
     doc: 'Ephemeral protected URL to the forecast data service (fallback)',
     format: String,
-    default: `https://ephemeral-protected.api.dev.cdp-int.defra.cloud/aqie-forecast-api/forecast`,
+    default: `https://ephemeral-protected.api.perf-test.cdp-int.defra.cloud/aqie-forecast-api/forecast`,
     env: 'EPHEMERAL_FORECAST_URL'
   },
   ephemeralApiKey: {
     doc: 'API key for ephemeral forecast service',
     format: String,
-    default: 'rV7vhAlP0dpu9P6SN9qptMf4DRMGWYS1',
+    default: 'sh0AUAWvEIU3BB6VKq9HG1akvixDeJV8',
     sensitive: true,
     env: 'EPHEMERAL_API_KEY'
   },
