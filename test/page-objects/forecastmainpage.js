@@ -272,7 +272,7 @@ class ForecastMainPage {
   }
 
   get getHowAirPollutantsheader() {
-    return this.subHeadersinForecastPage[2]
+    return this.subHeadersinForecastPage[1]
   }
 
   get timestampBlockForecastPage() {

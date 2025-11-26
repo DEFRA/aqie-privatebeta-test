@@ -214,6 +214,8 @@ async function getAllDAQIValues() {
       logger.warn(
         `Error validating color for DAQI ${daqiLabels[i]}: ${error.message}`
       )
+      // Rethrow so the test runner fails the test on assertion errors
+      throw error
     }
   }
 
