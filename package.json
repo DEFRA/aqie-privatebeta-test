@@ -11,8 +11,11 @@
   "scripts": {
     "clean": "rm -rf allure-results && rm -rf allure-report",
     "test": "npm run clean && wdio run wdio.conf.cjs",
+    "test:browserstack": "npm run clean && wdio run wdio.browserstack.conf.js",
     "test:local": "npm run clean && wdio run wdio.local.conf.cjs",
     "test:local:debug": "DEBUG=true npm run test:local",
+    "test:github": "npm run clean && wdio run wdio.github.conf.js",
+    "test:github:browserstack": "npm run clean && wdio run wdio.github.browserstack.conf.js",
     "format": "prettier --write \"test/**/*.js\" \"**/*.{js,md,json,config.js}\"",
     "format:check": "prettier --check \"test/**/*.js\" \"**/*.{js,md,json,config.js}\"",
     "lint": "eslint .",
@@ -26,6 +29,7 @@
   "dependencies": {
     "@babel/cli": "7.23.4",
     "@babel/core": "7.23.7",
+    "@wdio/browserstack-service": "9.9.1",
     "@babel/preset-env": "7.23.8",
     "@babel/register": "7.23.7",
     "@elastic/ecs-pino-format": "1.5.0",
