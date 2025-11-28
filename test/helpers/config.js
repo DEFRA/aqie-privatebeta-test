@@ -56,7 +56,7 @@ const config = convict({
     format: String,
     nullable: true,
     default: null,
-    env: 'CDP_HTTPS_PROXY'
+    env: 'HTTPS_PROXY'
   },
   daqiePassword: {
     doc: 'password for daqie',
