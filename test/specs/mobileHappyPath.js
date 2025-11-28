@@ -14,7 +14,7 @@ const logger = createLogger()
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
   describe(`Forecast Main Page - ${region}`, () => {
     it('daqi value-direct search', async () => {
-      logger.info('--- FMP StartScenario daqi value-direct search --------')
+      logger.info('--- MobileTestValidation StartScenario --------')
 
       // Initialize browser and handle cookies
       await browser.deleteCookies(['airaqie_cookie'])
@@ -42,6 +42,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
       }
+      logger.info('--- MobileTestValidation EndScenario --------')
     })
   })
 })
