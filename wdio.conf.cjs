@@ -31,7 +31,7 @@ function getConfigForSpecs(specs) {
           'bstack:options': {
             userName: process.env.BROWSERSTACK_USER,
             accessKey: process.env.BROWSERSTACK_KEY,
-            projectName: 'aiqe-dataservice-test',
+            projectName: 'aqie-privatebeta-test',
             buildName: `test-run-${process.env.ENVIRONMENT}`,
             local: true,
             localIdentifier: 'wdio-local',
@@ -52,7 +52,7 @@ function getConfigForSpecs(specs) {
             testObservabilityOptions: {
               user: process.env.BROWSERSTACK_USER,
               key: process.env.BROWSERSTACK_KEY,
-              projectName: 'aiqe-dataservice-test',
+              projectName: 'aqie-privatebeta-test',
               buildName: `test-run-${process.env.ENVIRONMENT}`
             },
             acceptInsecureCerts: true,
