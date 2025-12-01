@@ -12,8 +12,8 @@ const dynlocationValue = JSON.parse(
 const logger = createLogger()
 
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
-  describe(`Forecast Main Page - ${region}`, () => {
-    it('daqi value-direct search', async () => {
+  describe(`Browser Stack Mobile Test - ${region}`, () => {
+    it('Mobile test validation', async () => {
       logger.info('--- MobileTestValidation StartScenario --------')
 
       // Initialize browser and handle cookies
