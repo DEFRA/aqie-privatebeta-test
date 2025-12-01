@@ -29,13 +29,10 @@ function getConfigForSpecs(specs) {
       capabilities: [
         {
           'bstack:options': {
-            userName: process.env.BROWSERSTACK_USER,
-            accessKey: process.env.BROWSERSTACK_KEY,
+            user: process.env.BROWSERSTACK_USER,
+            key: process.env.BROWSERSTACK_KEY,
             projectName: 'aqie-privatebeta-test',
-            buildName: `test-run-${process.env.ENVIRONMENT}`,
-            local: true,
-            localIdentifier: 'wdio-local',
-            debug: true
+            buildName: `test-run-${process.env.ENVIRONMENT}`
           },
           acceptInsecureCerts: true,
           browserName: 'chrome',
