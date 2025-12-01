@@ -105,12 +105,32 @@ function getConfigForSpecs(specs) {
 const webConfig = getConfigForSpecs(webSpecs)
 const mobileConfig = getConfigForSpecs(mobileSpecs)
 
+// Build capabilities array up-front so WDIO schedules web and mobile capabilities
+const capabilities = []
+if (webConfig && webConfig.capabilities && webConfig.capabilities.length) {
+  const webCap = Object.assign({}, webConfig.capabilities[0])
+  // attach specs to capability so WDIO maps them to this capability
+  if (webConfig.specs) webCap.specs = webConfig.specs
+  capabilities.push(webCap)
+}
+if (mobileConfig && mobileConfig.capabilities && mobileConfig.capabilities.length) {
+  const mobileCap = Object.assign({}, mobileConfig.capabilities[0])
+  if (mobileConfig.specs) mobileCap.specs = mobileConfig.specs
+  capabilities.push(mobileCap)
+}
+
+// Use mobile services (e.g. browserstack) when mobileConfig provided
+const services = mobileConfig && mobileConfig.services ? mobileConfig.services : []
+
 // Merge base config
 export const config = {
   runner: 'local',
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
   port: process.env.CHROMEDRIVER_PORT || 4444,
+  specs: [], // using per-capability specs
+  capabilities,
+  services,
   execArgv: debug ? ['--inspect'] : [],
   logLevel: debug ? 'debug' : 'info',
   logLevels: { webdriver: 'error' },
@@ -158,22 +178,6 @@ export const config = {
   }
 }
 
-// Sequentially run web then mobile specs
-if (webConfig) {
-  // eslint-disable-next-line no-console
-  console.log('Applying web configuration')
-  Object.assign(config, webConfig)
-  // After web tests, run mobile if present
-  if (mobileConfig) {
-    // eslint-disable-next-line no-console
-    console.log('Mobile configuration will follow web tests')
-    // This is a simplified approach; for true sequential runs, use a runner script or wdio multi-remote
-    setTimeout(() => {
-      Object.assign(config, mobileConfig)
-    }, 0)
-  }
-} else if (mobileConfig) {
-  // eslint-disable-next-line no-console
-  console.log('Applying mobile configuration (no web specs found)')
-  Object.assign(config, mobileConfig)
-}
+// Status: capabilities prepared for WDIO
+// eslint-disable-next-line no-console
+console.log(`WDIO capabilities: ${capabilities.map(c => c.browserName || 'mobile').join(', ')}`)
