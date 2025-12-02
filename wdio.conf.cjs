@@ -69,7 +69,7 @@ const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 1,
+  maxInstances: 2,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -78,25 +78,14 @@ const config = {
 
   capabilities: [
     // Web capability (Chrome/Windows)
-     {
-      maxInstances: 1,
-      browserName: 'chrome',
-      'goog:chromeOptions': {
-        args: [
-          '--no-sandbox',
-          '--disable-infobars',
-          '--headless',
-          '--disable-gpu',
-          '--window-size=1920,1080',
-          '--enable-features=NetworkService,NetworkServiceInProcess',
-          '--password-store=basic',
-          '--use-mock-keychain',
-          '--dns-prefetch-disable',
-          '--disable-background-networking',
-          '--disable-remote-fonts',
-          '--ignore-certificate-errors',
-          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
-        ]
+    {
+      browserName: 'Chrome',
+      'bstack:options': {
+        browserVersion: 'latest',
+        os: 'Windows',
+        osVersion: '11',
+        buildName: `test-run-${process.env.ENVIRONMENT}`,
+        projectName: 'aqie-privatebeta-test'
       }
     },
     // Mobile capability (Samsung Galaxy S21/Android)
@@ -159,7 +148,27 @@ const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [], // will be set dynamically below
+  services: [
+    [
+      'browserstack',
+      {
+        testObservability: true,
+        testObservabilityOptions: {
+          user: process.env.BROWSERSTACK_USER,
+          key: process.env.BROWSERSTACK_KEY,
+          projectName: 'aqie-privatebeta-test',
+          buildName: `test-run-${process.env.ENVIRONMENT}`
+        },
+        acceptInsecureCerts: true,
+        forceLocal: false,
+        browserstackLocal: true,
+        opts: {
+          proxyHost: 'localhost',
+          proxyPort: 3128
+        }
+      }
+    ]
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -350,56 +359,23 @@ const config = {
   }
 };
 
-
-// --- Set config for web (remote chromedriver) or mobile (BrowserStack) at config load time ---
+// --- Dynamic spec assignment for sequential web/mobile execution ---
 const path = require('path');
 const glob = require('glob');
 const allSpecs = glob.sync('./test/specs/**/*.js');
 const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
 const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
-const hostnameWeb = process.env.CHROMEDRIVER_URL || '127.0.0.1';
-const portWeb = process.env.CHROMEDRIVER_PORT || 4444;
-
-const runMode = process.env.TEST_RUN_MODE === 'mobile' ? 'mobile' : 'web';
+// Sequential: run web specs first, then mobile specs
+let runMode = process.env.TEST_RUN_MODE || 'web';
 if (runMode === 'mobile') {
-  config.capabilities = [Object.assign({}, config.capabilities[1])];
+  config.capabilities = [config.capabilities[1]];
   config.specs = mobileSpecs;
-  delete config.hostname;
-  delete config.port;
-  config.user = process.env.BROWSERSTACK_USER;
-  config.key = process.env.BROWSERSTACK_KEY;
-  config.services = [
-    [
-      'browserstack',
-      {
-        testObservability: true,
-        testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
-          key: process.env.BROWSERSTACK_KEY,
-          projectName: 'aqie-privatebeta-test',
-          buildName: `test-run-${process.env.ENVIRONMENT}`
-        },
-        acceptInsecureCerts: true,
-        forceLocal: false,
-        browserstackLocal: true,
-        opts: {
-          proxyHost: 'localhost',
-          proxyPort: 3128
-        }
-      }
-    ]
-  ];
-  console.log('[WDIO-CONFIG] Running MOBILE specs (BrowserStack):', mobileSpecs);
+  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
 } else {
-  config.capabilities = [Object.assign({}, config.capabilities[0])];
+  config.capabilities = [config.capabilities[0]];
   config.specs = webSpecs;
-  config.hostname = hostnameWeb;
-  config.port = portWeb;
-  delete config.user;
-  delete config.key;
-  config.services = [];
-  console.log('[WDIO-CONFIG] Running WEB specs (remote chromedriver):', webSpecs);
+  console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
 }
 
 exports.config = config;
