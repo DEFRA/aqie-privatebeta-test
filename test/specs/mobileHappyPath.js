@@ -20,7 +20,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await browser.deleteCookies(['airaqie_cookie'])
       // await browser.url('')
       await browser.url('')
-      await browser.maximizeWindow()
+      // await browser.maximizeWindow()
 
       // Handle the cookie banner
       if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
