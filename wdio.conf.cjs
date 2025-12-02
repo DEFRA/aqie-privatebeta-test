@@ -159,27 +159,7 @@ const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    [
-      'browserstack',
-      {
-        testObservability: true,
-        testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
-          key: process.env.BROWSERSTACK_KEY,
-          projectName: 'aqie-privatebeta-test',
-          buildName: `test-run-${process.env.ENVIRONMENT}`
-        },
-        acceptInsecureCerts: true,
-        forceLocal: false,
-        browserstackLocal: true,
-        opts: {
-          proxyHost: 'localhost',
-          proxyPort: 3128
-        }
-      }
-    ]
-  ],
+  services: [], // will be set dynamically below
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -389,6 +369,27 @@ if (runMode === 'mobile') {
   delete config.port;
   config.user = process.env.BROWSERSTACK_USER;
   config.key = process.env.BROWSERSTACK_KEY;
+  config.services = [
+    [
+      'browserstack',
+      {
+        testObservability: true,
+        testObservabilityOptions: {
+          user: process.env.BROWSERSTACK_USER,
+          key: process.env.BROWSERSTACK_KEY,
+          projectName: 'aqie-privatebeta-test',
+          buildName: `test-run-${process.env.ENVIRONMENT}`
+        },
+        acceptInsecureCerts: true,
+        forceLocal: false,
+        browserstackLocal: true,
+        opts: {
+          proxyHost: 'localhost',
+          proxyPort: 3128
+        }
+      }
+    ]
+  ];
   console.log('[WDIO-CONFIG] Running MOBILE specs (BrowserStack):', mobileSpecs);
 } else {
   config.capabilities = [Object.assign({}, config.capabilities[0])];
@@ -397,6 +398,7 @@ if (runMode === 'mobile') {
   config.port = portWeb;
   delete config.user;
   delete config.key;
+  config.services = [];
   console.log('[WDIO-CONFIG] Running WEB specs (remote chromedriver):', webSpecs);
 }
 
