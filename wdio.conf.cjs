@@ -370,32 +370,19 @@ const config = {
   }
 };
 
-// --- Dynamic spec assignment for sequential web/mobile execution ---
+
+// --- Set config for web (remote chromedriver) or mobile (BrowserStack) at config load time ---
 const path = require('path');
 const glob = require('glob');
 const allSpecs = glob.sync('./test/specs/**/*.js');
 const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
 const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
-
-
-// --- Run both web and mobile sequentially in one WDIO run ---
 const hostnameWeb = process.env.CHROMEDRIVER_URL || '127.0.0.1';
 const portWeb = process.env.CHROMEDRIVER_PORT || 4444;
 
-const runBoth = async () => {
-  // 1. Run web specs with remote chromedriver
-  config.capabilities = [Object.assign({}, config.capabilities[0])];
-  config.specs = webSpecs;
-  config.hostname = hostnameWeb;
-  config.port = portWeb;
-  // Remove BrowserStack-specific options for web
-  delete config.user;
-  delete config.key;
-  console.log('[WDIO-CONFIG] Running WEB specs (remote chromedriver):', webSpecs);
-  await new Promise((resolve) => setTimeout(resolve, 100)); // allow config to be picked up
-
-  // 2. Run mobile specs with BrowserStack
+const runMode = process.env.TEST_RUN_MODE === 'mobile' ? 'mobile' : 'web';
+if (runMode === 'mobile') {
   config.capabilities = [Object.assign({}, config.capabilities[1])];
   config.specs = mobileSpecs;
   delete config.hostname;
@@ -403,9 +390,14 @@ const runBoth = async () => {
   config.user = process.env.BROWSERSTACK_USER;
   config.key = process.env.BROWSERSTACK_KEY;
   console.log('[WDIO-CONFIG] Running MOBILE specs (BrowserStack):', mobileSpecs);
-};
-if (require.main === module) {
-  runBoth();
+} else {
+  config.capabilities = [Object.assign({}, config.capabilities[0])];
+  config.specs = webSpecs;
+  config.hostname = hostnameWeb;
+  config.port = portWeb;
+  delete config.user;
+  delete config.key;
+  console.log('[WDIO-CONFIG] Running WEB specs (remote chromedriver):', webSpecs);
 }
 
 exports.config = config;
