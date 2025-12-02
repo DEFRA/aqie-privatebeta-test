@@ -378,7 +378,7 @@ if (runMode === 'mobile') {
   console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
 }
 
-module.exports = config;
+exports.config = config;
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
