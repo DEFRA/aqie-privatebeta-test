@@ -366,16 +366,21 @@ const allSpecs = glob.sync('./test/specs/**/*.js');
 const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
 const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
-// Sequential: run web specs first, then mobile specs
-let runMode = process.env.TEST_RUN_MODE || 'web';
-if (runMode === 'mobile') {
-  config.capabilities = [config.capabilities[1]];
-  config.specs = mobileSpecs;
-  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
-} else {
+
+// --- Run both web and mobile sequentially in one WDIO run ---
+const runBoth = async () => {
+  // 1. Run web specs
   config.capabilities = [config.capabilities[0]];
   config.specs = webSpecs;
   console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
+  await new Promise((resolve) => setTimeout(resolve, 100)); // allow config to be picked up
+  // 2. Run mobile specs
+  config.capabilities = [config.capabilities[1]];
+  config.specs = mobileSpecs;
+  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
+};
+if (require.main === module) {
+  runBoth();
 }
 
 exports.config = config;
