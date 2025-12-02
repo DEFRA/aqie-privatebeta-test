@@ -78,14 +78,25 @@ const config = {
 
   capabilities: [
     // Web capability (Chrome/Windows)
-    {
-      browserName: 'Chrome',
-      'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11',
-        buildName: `test-run-${process.env.ENVIRONMENT}`,
-        projectName: 'aqie-privatebeta-test'
+     {
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
+        ]
       }
     },
     // Mobile capability (Samsung Galaxy S21/Android)
@@ -367,17 +378,31 @@ const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
 const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
 
+
 // --- Run both web and mobile sequentially in one WDIO run ---
+const hostnameWeb = process.env.CHROMEDRIVER_URL || '127.0.0.1';
+const portWeb = process.env.CHROMEDRIVER_PORT || 4444;
+
 const runBoth = async () => {
-  // 1. Run web specs
-  config.capabilities = [config.capabilities[0]];
+  // 1. Run web specs with remote chromedriver
+  config.capabilities = [Object.assign({}, config.capabilities[0])];
   config.specs = webSpecs;
-  console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
+  config.hostname = hostnameWeb;
+  config.port = portWeb;
+  // Remove BrowserStack-specific options for web
+  delete config.user;
+  delete config.key;
+  console.log('[WDIO-CONFIG] Running WEB specs (remote chromedriver):', webSpecs);
   await new Promise((resolve) => setTimeout(resolve, 100)); // allow config to be picked up
-  // 2. Run mobile specs
-  config.capabilities = [config.capabilities[1]];
+
+  // 2. Run mobile specs with BrowserStack
+  config.capabilities = [Object.assign({}, config.capabilities[1])];
   config.specs = mobileSpecs;
-  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
+  delete config.hostname;
+  delete config.port;
+  config.user = process.env.BROWSERSTACK_USER;
+  config.key = process.env.BROWSERSTACK_KEY;
+  console.log('[WDIO-CONFIG] Running MOBILE specs (BrowserStack):', mobileSpecs);
 };
 if (require.main === module) {
   runBoth();
