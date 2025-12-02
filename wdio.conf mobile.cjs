@@ -1,14 +1,18 @@
-const fs = require('node:fs');
-const { ProxyAgent, setGlobalDispatcher } = require('undici');
-const { bootstrap } = require('global-agent');
-const debug = process.env.DEBUG;
-const oneHour = 60 * 60 * 1000;
-const dispatcher = new ProxyAgent({ uri: process.env.HTTP_PROXY });
-setGlobalDispatcher(dispatcher);
-bootstrap();
-global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY;
+import fs from 'node:fs'
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
+import { bootstrap } from 'global-agent'
 
-const config = {
+const debug = process.env.DEBUG
+const oneHour = 60 * 60 * 1000
+
+const dispatcher = new ProxyAgent({
+  uri: process.env.HTTP_PROXY
+})
+setGlobalDispatcher(dispatcher)
+bootstrap()
+global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
+
+export const config = {
   //
   // ====================
   // Runner Configuration
@@ -49,7 +53,7 @@ const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/*.js'],
+  specs: ['./test/specs/**/mobileHappyPath.js'],
   // Patterns to exclude.
   exclude: [],
   // injectGlobals: false,
@@ -76,27 +80,19 @@ const config = {
   // https://saucelabs.com/platform/platform-configurator
   //
 
+  commonCapabilities: {
+    'bstack:options': {
+      buildName: `test-run-${process.env.ENVIRONMENT}`,
+      projectName: 'aqie-privatebeta-test'
+    }
+  },
   capabilities: [
-    // Web capability (Chrome/Windows)
     {
-      browserName: 'Chrome',
       'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11',
-        buildName: `test-run-${process.env.ENVIRONMENT}`,
-        projectName: 'aqie-privatebeta-test'
-      }
-    },
-    // Mobile capability (Samsung Galaxy S21/Android)
-    {
       browserName: 'chromium',
-      'bstack:options': {
-        deviceName: 'Samsung Galaxy S21',
-        osVersion: '11.0',
-        platformName: 'android',
-        buildName: `test-run-${process.env.ENVIRONMENT}`,
-        projectName: 'aqie-privatebeta-test'
+      deviceName: 'Samsung Galaxy S21',
+      osVersion: '11.0',
+      platformName: 'android'
       }
     }
   ],
@@ -354,34 +350,13 @@ const config = {
    */
   onComplete: function (exitCode, config, capabilities, results) {
     if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('./FAILED', JSON.stringify(results));
+      fs.writeFileSync('./FAILED', JSON.stringify(results))
     }
   }
-};
-
-// --- Dynamic spec assignment for sequential web/mobile execution ---
-const path = require('path');
-const glob = require('glob');
-const allSpecs = glob.sync('./test/specs/**/*.js');
-const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
-const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
-
-// Sequential: run web specs first, then mobile specs
-let runMode = process.env.TEST_RUN_MODE || 'web';
-if (runMode === 'mobile') {
-  config.capabilities = [config.capabilities[1]];
-  config.specs = mobileSpecs;
-  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
-} else {
-  config.capabilities = [config.capabilities[0]];
-  config.specs = webSpecs;
-  console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
-}
-
-module.exports = config;
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
    * @param {string} newSessionId session ID of the new session
    */
   // onReload: function (oldSessionId, newSessionId) {}
+}
