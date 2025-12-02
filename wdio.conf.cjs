@@ -88,11 +88,11 @@ export const config = {
   },
   capabilities: [
     {
-      browserName: 'Chrome',
       'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11'
+      browserName: 'chromium',
+      deviceName: 'Samsung Galaxy S21',
+      osVersion: '11.0',
+      platformName: 'android'
       }
     }
   ],
