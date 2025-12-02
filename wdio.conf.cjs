@@ -1,5 +1,15 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
+import { bootstrap } from 'global-agent'
+
+// Setup proxy for BrowserStack (calls must go via platform proxy)
+const dispatcher = new ProxyAgent({
+  uri: process.env.HTTP_PROXY
+})
+setGlobalDispatcher(dispatcher)
+bootstrap()
+global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
 
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
@@ -28,17 +38,21 @@ function getConfigForSpecs(specs) {
       maxInstances: 1,
       capabilities: [
         {
-          'bstack:options': {
-            user: process.env.BROWSERSTACK_USER,
-            key: process.env.BROWSERSTACK_KEY,
-            projectName: 'aqie-privatebeta-test',
-            buildName: `test-run-${process.env.ENVIRONMENT}`
-          },
-          acceptInsecureCerts: true,
           browserName: 'chrome',
-          os: 'Android',
-          osVersion: '11.0',
-          deviceName: 'Samsung Galaxy S21',
+          'bstack:options': {
+            userName: process.env.BROWSERSTACK_USER,
+            accessKey: process.env.BROWSERSTACK_KEY,
+            deviceName: 'Samsung Galaxy S21',
+            osVersion: '11.0',
+            platformName: 'android',
+            projectName: 'aqie-privatebeta-test',
+            buildName: `test-run-${process.env.ENVIRONMENT}`,
+            realMobile: true,
+            local: true,
+            localIdentifier: 'wdio-local',
+            debug: true
+          },
+          acceptInsecureCerts: true
         }
       ],
       services: [
@@ -119,12 +133,23 @@ if (mobileConfig && mobileConfig.capabilities && mobileConfig.capabilities.lengt
 // Use mobile services (e.g. browserstack) when mobileConfig provided
 const services = mobileConfig && mobileConfig.services ? mobileConfig.services : []
 
+// Common BrowserStack capabilities (applied when mobile specs exist)
+const commonCapabilities = mobileConfig ? {
+  'bstack:options': {
+    buildName: `test-run-${process.env.ENVIRONMENT}`,
+    projectName: 'aqie-privatebeta-test'
+  }
+} : {}
+
 // Merge base config
 export const config = {
   runner: 'local',
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
   hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
   port: process.env.CHROMEDRIVER_PORT || 4444,
+  // Add BrowserStack credentials when mobile specs present (per BrowserStack docs)
+  ...(mobileConfig ? { user: process.env.BROWSERSTACK_USER, key: process.env.BROWSERSTACK_KEY } : {}),
+  commonCapabilities,
   specs: [], // using per-capability specs
   capabilities,
   services,
