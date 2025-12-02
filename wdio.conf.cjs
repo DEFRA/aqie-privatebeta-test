@@ -76,30 +76,7 @@ const config = {
   // https://saucelabs.com/platform/platform-configurator
   //
 
-  capabilities: [
-    // Web capability (Chrome/Windows)
-    {
-      browserName: 'Chrome',
-      'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11',
-        buildName: `test-run-${process.env.ENVIRONMENT}`,
-        projectName: 'aqie-privatebeta-test'
-      }
-    },
-    // Mobile capability (Samsung Galaxy S21/Android)
-    {
-      browserName: 'chromium',
-      'bstack:options': {
-        deviceName: 'Samsung Galaxy S21',
-        osVersion: '11.0',
-        platformName: 'android',
-        buildName: `test-run-${process.env.ENVIRONMENT}`,
-        projectName: 'aqie-privatebeta-test'
-      }
-    }
-  ],
+  // capabilities will be assigned dynamically below
 
   execArgv: debug ? ['--inspect'] : [],
 
@@ -359,24 +336,40 @@ const config = {
   }
 };
 
-// --- Dynamic spec assignment for sequential web/mobile execution ---
+
+// Assign non-mobile specs to web, mobile specs to mobile capability
 const path = require('path');
 const glob = require('glob');
 const allSpecs = glob.sync('./test/specs/**/*.js');
 const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
 const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
-// Sequential: run web specs first, then mobile specs
-let runMode = process.env.TEST_RUN_MODE || 'web';
-if (runMode === 'mobile') {
-  config.capabilities = [config.capabilities[1]];
-  config.specs = mobileSpecs;
-  console.log('[WDIO-CONFIG] Running MOBILE specs:', mobileSpecs);
-} else {
-  config.capabilities = [config.capabilities[0]];
-  config.specs = webSpecs;
-  console.log('[WDIO-CONFIG] Running WEB specs:', webSpecs);
-}
+config.capabilities = [
+  {
+    browserName: 'Chrome',
+    'bstack:options': {
+      browserVersion: 'latest',
+      os: 'Windows',
+      osVersion: '11',
+      buildName: `test-run-${process.env.ENVIRONMENT}`,
+      projectName: 'aqie-privatebeta-test'
+    },
+    specs: webSpecs
+  },
+  {
+    browserName: 'chromium',
+    'bstack:options': {
+      deviceName: 'Samsung Galaxy S21',
+      osVersion: '11.0',
+      platformName: 'android',
+      buildName: `test-run-${process.env.ENVIRONMENT}`,
+      projectName: 'aqie-privatebeta-test'
+    },
+    specs: mobileSpecs
+  }
+];
+
+config.specs = allSpecs;
 
 exports.config = config;
   /**
