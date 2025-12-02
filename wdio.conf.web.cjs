@@ -1,16 +1,6 @@
 import fs from 'node:fs'
-import { ProxyAgent, setGlobalDispatcher } from 'undici'
-import { bootstrap } from 'global-agent'
-
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
-
-const dispatcher = new ProxyAgent({
-  uri: process.env.HTTP_PROXY
-})
-setGlobalDispatcher(dispatcher)
-bootstrap()
-global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
 
 export const config = {
   //
@@ -29,13 +19,13 @@ export const config = {
 
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
-  user: process.env.BROWSERSTACK_USER,
-  key: process.env.BROWSERSTACK_KEY,
-
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
   // baseUrl: `https://service-name.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
+  // Connection to remote chromedriver
+  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  port: process.env.CHROMEDRIVER_PORT || 4444,
 
   //
   // ==================
@@ -53,7 +43,7 @@ export const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/mobileHappyPath.js'],
+  specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
   exclude: [],
   // injectGlobals: false,
@@ -80,19 +70,26 @@ export const config = {
   // https://saucelabs.com/platform/platform-configurator
   //
 
-  commonCapabilities: {
-    'bstack:options': {
-      buildName: `test-run-${process.env.ENVIRONMENT}`,
-      projectName: 'aqie-privatebeta-test'
-    }
-  },
   capabilities: [
     {
-      browserName: 'Chrome',
-      'bstack:options': {
-        browserVersion: 'latest',
-        os: 'Windows',
-        osVersion: '11'
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
+        ]
       }
     }
   ],
@@ -144,27 +141,7 @@ export const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    [
-      'browserstack',
-      {
-        testObservability: true,
-        testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
-          key: process.env.BROWSERSTACK_KEY,
-          projectName: 'aqie-privatebeta-test',
-          buildName: `test-run-${process.env.ENVIRONMENT}`
-        },
-        acceptInsecureCerts: true,
-        forceLocal: false,
-        browserstackLocal: true,
-        opts: {
-          proxyHost: 'localhost',
-          proxyPort: 3128
-        }
-      }
-    ]
-  ],
+  // services: [],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber

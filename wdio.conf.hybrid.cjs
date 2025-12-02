@@ -1,0 +1,205 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { ProxyAgent, setGlobalDispatcher } from 'undici'
+import { bootstrap } from 'global-agent'
+
+// Setup proxy for BrowserStack (calls must go via platform proxy)
+const dispatcher = new ProxyAgent({
+  uri: process.env.HTTP_PROXY
+})
+setGlobalDispatcher(dispatcher)
+bootstrap()
+global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
+
+const debug = process.env.DEBUG
+const oneHour = 60 * 60 * 1000
+
+// Helper: get all spec files and split into web/mobile
+const specDir = path.resolve('./test/specs')
+const allSpecs = fs.readdirSync(specDir)
+const mobileSpecs = allSpecs.filter(f => f.startsWith('mobile') && f.endsWith('.js')).map(f => `./test/specs/${f}`)
+const webSpecs = allSpecs.filter(f => !f.startsWith('mobile') && f.endsWith('.js')).map(f => `./test/specs/${f}`)
+
+// Helper: print environment logs
+function logEnv(env) {
+  // eslint-disable-next-line no-console
+  console.log(`\n=== Running ${env} tests ===\n`)
+}
+
+// Dynamic config builder
+function getConfigForSpecs(specs) {
+  if (specs.length === 0) return null
+  if (specs[0].includes('mobile')) {
+    logEnv('Mobile (BrowserStack)')
+    // eslint-disable-next-line no-console
+    console.log(`Mobile specs count: ${specs.length}`)
+    return {
+      specs,
+      maxInstances: 1,
+      capabilities: [
+        {
+          browserName: 'chrome',
+          'bstack:options': {
+            userName: process.env.BROWSERSTACK_USER,
+            accessKey: process.env.BROWSERSTACK_KEY,
+            deviceName: 'Samsung Galaxy S21',
+            osVersion: '11.0',
+            platformName: 'android',
+            projectName: 'aqie-privatebeta-test',
+            buildName: `test-run-${process.env.ENVIRONMENT}`,
+            realMobile: true,
+            local: true,
+            localIdentifier: 'wdio-local',
+            debug: true
+          },
+          acceptInsecureCerts: true
+        }
+      ],
+      services: [
+        [
+          'browserstack',
+          {
+            testObservability: true,
+            testObservabilityOptions: {
+              user: process.env.BROWSERSTACK_USER,
+              key: process.env.BROWSERSTACK_KEY,
+              projectName: 'aqie-privatebeta-test',
+              buildName: `test-run-${process.env.ENVIRONMENT}`
+            },
+            acceptInsecureCerts: true,
+            forceLocal: false,
+            browserstackLocal: true,
+            opts: {
+              proxyHost: 'localhost',
+              proxyPort: 3128
+            }
+          }
+        ]
+      ]
+    }
+  } else {
+    logEnv('Web (Local Chrome)')
+    // eslint-disable-next-line no-console
+    console.log(`Web specs count: ${specs.length}`)
+    return {
+      specs,
+      maxInstances: 1,
+      capabilities: [
+        {
+          maxInstances: 1,
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            args: [
+              '--no-sandbox',
+              '--disable-infobars',
+              '--headless',
+              '--disable-gpu',
+              '--window-size=1920,1080',
+              '--enable-features=NetworkService,NetworkServiceInProcess',
+              '--password-store=basic',
+              '--use-mock-keychain',
+              '--dns-prefetch-disable',
+              '--disable-background-networking',
+              '--disable-remote-fonts',
+              '--ignore-certificate-errors',
+              '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
+            ]
+          }
+        }
+      ],
+      services: []
+    }
+  }
+}
+
+// Build config: run web specs first, then mobile specs
+const webConfig = getConfigForSpecs(webSpecs)
+const mobileConfig = getConfigForSpecs(mobileSpecs)
+
+// Build capabilities array up-front so WDIO schedules web and mobile capabilities
+const capabilities = []
+if (webConfig && webConfig.capabilities && webConfig.capabilities.length) {
+  const webCap = Object.assign({}, webConfig.capabilities[0])
+  // attach specs to capability so WDIO maps them to this capability
+  if (webConfig.specs) webCap.specs = webConfig.specs
+  capabilities.push(webCap)
+}
+if (mobileConfig && mobileConfig.capabilities && mobileConfig.capabilities.length) {
+  const mobileCap = Object.assign({}, mobileConfig.capabilities[0])
+  if (mobileConfig.specs) mobileCap.specs = mobileConfig.specs
+  capabilities.push(mobileCap)
+}
+
+// Use mobile services (e.g. browserstack) when mobileConfig provided
+const services = mobileConfig && mobileConfig.services ? mobileConfig.services : []
+
+// Common BrowserStack capabilities (applied when mobile specs exist)
+const commonCapabilities = mobileConfig ? {
+  'bstack:options': {
+    buildName: `test-run-${process.env.ENVIRONMENT}`,
+    projectName: 'aqie-privatebeta-test'
+  }
+} : {}
+
+// Merge base config
+export const config = {
+  runner: 'local',
+  baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
+  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  port: process.env.CHROMEDRIVER_PORT || 4444,
+  // Add BrowserStack credentials when mobile specs present (per BrowserStack docs)
+  ...(mobileConfig ? { user: process.env.BROWSERSTACK_USER, key: process.env.BROWSERSTACK_KEY } : {}),
+  commonCapabilities,
+  specs: [], // using per-capability specs
+  capabilities,
+  services,
+  execArgv: debug ? ['--inspect'] : [],
+  logLevel: debug ? 'debug' : 'info',
+  logLevels: { webdriver: 'error' },
+  bail: 0,
+  waitforTimeout: 10000,
+  waitforInterval: 200,
+  connectionRetryTimeout: 120000,
+  connectionRetryCount: 3,
+  framework: 'mocha',
+  reporters: [
+    [
+      'spec',
+      { addConsoleLogs: true, realtimeReporting: true, color: false }
+    ],
+    [
+      'allure',
+      { outputDir: 'allure-results' }
+    ]
+  ],
+  mochaOpts: {
+    ui: 'bdd',
+    timeout: debug ? oneHour : 90000
+  },
+  beforeTest: function (test) {
+    // eslint-disable-next-line no-console
+    console.log(`Starting: ${test.title}`)
+  },
+  afterTest: async function (
+    test,
+    context,
+    { error, result, duration, passed, retries }
+  ) {
+    // eslint-disable-next-line no-console
+    console.log(`Finished: ${test.title} - ${passed ? 'PASSED' : 'FAILED'} (${duration}ms)`)
+    await browser.takeScreenshot()
+  },
+  onComplete: function (exitCode, config, capabilities, results) {
+    // eslint-disable-next-line no-console
+    console.log(`Test run completed - Passed: ${results.passed || 0}, Failed: ${results.failed || 0}`)
+    if (results?.failed && results.failed > 0) {
+      // eslint-disable-next-line no-console
+      console.log('Writing failure report to ./FAILED')
+      fs.writeFileSync('./FAILED', JSON.stringify(results))
+    }
+  }
+}
+
+// Status: capabilities prepared for WDIO
+// eslint-disable-next-line no-console
+console.log(`WDIO capabilities: ${capabilities.map(c => c.browserName || 'mobile').join(', ')}`)
