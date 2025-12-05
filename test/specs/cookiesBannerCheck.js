@@ -140,6 +140,13 @@ describe('Cookies Validation', () => {
     await browser.deleteCookies()
     await browser.url('')
     await browser.maximizeWindow()
+    await browser.waitUntil(
+      async () => await cookieBanner.cookieBannerDialog.isDisplayed(),
+      {
+        timeout: 1000, // Adjust timeout as needed
+        timeoutMsg: 'Cookie banner did not appear within 1 second'
+      }
+    )
     if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
       // validation of the buttons
       const getRejectButtonOfCookieBanner =

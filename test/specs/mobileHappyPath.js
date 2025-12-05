@@ -25,6 +25,10 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       // Handle the cookie banner
       if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
+        // Replace browser.pause(1000) with an explicit wait for the rejectButtonCookiesDialog to be clickable
+        await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+          timeout: 1000
+        })
         await cookieBanner.rejectButtonCookiesDialog.click()
         await cookieBanner.hideButtonHideDialog.click()
       }
@@ -38,6 +42,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         await locationSearchPage.clickNIRadiobtn()
         await locationSearchPage.setUserNIRegion(region)
       }
+
+      // Add an explicit wait for the continue button to be clickable
+      await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
       await locationSearchPage.clickContinueBtn()
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
