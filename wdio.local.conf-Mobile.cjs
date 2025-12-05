@@ -1,38 +1,16 @@
-const fs = require('node:fs');
-const { ProxyAgent, setGlobalDispatcher } = require('undici');
-const { bootstrap } = require('global-agent');
-const debug = process.env.DEBUG;
-const oneHour = 60 * 60 * 1000;
-const dispatcher = new ProxyAgent({ uri: process.env.HTTP_PROXY });
-setGlobalDispatcher(dispatcher);
-bootstrap();
-global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY;
+import allure from 'allure-commandline'
 
-const config = {
+const debug = process.env.DEBUG
+const oneMinute = 60 * 1000
+const oneHour = 60 * 60 * 1000
+
+export const config = {
   //
   // ====================
   // Runner Configuration
   // ====================
   // WebdriverIO supports running e2e tests as well as unit and component tests.
   runner: 'local',
-  //
-  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
-  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
-  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
-  // gets prepended directly.
-  // baseUrl: `https://${process.env.BASE_URL}/`,
-  // baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-
-  baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
-
-  user: process.env.BROWSERSTACK_USER,
-  key: process.env.BROWSERSTACK_KEY,
-
-  // If the service you're testing is setup with its own subdomain you can build the baseUrl
-  // up using the Environment name:
-  // baseUrl: `https://service-name.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
-
-
   //
   // ==================
   // Specify Test Files
@@ -52,7 +30,7 @@ const config = {
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
   exclude: [],
-  // injectGlobals: false,
+  // injectGlobals: true,
   //
   // ============
   // Capabilities
@@ -69,14 +47,26 @@ const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 3,
+  maxInstances: debug ? 1 : 3,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
-
-  // capabilities will be assigned dynamically below
+  capabilities: debug
+    ? [{ browserName: 'MicrosoftEdge' }]
+    : [
+        {
+          maxInstances: 1,
+          browserName: 'chrome',
+          'goog:chromeOptions': {
+            mobileEmulation: {
+              deviceName: 'iPhone XR' // You can use other device names like 'iPhone X'
+            },
+            args: ['--window-size=375,812'] // Optional: Set window size for the emulation
+          }
+        }
+      ],
 
   execArgv: debug ? ['--inspect'] : [],
 
@@ -87,10 +77,7 @@ const config = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: debug ? 'debug' : 'info',
-  logLevels: {
-    webdriver: 'error'
-  },
+  logLevel: debug ? 'debug' : 'silent',
   //
   // Set specific log levels per logger
   // loggers:
@@ -108,7 +95,14 @@ const config = {
   //
   // If you only want to run your tests until a specific amount of tests have failed use
   // bail (default is 0 - don't bail, run all tests).
-  bail: 0,
+  bail: 1,
+  //
+  // Set a base URL in order to shorten url command calls. If your `url` parameter starts
+  // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
+  // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
+  // gets prepended directly.
+  baseUrl: `https://aqie-front-end.perf-test.cdp-int.defra.cloud/`,
+  // baseUrl: 'http://localhost:3000/',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 10000,
@@ -125,27 +119,7 @@ const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    [
-      'browserstack',
-      {
-        testObservability: true,
-        testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
-          key: process.env.BROWSERSTACK_KEY,
-          projectName: 'aqie-privatebeta-test',
-          buildName: `test-run-${process.env.ENVIRONMENT}`
-        },
-        acceptInsecureCerts: true,
-        forceLocal: false,
-        browserstackLocal: true,
-        opts: {
-          proxyHost: 'localhost',
-          proxyPort: 3128
-        }
-      }
-    ]
-  ],
+  // services: ['chromedriver'],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -167,7 +141,7 @@ const config = {
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter
-
+  // disableMochaHooks: true
   reporters: [
     [
       // Spec reporter provides rolling output to the logger so you can see it in-progress
@@ -191,7 +165,7 @@ const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 90000
+    timeout: debug ? oneHour : 60000
   },
   //
   // =====
@@ -241,7 +215,10 @@ const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {},
+  /* before: function () {
+    require('expect-webdriverio').setOptions({ wait: 5000 });
+  },
+  */
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
@@ -281,16 +258,40 @@ const config = {
    * @param {boolean} result.passed    true if test has passed, otherwise false
    * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
    */
+  /* before: function (config, capabilities) {
+    const parentFolderName = './screenshots';
+    const date = new Date();
+    const folderName = `./screenshots/${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}_${date.getHours().toString().padStart(2, '0')}-${date.getMinutes().toString().padStart(2, '0')}-${date.getSeconds().toString().padStart(2, '0')}`;
+    
+    if (fs.existsSync(parentFolderName)) {
+      fs.rmdirSync(parentFolderName, { recursive: true });
+    }
+
+    if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName, { recursive: true });
+    }    
+    global.screenshotFolder = folderName;
+}, */
+
   afterTest: async function (
     test,
     context,
     { error, result, duration, passed, retries }
   ) {
-    await browser.takeScreenshot()
+    // await browser.takeScreenshot()
+    // await browser.saveScreenshot()
     /*  if (error) {
-      await browser.takeScreenshot()
-      // await browser.saveScreenshot()
+      browser.executeScript(
+        'browserstack_executor: {"action": "setSessionStatus", "arguments": {"status":"failed","reason": "At least 1 assertion failed"}}'
+      )
     } */
+    /*  if (!passed) {
+      const timestamp = new Date().toISOString().replace(/:/g, '-');
+      await browser.saveScreenshot(`./screenshots/${test.title}-${timestamp}.png`);
+  } */
+    // const screenshotPath = path.join(global.screenshotFolder, `${test.title.replace(/ /g, '_')}.png`);
+    // await browser.saveScreenshot(screenshotPath);
+    await browser.takeScreenshot()
   },
 
   /**
@@ -330,51 +331,29 @@ const config = {
    * @param {<Object>} results object containing test results
    */
   onComplete: function (exitCode, config, capabilities, results) {
-    if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('./FAILED', JSON.stringify(results));
-    }
+    const reportError = new Error('Could not generate Allure report')
+    const generation = allure(['generate', 'allure-results', '--clean'])
+
+    return new Promise((resolve, reject) => {
+      const generationTimeout = setTimeout(() => reject(reportError), oneMinute)
+
+      generation.on('exit', function (exitCode) {
+        clearTimeout(generationTimeout)
+
+        if (exitCode !== 0) {
+          return reject(reportError)
+        }
+
+        allure(['open'])
+        resolve()
+      })
+    })
   }
-};
 
-
-// Assign non-mobile specs to web, mobile specs to mobile capability
-const path = require('path');
-const glob = require('glob');
-const allSpecs = glob.sync('./test/specs/**/*.js');
-const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
-const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
-
-config.capabilities = [
-  {
-    browserName: 'Chrome',
-    'bstack:options': {
-      browserVersion: 'latest',
-      os: 'Windows',
-      osVersion: '11',
-      buildName: `test-run-${process.env.ENVIRONMENT}`,
-      projectName: 'aqie-privatebeta-test'
-    },
-    specs: webSpecs
-  },
-  {
-    browserName: 'chromium',
-    'bstack:options': {
-      deviceName: 'Samsung Galaxy S21',
-      osVersion: '11.0',
-      platformName: 'android',
-      buildName: `test-run-${process.env.ENVIRONMENT}`,
-      projectName: 'aqie-privatebeta-test'
-    },
-    specs: mobileSpecs
-  }
-];
-
-config.specs = allSpecs;
-
-exports.config = config;
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
    * @param {string} newSessionId session ID of the new session
    */
   // onReload: function (oldSessionId, newSessionId) {}
+}

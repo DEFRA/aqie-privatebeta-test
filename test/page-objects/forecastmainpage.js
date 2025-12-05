@@ -473,6 +473,11 @@ class ForecastMainPage {
     return $$("div[class*='daqi-selected']")
   }
 
+  // Mobile view - DAQI forecast
+  get daqiForecastDaysFullMobile() {
+    return $$("span[class='daqi-day-full']")
+  }
+
   // High level alert message symbol
   get highLevelAlertMessageSymbol() {
     return $("span[class='govuk-warning-text__icon']")
