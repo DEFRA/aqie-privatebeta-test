@@ -81,7 +81,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       // Compare the result with daqiDaysTextMobile
       await expect(daqiDaysTextMobile).toMatchObject(expectedDays)
-
+      await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- MobileTestValidation EndScenario --------')
     })
   })
