@@ -1,14 +1,8 @@
-const fs = require('node:fs');
-const { ProxyAgent, setGlobalDispatcher } = require('undici');
-const { bootstrap } = require('global-agent');
-const debug = process.env.DEBUG;
-const oneHour = 60 * 60 * 1000;
-const dispatcher = new ProxyAgent({ uri: process.env.HTTP_PROXY });
-setGlobalDispatcher(dispatcher);
-bootstrap();
-global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY;
+import fs from 'node:fs'
+const debug = process.env.DEBUG
+const oneHour = 60 * 60 * 1000
 
-const config = {
+export const config = {
   //
   // ====================
   // Runner Configuration
@@ -25,14 +19,13 @@ const config = {
 
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
-  // Connection to remote chromedriver (no BrowserStack)
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
-  port: process.env.CHROMEDRIVER_PORT || 4444,
-
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
   // baseUrl: `https://service-name.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
+  // Connection to remote chromedriver
+  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  port: process.env.CHROMEDRIVER_PORT || 4444,
 
   //
   // ==================
@@ -52,7 +45,7 @@ const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [],
+  exclude: ['./test/specs/mobileHappyPath.js'],
   // injectGlobals: false,
   //
   // ============
@@ -70,14 +63,36 @@ const config = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 5,
+  maxInstances: 1,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
   // https://saucelabs.com/platform/platform-configurator
   //
 
-  // capabilities will be assigned dynamically below
+  capabilities: [
+    {
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
+        ]
+      }
+    }
+  ],
 
   execArgv: debug ? ['--inspect'] : [],
 
@@ -312,59 +327,13 @@ const config = {
    */
   onComplete: function (exitCode, config, capabilities, results) {
     if (results?.failed && results.failed > 0) {
-      fs.writeFileSync('./FAILED', JSON.stringify(results));
+      fs.writeFileSync('./FAILED', JSON.stringify(results))
     }
   }
-};
-
-
-// Assign non-mobile specs to web, mobile specs to mobile capability
-const path = require('path');
-const glob = require('glob');
-const allSpecs = glob.sync('./test/specs/**/*.js');
-const webSpecs = allSpecs.filter(f => !path.basename(f).startsWith('mobile'));
-const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
-
-config.capabilities = [
-  {
-     browserName: 'chrome',
-      'goog:chromeOptions': {
-        args: [
-          '--no-sandbox',
-          '--disable-infobars',
-          '--headless',
-          '--disable-gpu',
-          '--window-size=1920,1080',
-          '--enable-features=NetworkService,NetworkServiceInProcess',
-          '--password-store=basic',
-          '--use-mock-keychain',
-          '--dns-prefetch-disable',
-          '--disable-background-networking',
-          '--disable-remote-fonts',
-          '--ignore-certificate-errors',
-          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
-        ]
-      },
-    specs: webSpecs
-  },
-  {
-            browserName: 'chrome',
-          'goog:chromeOptions': {
-            mobileEmulation: {
-              deviceName: 'iPhone XR' // You can use other device names like 'iPhone X'
-            },
-            args: ['--window-size=375,812'] // Optional: Set window size for the emulation
-          },
-    specs: mobileSpecs
-  }
-];
-
-config.specs = allSpecs;
-
-exports.config = config;
   /**
    * Gets executed when a refresh happens.
    * @param {string} oldSessionId session ID of the old session
    * @param {string} newSessionId session ID of the new session
    */
   // onReload: function (oldSessionId, newSessionId) {}
+}
