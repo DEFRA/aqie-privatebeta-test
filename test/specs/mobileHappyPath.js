@@ -25,7 +25,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await browser.waitUntil(
         async () =>
           await browser.execute(() => document.readyState === 'complete'),
-        { timeout: 10000, timeoutMsg: 'Page did not load completely' }
+        { timeout: 5000, timeoutMsg: 'Page did not load completely' }
       )
 
       // Handle the cookie banner - wait for it to appear
@@ -52,7 +52,34 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
+        // Wait for navigation to complete after clicking location match link
+        await browser.waitUntil(
+          async () => {
+            const url = await browser.getUrl()
+            return url.includes('forecast') || url.includes('region')
+          },
+          {
+            timeout: 10000,
+            timeoutMsg:
+              'Navigation did not complete after clicking location match'
+          }
+        )
       }
+
+      // Wait for the forecast page to load completely
+      await browser.waitUntil(
+        async () =>
+          await browser.execute(() => document.readyState === 'complete'),
+        { timeout: 5000, timeoutMsg: 'Forecast page did not load completely' }
+      )
+
+      // Wait for mobile forecast elements to be present
+      const firstMobileDayElement = await $("span[class='daqi-day-full']")
+      await firstMobileDayElement.waitForDisplayed({
+        timeout: 10000,
+        timeoutMsg: 'Mobile forecast days did not appear'
+      })
+
       // Validate mobile view DAQI forecast days
       const daqiDaysMobile = await ForecastMainPage.daqiForecastDaysFullMobile
       const daqiDaysTextMobile = []

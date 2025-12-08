@@ -210,7 +210,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 90000
+    timeout: debug ? oneHour : 180000
   },
   //
   // =====
