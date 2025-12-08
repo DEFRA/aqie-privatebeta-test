@@ -45,6 +45,22 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       // Add an explicit wait for the continue button to be clickable
       await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+      // Check if continue button is displayed and enabled before clicking
+      const isDisplayed = await locationSearchPage.continueBtn.isDisplayed()
+      const isEnabled = await locationSearchPage.continueBtn.isEnabled()
+      logger.info(
+        `Continue button displayed: ${isDisplayed}, enabled: ${isEnabled}`
+      )
+      if (!isDisplayed) {
+        throw new Error('Continue button is not displayed')
+      }
+      if (!isEnabled) {
+        throw new Error('Continue button is not enabled')
+      }
+      // Click on the body to dismiss the mobile keyboard
+      await browser.execute(() => {
+        document.body.click()
+      })
       await locationSearchPage.clickContinueBtn()
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {

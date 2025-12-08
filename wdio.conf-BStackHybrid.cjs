@@ -25,9 +25,8 @@ const config = {
 
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
-  // Connection to remote chromedriver (no BrowserStack)
-  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
-  port: process.env.CHROMEDRIVER_PORT || 4444,
+  user: process.env.BROWSERSTACK_USER,
+  key: process.env.BROWSERSTACK_KEY,
 
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
@@ -126,7 +125,27 @@ const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  // services: [],
+  services: [
+    [
+      'browserstack',
+      {
+        testObservability: true,
+        testObservabilityOptions: {
+          user: process.env.BROWSERSTACK_USER,
+          key: process.env.BROWSERSTACK_KEY,
+          projectName: 'aqie-privatebeta-test',
+          buildName: `test-run-${process.env.ENVIRONMENT}`
+        },
+        acceptInsecureCerts: true,
+        forceLocal: false,
+        browserstackLocal: true,
+        opts: {
+          proxyHost: 'localhost',
+          proxyPort: 3128
+        }
+      }
+    ]
+  ],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -172,7 +191,7 @@ const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 90000
+    timeout: debug ? oneHour : 180000
   },
   //
   // =====
@@ -327,34 +346,25 @@ const mobileSpecs = allSpecs.filter(f => path.basename(f).startsWith('mobile'));
 
 config.capabilities = [
   {
-     browserName: 'chrome',
-      'goog:chromeOptions': {
-        args: [
-          '--no-sandbox',
-          '--disable-infobars',
-          '--headless',
-          '--disable-gpu',
-          '--window-size=1920,1080',
-          '--enable-features=NetworkService,NetworkServiceInProcess',
-          '--password-store=basic',
-          '--use-mock-keychain',
-          '--dns-prefetch-disable',
-          '--disable-background-networking',
-          '--disable-remote-fonts',
-          '--ignore-certificate-errors',
-          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
-        ]
-      },
+    browserName: 'Chrome',
+    'bstack:options': {
+      browserVersion: 'latest',
+      os: 'Windows',
+      osVersion: '11',
+      buildName: `test-run-${process.env.ENVIRONMENT}`,
+      projectName: 'aqie-privatebeta-test'
+    },
     specs: webSpecs
   },
   {
-            browserName: 'chrome',
-          'goog:chromeOptions': {
-            mobileEmulation: {
-              deviceName: 'iPhone XR' // You can use other device names like 'iPhone X'
-            },
-            args: ['--window-size=375,812'] // Optional: Set window size for the emulation
-          },
+    browserName: 'chromium',
+    'bstack:options': {
+      deviceName: 'Samsung Galaxy S21',
+      osVersion: '11.0',
+      platformName: 'android',
+      buildName: `test-run-${process.env.ENVIRONMENT}`,
+      projectName: 'aqie-privatebeta-test'
+    },
     specs: mobileSpecs
   }
 ];
