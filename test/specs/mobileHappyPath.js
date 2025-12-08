@@ -17,21 +17,24 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
     it('Mobile test validation', async () => {
       logger.info('--- MobileTestValidation StartScenario --------')
 
-      // Initialize browser and handle cookies
-      await browser.deleteCookies(['airaqie_cookie'])
-      // await browser.url('')
-      await browser.url('')
-      // await browser.maximizeWindow()
+      // Initialize browser and handle cookies - delete ALL cookies to ensure clean state
+      await browser.deleteCookies()
 
-      // Handle the cookie banner
-      if (await cookieBanner.cookieBannerDialog.isDisplayed()) {
-        // Replace browser.pause(1000) with an explicit wait for the rejectButtonCookiesDialog to be clickable
-        await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
-          timeout: 1000
-        })
-        await cookieBanner.rejectButtonCookiesDialog.click()
-        await cookieBanner.hideButtonHideDialog.click()
-      }
+      // Navigate to homepage with explicit wait for page load
+      await browser.url('')
+      await browser.waitUntil(
+        async () =>
+          await browser.execute(() => document.readyState === 'complete'),
+        { timeout: 10000, timeoutMsg: 'Page did not load completely' }
+      )
+
+      // Handle the cookie banner - wait for it to appear
+      await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+      await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+        timeout: 5000
+      })
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
 
       // Navigate to forecast page
       await startNowPage.startNowBtnClick()
