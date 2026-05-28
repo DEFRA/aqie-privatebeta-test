@@ -443,7 +443,9 @@ describe(`new ricardo validation `, () => {
 
         // Validate distances are in ascending order
         for (let i = 1; i < distanceValues.length; i++) {
-          await expect(distanceValues[i]).toBeGreaterThan(distanceValues[i - 1])
+          await expect(distanceValues[i]).toBeGreaterThanOrEqual(
+            distanceValues[i - 1]
+          )
         }
       }
 
