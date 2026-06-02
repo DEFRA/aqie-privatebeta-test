@@ -1,0 +1,42 @@
+[
+  {
+    "value": "plainaddress",
+    "scenario": "no @ symbol"
+  },
+  {
+    "value": "@missinglocal.com",
+    "scenario": "missing local part"
+  },
+  {
+    "value": "user@",
+    "scenario": "missing domain"
+  },
+  {
+    "value": "user@.com",
+    "scenario": "leading dot in domain"
+  },
+  {
+    "value": "user..name@gmail.com",
+    "scenario": "consecutive dots"
+  },
+  {
+    "value": "user@domain..com",
+    "scenario": "consecutive dots in domain"
+  },
+  {
+    "value": "user @gmail.com",
+    "scenario": "space in email"
+  },
+  {
+    "value": "user@gmail .com",
+    "scenario": "space in domain"
+  },
+  {
+    "value": "user@-domain.com",
+    "scenario": "domain starts with hyphen"
+  },
+  {
+    "value": "<user>@gmail.com",
+    "scenario": "angle brackets"
+  }
+]

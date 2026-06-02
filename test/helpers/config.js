@@ -119,6 +119,39 @@ const config = convict({
     format: String,
     default: `https://api-ukair.defra.gov.uk/api/login_check`,
     env: 'SITE_META_DATA_LOGIN_URL'
+  },
+  aqsrAlertsUrl: {
+    doc: 'AQSR air pollution breaches/alerts API url',
+    format: String,
+    default: `https://api-ukair.defra.gov.uk/api/aqsr_alerts`,
+    env: 'AQSR_ALERTS_URL'
+  },
+  aqsrAlertsApiEmail: {
+    doc: 'AQSR alerts API email',
+    format: String,
+    default: `gbMpftHz`,
+    env: 'AQSR_ALERTS_API_EMAIL'
+  },
+  aqsrAlertsApiPwd: {
+    doc: 'AQSR alerts API password',
+    format: '*',
+    default: `9m4Y$YmtsooGs9`,
+    sensitive: true,
+    env: 'AQSR_ALERTS_API_PWD'
+  },
+  alertMobileNumber: {
+    doc: 'Mobile number used for the SMS alert sign-up journey tests',
+    format: '*',
+    default: `07459418445`,
+    sensitive: true,
+    env: 'ALERT_MOBILE_NUMBER'
+  },
+  alertEmailAddress: {
+    doc: 'Email address used for the email alert sign-up journey tests',
+    format: '*',
+    default: `airqualityukdefra@gmail.com`,
+    sensitive: true,
+    env: 'ALERT_EMAIL_ADDRESS'
   }
 })
 
