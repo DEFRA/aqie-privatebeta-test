@@ -14,17 +14,42 @@ const ALERTS_URL = config.get('aqsrAlertsUrl')
 const EMAIL = config.get('aqsrAlertsApiEmail')
 const PASSWORD = config.get('aqsrAlertsApiPwd')
 
+// Logs the underlying transport cause of an undici "fetch failed" error, which
+// is otherwise hidden. This is what tells us WHY the connection failed
+// (DNS / connection refused / proxy / TLS / timeout) in a given environment.
+function logFetchFailure(label, err) {
+  const proxy = config.get('httpsProxy') ?? config.get('httpProxy')
+  const cause = err?.cause
+  logger.error(
+    `[AQSR] ${label} failed at the network level: ${err?.message} | proxy: ${
+      proxy || 'none (direct connection)'
+    } | cause.code: ${cause?.code} | cause.message: ${cause?.message} | cause: ${JSON.stringify(
+      cause,
+      Object.getOwnPropertyNames(cause || {})
+    )}`
+  )
+}
+
 // Step 9 - obtain a bearer token from the login_check endpoint
 async function getAqsrToken() {
-  logger.info(`[AQSR] Requesting bearer token from ${LOGIN_URL}`)
-  const response = await proxyFetch(LOGIN_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: EMAIL,
-      password: PASSWORD
+  const proxy = config.get('httpsProxy') ?? config.get('httpProxy')
+  logger.info(
+    `[AQSR] Requesting bearer token from ${LOGIN_URL} (proxy: ${proxy || 'none (direct connection)'})`
+  )
+  let response
+  try {
+    response = await proxyFetch(LOGIN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: EMAIL,
+        password: PASSWORD
+      })
     })
-  })
+  } catch (err) {
+    logFetchFailure('login_check', err)
+    throw err
+  }
   let data
   if (response.ok) {
     data = await response.json()
@@ -38,10 +63,16 @@ async function getAqsrToken() {
 async function fetchAqsrAlerts(token, startDate, endDate) {
   const apiUrl = `${ALERTS_URL}?page=1&start-date=${startDate}&end-date=${endDate}`
   logger.info(`[AQSR] GET ${apiUrl}`)
-  const response = await proxyFetch(apiUrl, {
-    method: 'GET',
-    headers: { Authorization: `Bearer ${token}` }
-  })
+  let response
+  try {
+    response = await proxyFetch(apiUrl, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  } catch (err) {
+    logFetchFailure('aqsr_alerts', err)
+    throw err
+  }
   let data
   if (response.ok) {
     data = await response.json()
