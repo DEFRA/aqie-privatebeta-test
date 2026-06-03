@@ -125,23 +125,18 @@ async function fetchForecast(place) {
     logger.info(
       `[fetchForecast] Forecast summary available: ${lastForecastResponse ? 'YES' : 'NO'}`
     )
+    // Log the DAQI values returned by the API for this location (5-day forecast)
+    if (matchedForecast && Array.isArray(matchedForecast.forecast)) {
+      const apiDaqiValues = matchedForecast.forecast.map((day) => day.value)
+      logger.info(
+        `[fetchForecast] API DAQI 5-day values for ${place}: ${JSON.stringify(apiDaqiValues)}`
+      )
+    }
     return matchedForecast || null
   } catch (err) {
     logger.error(`[fetchForecast] Error parsing response: ${err.message}`)
     return null
   }
-}
-
-// Extract forecast-summary from stored forecast response
-async function getDailySummary() {
-  if (lastForecastResponse) {
-    logger.info(
-      '[getDailySummary] Using forecast-summary from fetchForecast response'
-    )
-    return lastForecastResponse['forecast-summary']
-  }
-  logger.warn('[getDailySummary] No forecast response available')
-  return null
 }
 
 // Get expected hex color based on DAQI number
@@ -279,6 +274,11 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       // Get all DAQI values from the page
       const arrGetAllDAQISelectedValues = await getAllDAQIValues()
       const getDaqiValueToday = arrGetAllDAQISelectedValues.today
+      logger.info(
+        `[Page DAQI] Selected DAQI values fetched from the page for ${region}: ${JSON.stringify(
+          arrGetAllDAQISelectedValues
+        )}`
+      )
 
       // Test Today tab
       const todayDAQITab = await ForecastMainPage.todayDAQITab
@@ -287,6 +287,11 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       const tabText = await todayDAQITab.getText()
       // Get DAQI values and forecast data
       const getValueForecast = await fetchForecast(nearestRegionForecast)
+      logger.info(
+        `[Forecast API] Forecast fetched for ${region} (${nearestRegionForecast}): ${
+          getValueForecast ? 'SUCCESS' : 'NO DATA'
+        }`
+      )
       const getValueForecastarr = getValueForecast.forecast
       //  await browser.url('https://aqie-front-end.test.cdp-int.defra.cloud/location/gloucester_gloucester?mockLevel=9&mockDay=day1#day1')
 
@@ -299,17 +304,17 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
             await ForecastMainPage.highLevelAlertMessageSymbol.getText()
           await expect(highLevelAlertSymbol).toMatch('!')
         }
+        logger.info(
+          `[DAQI compare] Today - page value: ${getDaqiValueToday}, API value: ${getValueForecastarr[0].value}`
+        )
         await expect(getDaqiValueToday).toMatch(
           getValueForecastarr[0].value.toString()
         )
-        const getTodayForecastSummary =
-          await ForecastMainPage.todayPollutantSummary.getText()
-        const sourcePollutantSummaryUrl = await getDailySummary()
-        const sourcePollutantSummaryURlToday =
-          sourcePollutantSummaryUrl?.today || ''
-        await expect(getTodayForecastSummary.trim()).toMatch(
-          sourcePollutantSummaryURlToday.trim()
-        )
+        // NOTE: the textual daily forecast summary (today/tomorrow/outlook) is
+        // no longer rendered on the location page following the DAQI redesign,
+        // so the previous comparison against the source forecast-summary has
+        // been removed. The DAQI value/header assertions above still cover the
+        // forecast data shown on the page.
       } else {
         throw new Error(
           "The 'Today' tab is either not selected or the text does not match 'Today'"
@@ -336,6 +341,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         await expect(getHeaderOfDaqiTomorrow).toMatch(
           'Daily Air Quality Index (DAQI)'
         )
+        logger.info(
+          `[DAQI compare] Tomorrow - page value: ${getDaqiValuetomorrow}, API value: ${getValueForecastarr[1].value}`
+        )
         await expect(getDaqiValuetomorrow).toMatch(
           getValueForecastarr[1].value.toString()
         )
@@ -345,14 +353,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
           await expect(highLevelAlertSymbol).toMatch('!')
         }
 
-        const getTomorrowForecastSummary =
-          await ForecastMainPage.tomorowDAQIPollutantSummary.getText()
-        const sourcePollutantSummaryUrl = await getDailySummary()
-        const sourcePollutantSummaryURlTomorrow =
-          sourcePollutantSummaryUrl?.tomorrow || ''
-        await expect(getTomorrowForecastSummary.trim()).toMatch(
-          sourcePollutantSummaryURlTomorrow.trim()
-        )
+        // Textual forecast summary removed from the page (see Today tab note).
       }
 
       // Test Day Three tab
@@ -375,6 +376,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         await expect(getHeaderOfDaqiThirdDay).toMatch(
           'Daily Air Quality Index (DAQI)'
         )
+        logger.info(
+          `[DAQI compare] Day 3 (outlook) - page value: ${getDaqiValueOutlook1}, API value: ${getValueForecastarr[2].value}`
+        )
         await expect(getDaqiValueOutlook1).toMatch(
           getValueForecastarr[2].value.toString()
         )
@@ -384,14 +388,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
           await expect(highLevelAlertSymbol).toMatch('!')
         }
 
-        const getDay3ForecastSummary =
-          await ForecastMainPage.outlookDay3DAQIPollutantSummary.getText()
-        const sourcePollutantSummaryUrl = await getDailySummary()
-        const sourcePollutantSummaryURlOutlook =
-          sourcePollutantSummaryUrl?.outlook || ''
-        await expect(getDay3ForecastSummary.trim()).toMatch(
-          sourcePollutantSummaryURlOutlook.trim()
-        )
+        // Textual forecast summary removed from the page (see Today tab note).
       }
 
       // Test Day Four tab
@@ -413,6 +410,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         await expect(getHeaderOfDaqiFourthDay).toMatch(
           'Daily Air Quality Index (DAQI)'
         )
+        logger.info(
+          `[DAQI compare] Day 4 (outlook) - page value: ${getDaqiValueOutlook2}, API value: ${getValueForecastarr[3].value}`
+        )
         await expect(getDaqiValueOutlook2).toMatch(
           getValueForecastarr[3].value.toString()
         )
@@ -422,14 +422,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
           await expect(highLevelAlertSymbol).toMatch('!')
         }
 
-        const getDay4ForecastSummary =
-          await ForecastMainPage.outlookDay4DAQIPollutantSummary.getText()
-        const sourcePollutantSummaryUrl = await getDailySummary()
-        const sourcePollutantSummaryURlOutlook =
-          sourcePollutantSummaryUrl?.outlook || ''
-        await expect(getDay4ForecastSummary.trim()).toMatch(
-          sourcePollutantSummaryURlOutlook.trim()
-        )
+        // Textual forecast summary removed from the page (see Today tab note).
       }
 
       // Test Day Five tab
@@ -451,6 +444,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         await expect(getHeaderOfDaqiFifthDay).toMatch(
           'Daily Air Quality Index (DAQI)'
         )
+        logger.info(
+          `[DAQI compare] Day 5 (outlook) - page value: ${getDaqiValueOutlook3}, API value: ${getValueForecastarr[4].value}`
+        )
         await expect(getDaqiValueOutlook3).toMatch(
           getValueForecastarr[4].value.toString()
         )
@@ -460,14 +456,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
           await expect(highLevelAlertSymbol).toMatch('!')
         }
 
-        const getDay5ForecastSummary =
-          await ForecastMainPage.outlookDay5DAQIPollutantSummary.getText()
-        const sourcePollutantSummaryUrl = await getDailySummary()
-        const sourcePollutantSummaryURlOutlook =
-          sourcePollutantSummaryUrl?.outlook || ''
-        await expect(getDay5ForecastSummary.trim()).toMatch(
-          sourcePollutantSummaryURlOutlook.trim()
-        )
+        // Textual forecast summary removed from the page (see Today tab note).
       }
 
       // Test pollutant tabs if available

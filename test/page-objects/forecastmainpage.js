@@ -275,6 +275,13 @@ class ForecastMainPage {
     return this.subHeadersinForecastPage[2]
   }
 
+  // Text-based locator for the "How air pollutants can affect your health"
+  // sub-header. Robust against section re-ordering on the page (e.g. when the
+  // "Air quality alerts by text message or email" section shifts the indexes).
+  get howAirPollutantsHealthHeader() {
+    return $('h2*=How air pollutants can affect your health')
+  }
+
   get timestampBlockForecastPage() {
     return $("p[class='govuk-caption-s daqi-health-summary-date']")
   }
