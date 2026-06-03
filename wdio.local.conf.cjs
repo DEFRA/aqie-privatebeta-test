@@ -219,10 +219,27 @@ export const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  /* before: function () {
-    require('expect-webdriverio').setOptions({ wait: 5000 });
+  before: async function () {
+    // Force scrollIntoView to use the JS DOM implementation instead of the
+    // WebDriver Actions API. The Actions API intermittently warns with
+    // 'Failed to execute "scrollIntoView" using WebDriver Actions API'
+    // (e.g. "move target out of bounds" / "javascript error") before falling
+    // back to JS anyway. Overriding it here removes the warning suite-wide.
+    await browser.overwriteCommand(
+      'scrollIntoView',
+      async function (
+        origScrollIntoView,
+        options = { block: 'center', inline: 'center' }
+      ) {
+        await browser.execute(
+          (el, opts) => el.scrollIntoView(opts),
+          this,
+          options
+        )
+      },
+      true
+    )
   },
-  */
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
