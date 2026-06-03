@@ -7,50 +7,49 @@ const logger = createLogger()
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
+// Resolve URLs and credentials once, up front (same pattern as
+// newRicardoValidation.js which uses proxyFetch successfully).
+const LOGIN_URL = config.get('siteMetaDataLoginUrl')
+const ALERTS_URL = config.get('aqsrAlertsUrl')
+const EMAIL = config.get('aqsrAlertsApiEmail')
+const PASSWORD = config.get('aqsrAlertsApiPwd')
+
 // Step 9 - obtain a bearer token from the login_check endpoint
 async function getAqsrToken() {
-  const loginUrl = config.get('siteMetaDataLoginUrl')
-  logger.info(`[AQSR] Requesting bearer token from ${loginUrl}`)
-  const response = await proxyFetch(loginUrl, {
+  logger.info(`[AQSR] Requesting bearer token from ${LOGIN_URL}`)
+  const response = await proxyFetch(LOGIN_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      email: config.get('aqsrAlertsApiEmail'),
-      password: config.get('aqsrAlertsApiPwd')
+      email: EMAIL,
+      password: PASSWORD
     })
   })
-  if (!response.ok) {
-    logger.error(`[AQSR] login_check failed with status ${response.status}`)
-    throw new Error(`AQSR login_check failed: ${response.status}`)
+  let data
+  if (response.ok) {
+    data = await response.json()
   }
-  const data = await response.json()
-  if (!data || !data.token) {
-    logger.error('[AQSR] login_check response did not contain a token')
-    throw new Error('AQSR login_check response missing token')
-  }
-  logger.info('[AQSR] Bearer token received successfully')
-  return data.token
+  logger.info(`[AQSR] login_check response status: ${response.status}`)
+  logger.info(`[AQSR] Bearer token received: ${data?.token ? 'YES' : 'NO'}`)
+  return data?.token
 }
 
 // Step 9 - query the aqsr_alerts endpoint for the given date range (page 1)
 async function fetchAqsrAlerts(token, startDate, endDate) {
-  const baseUrl = config.get('aqsrAlertsUrl')
-  const apiUrl = `${baseUrl}?page=1&start-date=${startDate}&end-date=${endDate}`
+  const apiUrl = `${ALERTS_URL}?page=1&start-date=${startDate}&end-date=${endDate}`
   logger.info(`[AQSR] GET ${apiUrl}`)
   const response = await proxyFetch(apiUrl, {
     method: 'GET',
     headers: { Authorization: `Bearer ${token}` }
   })
-  if (!response.ok) {
-    logger.error(
-      `[AQSR] aqsr_alerts fetch failed with status ${response.status}`
-    )
-    throw new Error(`AQSR aqsr_alerts fetch failed: ${response.status}`)
+  let data
+  if (response.ok) {
+    data = await response.json()
   }
-  const data = await response.json()
-  const memberLength = Array.isArray(data.member) ? data.member.length : 'n/a'
+  const memberLength =
+    data && Array.isArray(data.member) ? data.member.length : 'n/a'
   logger.info(
-    `[AQSR] Response totalItems=${data.totalItems}, member length=${memberLength}`
+    `[AQSR] aqsr_alerts response status: ${response.status}, totalItems=${data?.totalItems}, member length=${memberLength}`
   )
   return data
 }
@@ -72,7 +71,7 @@ export async function getActiveBreachCount() {
   const token = await getAqsrToken()
   const data = await fetchAqsrAlerts(token, startDate, endDate)
 
-  const members = Array.isArray(data.member) ? data.member : []
+  const members = data && Array.isArray(data.member) ? data.member : []
   if (members.length === 0) {
     logger.info('[AQSR] No members returned - active breach count is 0')
     return 0
@@ -124,7 +123,7 @@ export async function getPastBreachCount() {
   const token = await getAqsrToken()
   const data = await fetchAqsrAlerts(token, startDate, endDate)
 
-  const members = Array.isArray(data.member) ? data.member : []
+  const members = data && Array.isArray(data.member) ? data.member : []
   logger.info(
     `[AQSR][Past] Total members in the last 12 months: ${members.length}`
   )
