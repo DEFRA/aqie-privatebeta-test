@@ -165,10 +165,10 @@ describe('Pollutants Static Page content', () => {
           await LocationMatchPage.firstLinkOfLocationMatch.click()
         }
         const pollutantSubHeader = 'How air pollutants can affect your health'
-        await ForecastMainPage.getHowAirPollutantsheader.scrollIntoView()
+        await ForecastMainPage.howAirPollutantsHealthHeader.scrollIntoView()
         // for the sub header "How air pollutants can affect your health"
         const matchPollutantSubHeader =
-          await ForecastMainPage.getHowAirPollutantsheader.getText()
+          await ForecastMainPage.howAirPollutantsHealthHeader.getText()
         await expect(matchPollutantSubHeader).toMatch(pollutantSubHeader)
         for (
           let i = 0;
