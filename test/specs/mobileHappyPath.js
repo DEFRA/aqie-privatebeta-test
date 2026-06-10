@@ -29,20 +29,48 @@ const MOBILE_TIMEOUT = 30000
 // location match list OR the forecast heading to appear, click the first match
 // if a match list was returned, then wait for the forecast heading.
 async function openForecastAfterContinue() {
-  await browser.waitUntil(
-    async () => {
-      const onMatchList = await LocationMatchPage.headerTextMatch.isExisting()
-      const onForecast = await ForecastMainPage.regionHeaderDisplay
-        .isDisplayed()
-        .catch(() => false)
-      return onMatchList || onForecast
-    },
-    {
-      timeout: MOBILE_TIMEOUT,
-      timeoutMsg:
-        'Neither the location match list nor the forecast page appeared after Continue'
-    }
-  )
+  try {
+    await browser.waitUntil(
+      async () => {
+        const onMatchList = await LocationMatchPage.headerTextMatch.isExisting()
+        const onForecast = await ForecastMainPage.regionHeaderDisplay
+          .isDisplayed()
+          .catch(() => false)
+        return onMatchList || onForecast
+      },
+      {
+        timeout: MOBILE_TIMEOUT,
+        timeoutMsg:
+          'Neither the location match list nor the forecast page appeared after Continue'
+      }
+    )
+  } catch (err) {
+    // Log exactly where we are stuck so the console output itself reveals why
+    // navigation did not happen on the device (wrong page / validation error /
+    // still on the search page), instead of needing to pull artifacts.
+    const url = await browser.getUrl().catch(() => 'unknown')
+    const diag = await browser
+      .execute(() => {
+        const h1 = document.querySelector('h1')
+        const errorSummary = document.querySelector(
+          '.govuk-error-summary__title'
+        )
+        const errorList = document.querySelector('.govuk-error-summary__list')
+        return {
+          title: document.title,
+          firstH1: h1 ? h1.textContent.trim() : '(no h1)',
+          errorTitle: errorSummary ? errorSummary.textContent.trim() : null,
+          errorText: errorList
+            ? errorList.textContent.replace(/\s+/g, ' ').trim()
+            : null
+        }
+      })
+      .catch(() => ({}))
+    logger.error(
+      `[openForecastAfterContinue] Stuck after Continue. URL=${url} | title=${diag.title} | h1=${diag.firstH1} | errorTitle=${diag.errorTitle} | errorText=${diag.errorText}`
+    )
+    throw err
+  }
   if (await LocationMatchPage.headerTextMatch.isExisting()) {
     await LocationMatchPage.firstLinkOfLocationMatch.click()
   }
@@ -50,6 +78,46 @@ async function openForecastAfterContinue() {
     timeout: MOBILE_TIMEOUT,
     timeoutMsg: 'Forecast page heading did not appear'
   })
+}
+
+// Select the location-type radio, enter the location, and submit. On a real
+// touch device the radio LABEL tap can fail to actually check the radio, which
+// leaves the form invalid so Continue just reloads /search-location. We verify
+// the radio is selected (falling back to clicking the input element), verify
+// the typed value landed, and scroll Continue into view before submitting.
+async function selectLocationAndContinue(region, ni) {
+  if (ni === 'Yes') {
+    await locationSearchPage.clickNIRadiobtn()
+    const niRadio = await $('#locationType-2')
+    if (!(await niRadio.isSelected().catch(() => false))) {
+      await niRadio.click().catch(() => {})
+    }
+    await locationSearchPage.locationNIBox.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
+    await locationSearchPage.setUserNIRegion(region)
+    logger.info(
+      `[search] NI radio selected=${await niRadio.isSelected()}, value="${await locationSearchPage.locationNIBox.getValue()}"`
+    )
+  } else {
+    await locationSearchPage.clickESWRadiobtn()
+    const eswRadio = await $('#locationType')
+    if (!(await eswRadio.isSelected().catch(() => false))) {
+      await eswRadio.click().catch(() => {})
+    }
+    await locationSearchPage.locationESWBox.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
+    await locationSearchPage.setUserESWRegion(region)
+    logger.info(
+      `[search] ESW radio selected=${await eswRadio.isSelected()}, value="${await locationSearchPage.locationESWBox.getValue()}"`
+    )
+  }
+  await locationSearchPage.continueBtn.scrollIntoView()
+  await locationSearchPage.continueBtn.waitForClickable({
+    timeout: MOBILE_TIMEOUT
+  })
+  await locationSearchPage.clickContinueBtn()
 }
 
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
@@ -78,37 +146,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await cookieBanner.rejectButtonCookiesDialog.click()
       await cookieBanner.hideButtonHideDialog.click()
 
-      // Navigate to forecast page
+      // Navigate to forecast page (robust radio selection + submit)
       await startNowPage.startNowBtnClick()
-      if (NI === 'No') {
-        await locationSearchPage.clickESWRadiobtn()
-        await locationSearchPage.setUserESWRegion(region)
-      } else if (NI === 'Yes') {
-        await locationSearchPage.clickNIRadiobtn()
-        await locationSearchPage.setUserNIRegion(region)
-      }
-
-      // Add an explicit wait for the continue button to be clickable
-      await locationSearchPage.continueBtn.waitForClickable({
-        timeout: MOBILE_TIMEOUT
-      })
-      // Check if continue button is displayed and enabled before clicking
-      const isDisplayed = await locationSearchPage.continueBtn.isDisplayed()
-      const isEnabled = await locationSearchPage.continueBtn.isEnabled()
-      logger.info(
-        `Continue button displayed: ${isDisplayed}, enabled: ${isEnabled}`
-      )
-      if (!isDisplayed) {
-        throw new Error('Continue button is not displayed')
-      }
-      if (!isEnabled) {
-        throw new Error('Continue button is not enabled')
-      }
-      // Click on the body to dismiss the mobile keyboard
-      await browser.execute(() => {
-        document.body.click()
-      })
-      await locationSearchPage.clickContinueBtn()
+      await selectLocationAndContinue(region, NI)
 
       // Move to the forecast page (handles the location match list + slow
       // real-device navigation timing).
@@ -191,18 +231,9 @@ describe('Browser Stack Mobile Test - Related content', () => {
     await cookieBanner.rejectButtonCookiesDialog.click()
     await cookieBanner.hideButtonHideDialog.click()
 
-    // Navigate to the location forecast page
+    // Navigate to the location forecast page (robust radio selection + submit)
     await startNowPage.startNowBtnClick()
-    await locationSearchPage.clickESWRadiobtn()
-    await locationSearchPage.setUserESWRegion(searchLocation)
-    await locationSearchPage.continueBtn.waitForClickable({
-      timeout: MOBILE_TIMEOUT
-    })
-    // Click on the body to dismiss the mobile keyboard
-    await browser.execute(() => {
-      document.body.click()
-    })
-    await locationSearchPage.clickContinueBtn()
+    await selectLocationAndContinue(searchLocation, 'No')
     await openForecastAfterContinue()
 
     // Save the place name dynamically from the "Air quality in <place>" heading
@@ -286,18 +317,9 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     await cookieBanner.rejectButtonCookiesDialog.click()
     await cookieBanner.hideButtonHideDialog.click()
 
-    // Navigate to the location forecast page
+    // Navigate to the location forecast page (robust radio selection + submit)
     await startNowPage.startNowBtnClick()
-    await locationSearchPage.clickESWRadiobtn()
-    await locationSearchPage.setUserESWRegion(searchLocation)
-    await locationSearchPage.continueBtn.waitForClickable({
-      timeout: MOBILE_TIMEOUT
-    })
-    // Click on the body to dismiss the mobile keyboard
-    await browser.execute(() => {
-      document.body.click()
-    })
-    await locationSearchPage.clickContinueBtn()
+    await selectLocationAndContinue(searchLocation, 'No')
     await openForecastAfterContinue()
 
     // Assert the "Air quality alerts by text message or email" section header
