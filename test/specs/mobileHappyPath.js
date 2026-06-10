@@ -104,22 +104,41 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         }
       )
 
-      // Wait for mobile forecast elements to be present
-      const firstMobileDayElement = await $("span[class='daqi-day-full']")
-      await firstMobileDayElement.waitForDisplayed({
+      // Wait for the forecast page to be ready (heading present in all layouts)
+      await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
         timeout: MOBILE_TIMEOUT,
-        timeoutMsg: 'Mobile forecast days did not appear'
+        timeoutMsg: 'Forecast page heading did not appear'
       })
 
+      // The DAQI day labels render in two variants that both exist in the DOM
+      // but are toggled by CSS depending on the layout/viewport: full names
+      // ("Thursday", span.daqi-day-full) and abbreviated names ("Thu",
+      // span.daqi-day-abbrev). Local emulation shows the full names, but a real
+      // device (e.g. BrowserStack) can show the abbreviated ones instead. Detect
+      // whichever variant is actually displayed and assert against that format.
+      const fullDayEls = await ForecastMainPage.daqiForecastDaysFullMobile
+      const abbrevDayEls = await $$("span[class='daqi-day-abbrev']")
+      const fullVisible =
+        fullDayEls.length > 0 && (await fullDayEls[0].isDisplayed())
+      const dayElements = fullVisible ? fullDayEls : abbrevDayEls
+
+      await browser.waitUntil(
+        async () =>
+          dayElements.length > 0 && (await dayElements[0].isDisplayed()),
+        {
+          timeout: MOBILE_TIMEOUT,
+          timeoutMsg: 'Mobile forecast days did not appear'
+        }
+      )
+
       // Validate mobile view DAQI forecast days
-      const daqiDaysMobile = await ForecastMainPage.daqiForecastDaysFullMobile
       const daqiDaysTextMobile = []
-      for (const dayElement of daqiDaysMobile) {
+      for (const dayElement of dayElements) {
         const dayText = await dayElement.getText()
         daqiDaysTextMobile.push(dayText)
       }
-      // Fetch the next 4 days starting from tomorrow
-      const days = [
+      // Fetch the next 4 days starting from tomorrow, in the matching format
+      const daysFull = [
         'Sunday',
         'Monday',
         'Tuesday',
@@ -128,6 +147,8 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         'Friday',
         'Saturday'
       ]
+      const daysAbbrev = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      const days = fullVisible ? daysFull : daysAbbrev
       const today = new Date()
       const todayIndex = today.getDay()
       const next4Days = []
@@ -139,6 +160,11 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       // Use only the next 4 days as expected
       const expectedDays = next4Days
+      logger.info(
+        `[MobileDAQI] Using ${fullVisible ? 'full' : 'abbreviated'} day labels; page=${JSON.stringify(
+          daqiDaysTextMobile
+        )}, expected=${JSON.stringify(expectedDays)}`
+      )
 
       // Compare the result with daqiDaysTextMobile
       await expect(daqiDaysTextMobile).toMatchObject(expectedDays)
