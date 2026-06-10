@@ -305,38 +305,36 @@ export const config = {
     context,
     { error, result, duration, passed, retries }
   ) {
-    // Always capture a screenshot (attached to the report). On failure, also
-    // save a named screenshot to disk so device-only failures are easy to
-    // diagnose from CI artifacts.
+    // Capture a screenshot (attached to the WDIO/BrowserStack session report).
     await browser.takeScreenshot()
+    // On failure, log the page state to the CONSOLE only. The CDP runner
+    // container is ephemeral and ./screenshots is not published, so writing
+    // files there is useless; console output is captured in the CDP logs.
     if (error) {
       try {
-        const dir = './screenshots'
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true })
-        }
-        const safeTitle = (test.title || 'test').replace(/[^a-z0-9]+/gi, '_')
-        const stamp = Date.now()
-        const file = `${dir}/FAILED_${safeTitle}_${stamp}.png`
-        await browser.saveScreenshot(file)
-        // eslint-disable-next-line no-console
-        console.log(`[afterTest] Saved failure screenshot: ${file}`)
-
-        // Also dump the page URL + rendered HTML so selector mismatches on a
-        // real device (where elements differ from desktop) can be diagnosed.
         const url = await browser.getUrl()
-        const html = await browser.execute(
-          () => document.documentElement.outerHTML
+        const info = await browser.execute(() => {
+          const h1 = document.querySelector('h1')
+          const errTitle = document.querySelector('.govuk-error-summary__title')
+          const errList = document.querySelector('.govuk-error-summary__list')
+          return {
+            title: document.title,
+            h1: h1 ? h1.textContent.trim() : '(no h1)',
+            errorTitle: errTitle ? errTitle.textContent.trim() : null,
+            errorText: errList
+              ? errList.textContent.replace(/\s+/g, ' ').trim()
+              : null
+          }
+        })
+        // eslint-disable-next-line no-console
+        console.log(
+          `[afterTest] FAILURE "${test.title}" | URL=${url} | title=${info.title} | h1=${info.h1} | errorTitle=${info.errorTitle} | errorText=${info.errorText}`
         )
-        const htmlFile = `${dir}/FAILED_${safeTitle}_${stamp}.html`
-        fs.writeFileSync(htmlFile, `<!-- URL: ${url} -->\n${html}`, 'utf-8')
-        // eslint-disable-next-line no-console
-        console.log(`[afterTest] Failure URL: ${url}`)
-        // eslint-disable-next-line no-console
-        console.log(`[afterTest] Saved failure page source: ${htmlFile}`)
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.log(`[afterTest] Could not save failure artifacts: ${e.message}`)
+        console.log(
+          `[afterTest] Could not capture failure diagnostics: ${e.message}`
+        )
       }
     }
   },
