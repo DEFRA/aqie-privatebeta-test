@@ -305,11 +305,28 @@ export const config = {
     context,
     { error, result, duration, passed, retries }
   ) {
+    // Always capture a screenshot (attached to the report). On failure, also
+    // save a named screenshot to disk so device-only failures are easy to
+    // diagnose from CI artifacts.
     await browser.takeScreenshot()
-    /*  if (error) {
-      await browser.takeScreenshot()
-      // await browser.saveScreenshot()
-    } */
+    if (error) {
+      try {
+        const dir = './screenshots'
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true })
+        }
+        const safeTitle = (test.title || 'test').replace(/[^a-z0-9]+/gi, '_')
+        const file = `${dir}/FAILED_${safeTitle}_${Date.now()}.png`
+        await browser.saveScreenshot(file)
+        // eslint-disable-next-line no-console
+        console.log(`[afterTest] Saved failure screenshot: ${file}`)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `[afterTest] Could not save failure screenshot: ${e.message}`
+        )
+      }
+    }
   },
 
   /**
