@@ -22,55 +22,92 @@ const logger = createLogger()
 // longer ceiling - it does not slow the local run down.
 const MOBILE_TIMEOUT = 30000
 
+// Capture exactly where we are stuck so the console output itself reveals why
+// navigation did not happen on the device (wrong page / validation error /
+// still on the search page), instead of needing to pull artifacts.
+async function logStuckDiagnostics(label) {
+  const url = await browser.getUrl().catch(() => 'unknown')
+  const diag = await browser
+    .execute(() => {
+      const h1 = document.querySelector('h1')
+      const errorSummary = document.querySelector('.govuk-error-summary__title')
+      const errorList = document.querySelector('.govuk-error-summary__list')
+      return {
+        title: document.title,
+        firstH1: h1 ? h1.textContent.trim() : '(no h1)',
+        errorTitle: errorSummary ? errorSummary.textContent.trim() : null,
+        errorText: errorList
+          ? errorList.textContent.replace(/\s+/g, ' ').trim()
+          : null
+      }
+    })
+    .catch(() => ({}))
+  logger.error(
+    `[${label}] Stuck after Continue. URL=${url} | title=${diag.title} | h1=${diag.firstH1} | errorTitle=${diag.errorTitle} | errorText=${diag.errorText}`
+  )
+}
+
 // Robustly move from the "Continue" click to the forecast page. On a slow real
 // device (BrowserStack) the next page often has not loaded yet at the moment we
 // check, so checking the match list immediately can wrongly skip it and then
 // wait forever for a heading that is not there. Instead, wait for EITHER the
 // location match list OR the forecast heading to appear, click the first match
 // if a match list was returned, then wait for the forecast heading.
-async function openForecastAfterContinue() {
-  try {
-    await browser.waitUntil(
-      async () => {
-        const onMatchList = await LocationMatchPage.headerTextMatch.isExisting()
-        const onForecast = await ForecastMainPage.regionHeaderDisplay
-          .isDisplayed()
-          .catch(() => false)
-        return onMatchList || onForecast
-      },
-      {
-        timeout: MOBILE_TIMEOUT,
-        timeoutMsg:
-          'Neither the location match list nor the forecast page appeared after Continue'
-      }
+//
+// The tap on the radio label and the typed location value can intermittently
+// fail to register on a real touch device, leaving the form invalid so Continue
+// just re-renders /search-location with a validation error and never navigates.
+// We detect that bounce-back and re-submit the search a few times before giving
+// up, so a single missed tap no longer fails the whole test.
+async function openForecastAfterContinue(region, ni) {
+  const MAX_SUBMIT_ATTEMPTS = 3
+
+  const reachedNextPage = async () =>
+    browser
+      .waitUntil(
+        async () => {
+          const onMatchList =
+            await LocationMatchPage.headerTextMatch.isExisting()
+          const onForecast = await ForecastMainPage.regionHeaderDisplay
+            .isDisplayed()
+            .catch(() => false)
+          return onMatchList || onForecast
+        },
+        { timeout: MOBILE_TIMEOUT }
+      )
+      .then(() => true)
+      .catch(() => false)
+
+  let navigated = await reachedNextPage()
+
+  for (
+    let attempt = 1;
+    !navigated && attempt < MAX_SUBMIT_ATTEMPTS;
+    attempt++
+  ) {
+    // Still on the search page (or nowhere useful) - the previous submit did
+    // not take. Log why, then re-fill the form and resubmit.
+    await logStuckDiagnostics('openForecastAfterContinue')
+    const stillOnSearch = (await browser.getUrl().catch(() => '')).includes(
+      '/search-location'
     )
-  } catch (err) {
-    // Log exactly where we are stuck so the console output itself reveals why
-    // navigation did not happen on the device (wrong page / validation error /
-    // still on the search page), instead of needing to pull artifacts.
-    const url = await browser.getUrl().catch(() => 'unknown')
-    const diag = await browser
-      .execute(() => {
-        const h1 = document.querySelector('h1')
-        const errorSummary = document.querySelector(
-          '.govuk-error-summary__title'
-        )
-        const errorList = document.querySelector('.govuk-error-summary__list')
-        return {
-          title: document.title,
-          firstH1: h1 ? h1.textContent.trim() : '(no h1)',
-          errorTitle: errorSummary ? errorSummary.textContent.trim() : null,
-          errorText: errorList
-            ? errorList.textContent.replace(/\s+/g, ' ').trim()
-            : null
-        }
-      })
-      .catch(() => ({}))
-    logger.error(
-      `[openForecastAfterContinue] Stuck after Continue. URL=${url} | title=${diag.title} | h1=${diag.firstH1} | errorTitle=${diag.errorTitle} | errorText=${diag.errorText}`
+    if (!stillOnSearch || region === undefined) break
+    logger.warn(
+      `[openForecastAfterContinue] Re-submitting search (attempt ${
+        attempt + 1
+      }/${MAX_SUBMIT_ATTEMPTS})`
     )
-    throw err
+    await selectLocationAndContinue(region, ni)
+    navigated = await reachedNextPage()
   }
+
+  if (!navigated) {
+    await logStuckDiagnostics('openForecastAfterContinue')
+    throw new Error(
+      'Neither the location match list nor the forecast page appeared after Continue'
+    )
+  }
+
   if (await LocationMatchPage.headerTextMatch.isExisting()) {
     await LocationMatchPage.firstLinkOfLocationMatch.click()
   }
@@ -85,6 +122,21 @@ async function openForecastAfterContinue() {
 // leaves the form invalid so Continue just reloads /search-location. We verify
 // the radio is selected (falling back to clicking the input element), verify
 // the typed value landed, and scroll Continue into view before submitting.
+// Type the location into the box and confirm it actually landed. On a real
+// touch device a single setValue can be swallowed (focus/keyboard timing), so
+// we re-type until getValue reflects what we asked for, rather than submitting
+// an empty box that bounces straight back to /search-location.
+async function setLocationValue(box, region) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await box.setValue(region)
+    const landed = (await box.getValue().catch(() => '')).trim()
+    if (landed === region) return
+    logger.warn(
+      `[search] Location value not retained (got "${landed}", want "${region}"); retrying (${attempt}/3)`
+    )
+  }
+}
+
 async function selectLocationAndContinue(region, ni) {
   if (ni === 'Yes') {
     await locationSearchPage.clickNIRadiobtn()
@@ -95,7 +147,7 @@ async function selectLocationAndContinue(region, ni) {
     await locationSearchPage.locationNIBox.waitForDisplayed({
       timeout: MOBILE_TIMEOUT
     })
-    await locationSearchPage.setUserNIRegion(region)
+    await setLocationValue(locationSearchPage.locationNIBox, region)
     logger.info(
       `[search] NI radio selected=${await niRadio.isSelected()}, value="${await locationSearchPage.locationNIBox.getValue()}"`
     )
@@ -108,7 +160,7 @@ async function selectLocationAndContinue(region, ni) {
     await locationSearchPage.locationESWBox.waitForDisplayed({
       timeout: MOBILE_TIMEOUT
     })
-    await locationSearchPage.setUserESWRegion(region)
+    await setLocationValue(locationSearchPage.locationESWBox, region)
     logger.info(
       `[search] ESW radio selected=${await eswRadio.isSelected()}, value="${await locationSearchPage.locationESWBox.getValue()}"`
     )
@@ -151,8 +203,8 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await selectLocationAndContinue(region, NI)
 
       // Move to the forecast page (handles the location match list + slow
-      // real-device navigation timing).
-      await openForecastAfterContinue()
+      // real-device navigation timing, and re-submits if Continue bounced back).
+      await openForecastAfterContinue(region, NI)
 
       // The DAQI 5-day forecast is a govuk-tabs component. On the stacked
       // (mobile-emulation) layout the panels are shown and the tab strip is
@@ -234,7 +286,7 @@ describe('Browser Stack Mobile Test - Related content', () => {
     // Navigate to the location forecast page (robust radio selection + submit)
     await startNowPage.startNowBtnClick()
     await selectLocationAndContinue(searchLocation, 'No')
-    await openForecastAfterContinue()
+    await openForecastAfterContinue(searchLocation, 'No')
 
     // Save the place name dynamically from the "Air quality in <place>" heading
     const locationHeader = await relatedContentPage.locationPageHeader.getText()
@@ -320,7 +372,7 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     // Navigate to the location forecast page (robust radio selection + submit)
     await startNowPage.startNowBtnClick()
     await selectLocationAndContinue(searchLocation, 'No')
-    await openForecastAfterContinue()
+    await openForecastAfterContinue(searchLocation, 'No')
 
     // Assert the "Air quality alerts by text message or email" section header
     await alertsSmsPage.alertsSectionHeader.scrollIntoView()
