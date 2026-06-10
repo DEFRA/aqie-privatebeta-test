@@ -3,6 +3,9 @@ import locationSearchPage from '../page-objects/locationsearchpage.js'
 import LocationMatchPage from '../page-objects/locationmatchpage.js'
 import ForecastMainPage from '../page-objects/forecastmainpage.js'
 import cookieBanner from '../page-objects/cookieBanner.js'
+import relatedContentPage from '../page-objects/relatedContentPage.js'
+import alertsSmsPage from '../page-objects/alertsSmsPage.js'
+import alertsEmailPage from '../page-objects/alertsEmailPage.js'
 import { browser } from '@wdio/globals'
 import fs from 'node:fs'
 import createLogger from '../helpers/logger.js'
@@ -68,18 +71,16 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
-        // Wait for navigation to complete after clicking location match link
-        await browser.waitUntil(
-          async () => {
-            const url = await browser.getUrl()
-            return url.includes('forecast') || url.includes('region')
-          },
-          {
-            timeout: 10000,
-            timeoutMsg:
-              'Navigation did not complete after clicking location match'
-          }
-        )
+        // Wait for navigation to complete by waiting for the forecast page
+        // heading ("Air quality in ...") to be displayed. The previous check
+        // looked for "forecast"/"region" in the URL, but the destination URL is
+        // "/location/<slug>?lang=en" and contains neither, so it always timed
+        // out on the location-match path (e.g. London).
+        await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+          timeout: 10000,
+          timeoutMsg:
+            'Navigation did not complete after clicking location match'
+        })
       }
 
       // Wait for the forecast page to load completely
@@ -130,5 +131,174 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- MobileTestValidation EndScenario --------')
     })
+  })
+})
+
+describe('Browser Stack Mobile Test - Related content', () => {
+  it('Related content header and the 3 links navigate and return', async () => {
+    logger.info('--- MobileRelatedContent StartScenario --------')
+    const searchLocation = 'Gloucester'
+
+    await browser.deleteCookies()
+    await browser.url('')
+    await browser.waitUntil(
+      async () =>
+        await browser.execute(() => document.readyState === 'complete'),
+      { timeout: 5000, timeoutMsg: 'Page did not load completely' }
+    )
+
+    // Handle the cookie banner
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+    await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+      timeout: 5000
+    })
+    await cookieBanner.rejectButtonCookiesDialog.click()
+    await cookieBanner.hideButtonHideDialog.click()
+
+    // Navigate to the location forecast page
+    await startNowPage.startNowBtnClick()
+    await locationSearchPage.clickESWRadiobtn()
+    await locationSearchPage.setUserESWRegion(searchLocation)
+    await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+    // Click on the body to dismiss the mobile keyboard
+    await browser.execute(() => {
+      document.body.click()
+    })
+    await locationSearchPage.clickContinueBtn()
+    if (await LocationMatchPage.headerTextMatch.isExisting()) {
+      await LocationMatchPage.firstLinkOfLocationMatch.click()
+    }
+
+    // Save the place name dynamically from the "Air quality in <place>" heading
+    await relatedContentPage.locationPageHeader.waitForDisplayed({
+      timeout: 10000
+    })
+    const locationHeader = await relatedContentPage.locationPageHeader.getText()
+    const placeName = locationHeader.replace(/^Air quality in\s*/i, '').trim()
+    logger.info(`--- MobileRelatedContent place name: "${placeName}" --------`)
+    const backLinkText = 'Air pollution in ' + placeName
+
+    // Related content section header (displayed at the bottom of the page)
+    await relatedContentPage.relatedContentHeader.scrollIntoView()
+    await expect(
+      await relatedContentPage.relatedContentHeader.getText()
+    ).toMatch('Related content')
+
+    // Link 1 - "Health effects of air pollution"
+    await relatedContentPage.clickHealthEffectsLink()
+    await expect(await relatedContentPage.pageHeader.getText()).toMatch(
+      'Health effects of air pollution'
+    )
+    await expect(
+      await relatedContentPage.backToLocationLink(placeName).getText()
+    ).toMatch(backLinkText)
+    await relatedContentPage.clickBackToLocation(placeName)
+    await expect(await relatedContentPage.locationPageHeader.getText()).toMatch(
+      'Air quality in ' + placeName
+    )
+
+    // Link 2 - "Actions to reduce your exposure to air pollution"
+    await relatedContentPage.relatedContentHeader.scrollIntoView()
+    await relatedContentPage.clickActionsReduceExposureLink()
+    await expect(await relatedContentPage.pageHeader.getText()).toMatch(
+      'Actions you can take to reduce your exposure to air pollution'
+    )
+    await expect(
+      await relatedContentPage.backToLocationLink(placeName).getText()
+    ).toMatch(backLinkText)
+    await relatedContentPage.clickBackToLocation(placeName)
+    await expect(await relatedContentPage.locationPageHeader.getText()).toMatch(
+      'Air quality in ' + placeName
+    )
+
+    // Link 3 - "Air pollution breaches"
+    await relatedContentPage.relatedContentHeader.scrollIntoView()
+    await relatedContentPage.clickAirPollutionBreachesLink()
+    await expect(await relatedContentPage.pageHeader.getText()).toMatch(
+      'Air pollution breaches'
+    )
+    await expect(
+      await relatedContentPage.backToLocationLink(placeName).getText()
+    ).toMatch(backLinkText)
+    await relatedContentPage.clickBackToLocation(placeName)
+    await expect(await relatedContentPage.locationPageHeader.getText()).toMatch(
+      'Air quality in ' + placeName
+    )
+
+    await browser.deleteCookies(['airaqie_cookie'])
+    logger.info('--- MobileRelatedContent EndScenario --------')
+  })
+})
+
+describe('Browser Stack Mobile Test - Air quality alerts section', () => {
+  it('Alerts section header and the SMS/email links redirect correctly', async () => {
+    logger.info('--- MobileAlertsSection StartScenario --------')
+    const searchLocation = 'Gloucester'
+
+    await browser.deleteCookies()
+    await browser.url('')
+    await browser.waitUntil(
+      async () =>
+        await browser.execute(() => document.readyState === 'complete'),
+      { timeout: 5000, timeoutMsg: 'Page did not load completely' }
+    )
+
+    // Handle the cookie banner
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+    await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+      timeout: 5000
+    })
+    await cookieBanner.rejectButtonCookiesDialog.click()
+    await cookieBanner.hideButtonHideDialog.click()
+
+    // Navigate to the location forecast page
+    await startNowPage.startNowBtnClick()
+    await locationSearchPage.clickESWRadiobtn()
+    await locationSearchPage.setUserESWRegion(searchLocation)
+    await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+    // Click on the body to dismiss the mobile keyboard
+    await browser.execute(() => {
+      document.body.click()
+    })
+    await locationSearchPage.clickContinueBtn()
+    if (await LocationMatchPage.headerTextMatch.isExisting()) {
+      await LocationMatchPage.firstLinkOfLocationMatch.click()
+    }
+    await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+      timeout: 10000
+    })
+
+    // Assert the "Air quality alerts by text message or email" section header
+    await alertsSmsPage.alertsSectionHeader.scrollIntoView()
+    await expect(await alertsSmsPage.alertsSectionHeader.getText()).toMatch(
+      'Air quality alerts by text message or email'
+    )
+
+    // Link 1 - "Get alerts by text message" redirects to the SMS page
+    await alertsSmsPage.clickGetAlertsByTextLink()
+    await expect(browser).toHaveUrl(
+      expect.stringContaining('/notify/register/sms-mobile-number')
+    )
+    await expect(await alertsSmsPage.smsPageHeader.getText()).toMatch(
+      'What is your mobile phone number?'
+    )
+    // Go back to the location page to validate the second link
+    await browser.back()
+    await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+      timeout: 10000
+    })
+
+    // Link 2 - "Get alerts by email" redirects to the email details page
+    await alertsEmailPage.alertsSectionHeader.scrollIntoView()
+    await alertsEmailPage.clickGetAlertsByEmailLink()
+    await expect(browser).toHaveUrl(
+      expect.stringContaining('/notify/register/email-details')
+    )
+    await expect(await alertsEmailPage.emailPageHeader.getText()).toMatch(
+      'What is your email address?'
+    )
+
+    await browser.deleteCookies(['airaqie_cookie'])
+    logger.info('--- MobileAlertsSection EndScenario --------')
   })
 })
