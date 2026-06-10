@@ -15,6 +15,13 @@ const dynlocationValue = JSON.parse(
 )
 const logger = createLogger()
 
+// Real BrowserStack devices reach the internal CDP environment over the
+// BrowserStack Local tunnel and are much slower than local Chrome emulation,
+// so page/element waits need a more generous timeout to avoid false "not
+// displayed" failures. Locally elements appear quickly, so this only adds a
+// longer ceiling - it does not slow the local run down.
+const MOBILE_TIMEOUT = 30000
+
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
   describe(`Browser Stack Mobile Test - ${region}`, () => {
     it('Mobile test validation', async () => {
@@ -28,13 +35,15 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await browser.waitUntil(
         async () =>
           await browser.execute(() => document.readyState === 'complete'),
-        { timeout: 5000, timeoutMsg: 'Page did not load completely' }
+        { timeout: MOBILE_TIMEOUT, timeoutMsg: 'Page did not load completely' }
       )
 
       // Handle the cookie banner - wait for it to appear
-      await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+      await cookieBanner.cookieBannerDialog.waitForDisplayed({
+        timeout: MOBILE_TIMEOUT
+      })
       await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
-        timeout: 5000
+        timeout: MOBILE_TIMEOUT
       })
       await cookieBanner.rejectButtonCookiesDialog.click()
       await cookieBanner.hideButtonHideDialog.click()
@@ -50,7 +59,9 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       }
 
       // Add an explicit wait for the continue button to be clickable
-      await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+      await locationSearchPage.continueBtn.waitForClickable({
+        timeout: MOBILE_TIMEOUT
+      })
       // Check if continue button is displayed and enabled before clicking
       const isDisplayed = await locationSearchPage.continueBtn.isDisplayed()
       const isEnabled = await locationSearchPage.continueBtn.isEnabled()
@@ -77,7 +88,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         // "/location/<slug>?lang=en" and contains neither, so it always timed
         // out on the location-match path (e.g. London).
         await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-          timeout: 10000,
+          timeout: MOBILE_TIMEOUT,
           timeoutMsg:
             'Navigation did not complete after clicking location match'
         })
@@ -87,13 +98,16 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       await browser.waitUntil(
         async () =>
           await browser.execute(() => document.readyState === 'complete'),
-        { timeout: 5000, timeoutMsg: 'Forecast page did not load completely' }
+        {
+          timeout: MOBILE_TIMEOUT,
+          timeoutMsg: 'Forecast page did not load completely'
+        }
       )
 
       // Wait for mobile forecast elements to be present
       const firstMobileDayElement = await $("span[class='daqi-day-full']")
       await firstMobileDayElement.waitForDisplayed({
-        timeout: 10000,
+        timeout: MOBILE_TIMEOUT,
         timeoutMsg: 'Mobile forecast days did not appear'
       })
 
@@ -144,13 +158,15 @@ describe('Browser Stack Mobile Test - Related content', () => {
     await browser.waitUntil(
       async () =>
         await browser.execute(() => document.readyState === 'complete'),
-      { timeout: 5000, timeoutMsg: 'Page did not load completely' }
+      { timeout: MOBILE_TIMEOUT, timeoutMsg: 'Page did not load completely' }
     )
 
     // Handle the cookie banner
-    await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
     await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
-      timeout: 5000
+      timeout: MOBILE_TIMEOUT
     })
     await cookieBanner.rejectButtonCookiesDialog.click()
     await cookieBanner.hideButtonHideDialog.click()
@@ -159,7 +175,9 @@ describe('Browser Stack Mobile Test - Related content', () => {
     await startNowPage.startNowBtnClick()
     await locationSearchPage.clickESWRadiobtn()
     await locationSearchPage.setUserESWRegion(searchLocation)
-    await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+    await locationSearchPage.continueBtn.waitForClickable({
+      timeout: MOBILE_TIMEOUT
+    })
     // Click on the body to dismiss the mobile keyboard
     await browser.execute(() => {
       document.body.click()
@@ -171,7 +189,7 @@ describe('Browser Stack Mobile Test - Related content', () => {
 
     // Save the place name dynamically from the "Air quality in <place>" heading
     await relatedContentPage.locationPageHeader.waitForDisplayed({
-      timeout: 10000
+      timeout: MOBILE_TIMEOUT
     })
     const locationHeader = await relatedContentPage.locationPageHeader.getText()
     const placeName = locationHeader.replace(/^Air quality in\s*/i, '').trim()
@@ -240,13 +258,15 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     await browser.waitUntil(
       async () =>
         await browser.execute(() => document.readyState === 'complete'),
-      { timeout: 5000, timeoutMsg: 'Page did not load completely' }
+      { timeout: MOBILE_TIMEOUT, timeoutMsg: 'Page did not load completely' }
     )
 
     // Handle the cookie banner
-    await cookieBanner.cookieBannerDialog.waitForDisplayed({ timeout: 5000 })
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
     await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
-      timeout: 5000
+      timeout: MOBILE_TIMEOUT
     })
     await cookieBanner.rejectButtonCookiesDialog.click()
     await cookieBanner.hideButtonHideDialog.click()
@@ -255,7 +275,9 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     await startNowPage.startNowBtnClick()
     await locationSearchPage.clickESWRadiobtn()
     await locationSearchPage.setUserESWRegion(searchLocation)
-    await locationSearchPage.continueBtn.waitForClickable({ timeout: 5000 })
+    await locationSearchPage.continueBtn.waitForClickable({
+      timeout: MOBILE_TIMEOUT
+    })
     // Click on the body to dismiss the mobile keyboard
     await browser.execute(() => {
       document.body.click()
@@ -265,7 +287,7 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
       await LocationMatchPage.firstLinkOfLocationMatch.click()
     }
     await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-      timeout: 10000
+      timeout: MOBILE_TIMEOUT
     })
 
     // Assert the "Air quality alerts by text message or email" section header
@@ -285,7 +307,7 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     // Go back to the location page to validate the second link
     await browser.back()
     await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-      timeout: 10000
+      timeout: MOBILE_TIMEOUT
     })
 
     // Link 2 - "Get alerts by email" redirects to the email details page
