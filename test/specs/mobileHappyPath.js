@@ -22,6 +22,36 @@ const logger = createLogger()
 // longer ceiling - it does not slow the local run down.
 const MOBILE_TIMEOUT = 30000
 
+// Robustly move from the "Continue" click to the forecast page. On a slow real
+// device (BrowserStack) the next page often has not loaded yet at the moment we
+// check, so checking the match list immediately can wrongly skip it and then
+// wait forever for a heading that is not there. Instead, wait for EITHER the
+// location match list OR the forecast heading to appear, click the first match
+// if a match list was returned, then wait for the forecast heading.
+async function openForecastAfterContinue() {
+  await browser.waitUntil(
+    async () => {
+      const onMatchList = await LocationMatchPage.headerTextMatch.isExisting()
+      const onForecast = await ForecastMainPage.regionHeaderDisplay
+        .isDisplayed()
+        .catch(() => false)
+      return onMatchList || onForecast
+    },
+    {
+      timeout: MOBILE_TIMEOUT,
+      timeoutMsg:
+        'Neither the location match list nor the forecast page appeared after Continue'
+    }
+  )
+  if (await LocationMatchPage.headerTextMatch.isExisting()) {
+    await LocationMatchPage.firstLinkOfLocationMatch.click()
+  }
+  await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+    timeout: MOBILE_TIMEOUT,
+    timeoutMsg: 'Forecast page heading did not appear'
+  })
+}
+
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
   describe(`Browser Stack Mobile Test - ${region}`, () => {
     it('Mobile test validation', async () => {
@@ -80,65 +110,31 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       })
       await locationSearchPage.clickContinueBtn()
 
-      if (await LocationMatchPage.headerTextMatch.isExisting()) {
-        await LocationMatchPage.firstLinkOfLocationMatch.click()
-        // Wait for navigation to complete by waiting for the forecast page
-        // heading ("Air quality in ...") to be displayed. The previous check
-        // looked for "forecast"/"region" in the URL, but the destination URL is
-        // "/location/<slug>?lang=en" and contains neither, so it always timed
-        // out on the location-match path (e.g. London).
-        await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-          timeout: MOBILE_TIMEOUT,
-          timeoutMsg:
-            'Navigation did not complete after clicking location match'
-        })
-      }
+      // Move to the forecast page (handles the location match list + slow
+      // real-device navigation timing).
+      await openForecastAfterContinue()
 
-      // Wait for the forecast page to load completely
-      await browser.waitUntil(
-        async () =>
-          await browser.execute(() => document.readyState === 'complete'),
-        {
-          timeout: MOBILE_TIMEOUT,
-          timeoutMsg: 'Forecast page did not load completely'
-        }
-      )
-
-      // Wait for the forecast page to be ready (heading present in all layouts)
-      await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+      // The DAQI 5-day forecast is a govuk-tabs component. On the stacked
+      // (mobile-emulation) layout the panels are shown and the tab strip is
+      // hidden; on the tabbed (real-device) layout only the active panel shows
+      // and the other days sit behind tabs you tap to view. The full day name
+      // is held in each day tab's aria-label, which is present in the DOM in
+      // both layouts - so we read that rather than the layout-dependent,
+      // possibly-hidden panel headings.
+      const dayTabs = await ForecastMainPage.daqiForecastDayTabs
+      await browser.waitUntil(async () => (await dayTabs.length) > 0, {
         timeout: MOBILE_TIMEOUT,
-        timeoutMsg: 'Forecast page heading did not appear'
+        timeoutMsg: 'Mobile forecast days did not appear'
       })
 
-      // The DAQI day labels render in two variants that both exist in the DOM
-      // but are toggled by CSS depending on the layout/viewport: full names
-      // ("Thursday", span.daqi-day-full) and abbreviated names ("Thu",
-      // span.daqi-day-abbrev). Local emulation shows the full names, but a real
-      // device (e.g. BrowserStack) can show the abbreviated ones instead. Detect
-      // whichever variant is actually displayed and assert against that format.
-      const fullDayEls = await ForecastMainPage.daqiForecastDaysFullMobile
-      const abbrevDayEls = await $$("span[class='daqi-day-abbrev']")
-      const fullVisible =
-        fullDayEls.length > 0 && (await fullDayEls[0].isDisplayed())
-      const dayElements = fullVisible ? fullDayEls : abbrevDayEls
-
-      await browser.waitUntil(
-        async () =>
-          dayElements.length > 0 && (await dayElements[0].isDisplayed()),
-        {
-          timeout: MOBILE_TIMEOUT,
-          timeoutMsg: 'Mobile forecast days did not appear'
-        }
-      )
-
-      // Validate mobile view DAQI forecast days
       const daqiDaysTextMobile = []
-      for (const dayElement of dayElements) {
-        const dayText = await dayElement.getText()
-        daqiDaysTextMobile.push(dayText)
+      for (const dayTab of dayTabs) {
+        const dayName = await dayTab.getAttribute('aria-label')
+        daqiDaysTextMobile.push(dayName)
       }
-      // Fetch the next 4 days starting from tomorrow, in the matching format
-      const daysFull = [
+
+      // Fetch the next 4 days starting from tomorrow (full weekday names)
+      const days = [
         'Sunday',
         'Monday',
         'Tuesday',
@@ -147,8 +143,6 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         'Friday',
         'Saturday'
       ]
-      const daysAbbrev = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-      const days = fullVisible ? daysFull : daysAbbrev
       const today = new Date()
       const todayIndex = today.getDay()
       const next4Days = []
@@ -161,7 +155,7 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       // Use only the next 4 days as expected
       const expectedDays = next4Days
       logger.info(
-        `[MobileDAQI] Using ${fullVisible ? 'full' : 'abbreviated'} day labels; page=${JSON.stringify(
+        `[MobileDAQI] Day tab labels; page=${JSON.stringify(
           daqiDaysTextMobile
         )}, expected=${JSON.stringify(expectedDays)}`
       )
@@ -209,14 +203,9 @@ describe('Browser Stack Mobile Test - Related content', () => {
       document.body.click()
     })
     await locationSearchPage.clickContinueBtn()
-    if (await LocationMatchPage.headerTextMatch.isExisting()) {
-      await LocationMatchPage.firstLinkOfLocationMatch.click()
-    }
+    await openForecastAfterContinue()
 
     // Save the place name dynamically from the "Air quality in <place>" heading
-    await relatedContentPage.locationPageHeader.waitForDisplayed({
-      timeout: MOBILE_TIMEOUT
-    })
     const locationHeader = await relatedContentPage.locationPageHeader.getText()
     const placeName = locationHeader.replace(/^Air quality in\s*/i, '').trim()
     logger.info(`--- MobileRelatedContent place name: "${placeName}" --------`)
@@ -309,12 +298,7 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
       document.body.click()
     })
     await locationSearchPage.clickContinueBtn()
-    if (await LocationMatchPage.headerTextMatch.isExisting()) {
-      await LocationMatchPage.firstLinkOfLocationMatch.click()
-    }
-    await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-      timeout: MOBILE_TIMEOUT
-    })
+    await openForecastAfterContinue()
 
     // Assert the "Air quality alerts by text message or email" section header
     await alertsSmsPage.alertsSectionHeader.scrollIntoView()

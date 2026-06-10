@@ -405,6 +405,14 @@ class ForecastMainPage {
     return $("h1[class='govuk-heading-xl']")
   }
 
+  // DAQI forecast day tabs (#day2..#day5, i.e. the next 4 days, excluding
+  // "Today"/#today). The tab links are always present in the DOM in both the
+  // stacked (mobile) and tabbed (desktop/real-device) layouts; the full day
+  // name is held in each tab's aria-label, readable regardless of CSS layout.
+  get daqiForecastDayTabs() {
+    return $$("a[href^='#day']")
+  }
+
   // New DAQI Redeisgn
   get todayDAQITab() {
     return $('#tab_today')
