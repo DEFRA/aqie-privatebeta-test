@@ -17,17 +17,25 @@ class RelatedContentPage {
     return $('h2*=Related content')
   }
 
-  // Related content links (selected by their stable href segments)
+  // Related content links. These hrefs (health-effects / actions-reduce-exposure)
+  // also appear higher up the page, so the selectors are scoped to the
+  // "location-related-content" pane to validate the bottom links specifically.
   get healthEffectsLink() {
-    return $("a[href*='/health-effects']")
+    return $(
+      "div[class*='location-related-content'] a[href*='/health-effects']"
+    )
   }
 
   get actionsReduceExposureLink() {
-    return $("a[href*='/actions-reduce-exposure']")
+    return $(
+      "div[class*='location-related-content'] a[href*='/actions-reduce-exposure']"
+    )
   }
 
   get airPollutionBreachesLink() {
-    return $("a[href*='/air-pollution-breaches']")
+    return $(
+      "div[class*='location-related-content'] a[href*='/air-pollution-breaches']"
+    )
   }
 
   async clickHealthEffectsLink() {
