@@ -316,15 +316,27 @@ export const config = {
           fs.mkdirSync(dir, { recursive: true })
         }
         const safeTitle = (test.title || 'test').replace(/[^a-z0-9]+/gi, '_')
-        const file = `${dir}/FAILED_${safeTitle}_${Date.now()}.png`
+        const stamp = Date.now()
+        const file = `${dir}/FAILED_${safeTitle}_${stamp}.png`
         await browser.saveScreenshot(file)
         // eslint-disable-next-line no-console
         console.log(`[afterTest] Saved failure screenshot: ${file}`)
+
+        // Also dump the page URL + rendered HTML so selector mismatches on a
+        // real device (where elements differ from desktop) can be diagnosed.
+        const url = await browser.getUrl()
+        const html = await browser.execute(
+          () => document.documentElement.outerHTML
+        )
+        const htmlFile = `${dir}/FAILED_${safeTitle}_${stamp}.html`
+        fs.writeFileSync(htmlFile, `<!-- URL: ${url} -->\n${html}`, 'utf-8')
+        // eslint-disable-next-line no-console
+        console.log(`[afterTest] Failure URL: ${url}`)
+        // eslint-disable-next-line no-console
+        console.log(`[afterTest] Saved failure page source: ${htmlFile}`)
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.log(
-          `[afterTest] Could not save failure screenshot: ${e.message}`
-        )
+        console.log(`[afterTest] Could not save failure artifacts: ${e.message}`)
       }
     }
   },
