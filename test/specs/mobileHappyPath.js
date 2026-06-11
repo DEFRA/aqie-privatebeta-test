@@ -82,17 +82,24 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
-        // Wait for navigation to complete by waiting for the forecast page
-        // heading ("Air quality in ...") to be displayed. The previous check
-        // looked for "forecast"/"region" in the URL, but the destination URL is
-        // "/location/<slug>?lang=en" and contains neither, so it always timed
-        // out on the location-match path (e.g. London).
-        await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-          timeout: MOBILE_TIMEOUT,
-          timeoutMsg:
-            'Navigation did not complete after clicking location match'
-        })
       }
+
+      // Wait for navigation to complete by waiting for the forecast page
+      // heading ("Air quality in ...") to be displayed. This must run for BOTH
+      // navigation paths:
+      //  - Place names (e.g. London) go via the location-match page above.
+      //  - Postcodes (e.g. BS1 1BU, BT1 1FB) skip the match page and navigate
+      //    straight to "/location/<slug>?lang=en".
+      // Previously this wait lived inside the match-page branch, so the postcode
+      // path had no navigation barrier. The readyState check below returns true
+      // immediately against the old search-location page (already "complete")
+      // before the postcode geocoding/redirect finishes, so the test searched
+      // for the mobile day spans too early and timed out with "Mobile forecast
+      // days did not appear" while still on /search-location.
+      await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+        timeout: MOBILE_TIMEOUT,
+        timeoutMsg: 'Forecast page heading did not appear after search'
+      })
 
       // Wait for the forecast page to load completely
       await browser.waitUntil(
