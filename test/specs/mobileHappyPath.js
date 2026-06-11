@@ -74,11 +74,8 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       if (!isEnabled) {
         throw new Error('Continue button is not enabled')
       }
-      // Click on the body to dismiss the mobile keyboard
-      await browser.execute(() => {
-        document.body.click()
-      })
-      await locationSearchPage.clickContinueBtn()
+      // Dismiss the mobile soft keyboard, then click Continue.
+      await locationSearchPage.dismissKeyboardAndContinue()
 
       if (await LocationMatchPage.headerTextMatch.isExisting()) {
         await LocationMatchPage.firstLinkOfLocationMatch.click()
@@ -185,11 +182,8 @@ describe('Browser Stack Mobile Test - Related content', () => {
     await locationSearchPage.continueBtn.waitForClickable({
       timeout: MOBILE_TIMEOUT
     })
-    // Click on the body to dismiss the mobile keyboard
-    await browser.execute(() => {
-      document.body.click()
-    })
-    await locationSearchPage.clickContinueBtn()
+    // Dismiss the mobile soft keyboard, then click Continue.
+    await locationSearchPage.dismissKeyboardAndContinue()
     if (await LocationMatchPage.headerTextMatch.isExisting()) {
       await LocationMatchPage.firstLinkOfLocationMatch.click()
     }
@@ -285,11 +279,8 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     await locationSearchPage.continueBtn.waitForClickable({
       timeout: MOBILE_TIMEOUT
     })
-    // Click on the body to dismiss the mobile keyboard
-    await browser.execute(() => {
-      document.body.click()
-    })
-    await locationSearchPage.clickContinueBtn()
+    // Dismiss the mobile soft keyboard, then click Continue.
+    await locationSearchPage.dismissKeyboardAndContinue()
     if (await LocationMatchPage.headerTextMatch.isExisting()) {
       await LocationMatchPage.firstLinkOfLocationMatch.click()
     }
