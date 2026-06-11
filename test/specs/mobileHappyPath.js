@@ -22,54 +22,6 @@ const logger = createLogger()
 // longer ceiling - it does not slow the local run down.
 const MOBILE_TIMEOUT = 30000
 
-// Dismiss the cookie banner robustly. On slow real devices the confirmation
-// "hide" button lags behind the reject click, so wait for each control to be
-// clickable instead of clicking blind (a blind click was a flake source).
-async function dismissCookieBanner() {
-  await cookieBanner.cookieBannerDialog.waitForDisplayed({
-    timeout: MOBILE_TIMEOUT
-  })
-  await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
-    timeout: MOBILE_TIMEOUT
-  })
-  await cookieBanner.rejectButtonCookiesDialog.click()
-  await cookieBanner.hideButtonHideDialog.waitForClickable({
-    timeout: MOBILE_TIMEOUT
-  })
-  await cookieBanner.hideButtonHideDialog.click()
-}
-
-// After submitting the location search, land on the forecast page. This is the
-// main flakiness fix: previously the test read isExisting() on the location-
-// match page immediately after the click, while the old /search-location page
-// was often still showing on a slow device, so it took the wrong branch.
-// Here we first wait until the page settles into ONE of the two valid
-// destinations, then branch, then confirm the forecast heading is displayed:
-//  - place names (e.g. London) show a location-match page first,
-//  - postcodes / single matches (e.g. BS1 1BU, BT1 1FB, Gloucester) navigate
-//    straight to "/location/<slug>?lang=en".
-async function landOnForecastAfterContinue() {
-  await browser.waitUntil(
-    async () =>
-      (await LocationMatchPage.headerTextMatch.isExisting()) ||
-      (await ForecastMainPage.regionHeaderDisplay.isExisting()),
-    {
-      timeout: MOBILE_TIMEOUT,
-      timeoutMsg:
-        'Neither the location-match page nor the forecast page appeared after search'
-    }
-  )
-
-  if (await LocationMatchPage.headerTextMatch.isExisting()) {
-    await LocationMatchPage.firstLinkOfLocationMatch.click()
-  }
-
-  await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
-    timeout: MOBILE_TIMEOUT,
-    timeoutMsg: 'Forecast page heading did not appear after search'
-  })
-}
-
 dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
   describe(`Browser Stack Mobile Test - ${region}`, () => {
     it('Mobile test validation', async () => {
@@ -86,8 +38,15 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
         { timeout: MOBILE_TIMEOUT, timeoutMsg: 'Page did not load completely' }
       )
 
-      // Handle the cookie banner
-      await dismissCookieBanner()
+      // Handle the cookie banner - wait for it to appear
+      await cookieBanner.cookieBannerDialog.waitForDisplayed({
+        timeout: MOBILE_TIMEOUT
+      })
+      await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+        timeout: MOBILE_TIMEOUT
+      })
+      await cookieBanner.rejectButtonCookiesDialog.click()
+      await cookieBanner.hideButtonHideDialog.click()
 
       // Navigate to forecast page
       await startNowPage.startNowBtnClick()
@@ -121,8 +80,26 @@ dynlocationValue.forEach(({ region, nearestRegionForecast, NI }) => {
       })
       await locationSearchPage.clickContinueBtn()
 
-      // Settle on the forecast page (handles both place-name and postcode paths)
-      await landOnForecastAfterContinue()
+      if (await LocationMatchPage.headerTextMatch.isExisting()) {
+        await LocationMatchPage.firstLinkOfLocationMatch.click()
+      }
+
+      // Wait for navigation to complete by waiting for the forecast page
+      // heading ("Air quality in ...") to be displayed. This must run for BOTH
+      // navigation paths:
+      //  - Place names (e.g. London) go via the location-match page above.
+      //  - Postcodes (e.g. BS1 1BU, BT1 1FB) skip the match page and navigate
+      //    straight to "/location/<slug>?lang=en".
+      // Previously this wait lived inside the match-page branch, so the postcode
+      // path had no navigation barrier. The readyState check below returns true
+      // immediately against the old search-location page (already "complete")
+      // before the postcode geocoding/redirect finishes, so the test searched
+      // for the mobile day spans too early and timed out with "Mobile forecast
+      // days did not appear" while still on /search-location.
+      await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+        timeout: MOBILE_TIMEOUT,
+        timeoutMsg: 'Forecast page heading did not appear after search'
+      })
 
       // Wait for the forecast page to load completely
       await browser.waitUntil(
@@ -192,7 +169,14 @@ describe('Browser Stack Mobile Test - Related content', () => {
     )
 
     // Handle the cookie banner
-    await dismissCookieBanner()
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
+    await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+      timeout: MOBILE_TIMEOUT
+    })
+    await cookieBanner.rejectButtonCookiesDialog.click()
+    await cookieBanner.hideButtonHideDialog.click()
 
     // Navigate to the location forecast page
     await startNowPage.startNowBtnClick()
@@ -206,7 +190,9 @@ describe('Browser Stack Mobile Test - Related content', () => {
       document.body.click()
     })
     await locationSearchPage.clickContinueBtn()
-    await landOnForecastAfterContinue()
+    if (await LocationMatchPage.headerTextMatch.isExisting()) {
+      await LocationMatchPage.firstLinkOfLocationMatch.click()
+    }
 
     // Save the place name dynamically from the "Air quality in <place>" heading
     await relatedContentPage.locationPageHeader.waitForDisplayed({
@@ -283,7 +269,14 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
     )
 
     // Handle the cookie banner
-    await dismissCookieBanner()
+    await cookieBanner.cookieBannerDialog.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
+    await cookieBanner.rejectButtonCookiesDialog.waitForClickable({
+      timeout: MOBILE_TIMEOUT
+    })
+    await cookieBanner.rejectButtonCookiesDialog.click()
+    await cookieBanner.hideButtonHideDialog.click()
 
     // Navigate to the location forecast page
     await startNowPage.startNowBtnClick()
@@ -297,7 +290,12 @@ describe('Browser Stack Mobile Test - Air quality alerts section', () => {
       document.body.click()
     })
     await locationSearchPage.clickContinueBtn()
-    await landOnForecastAfterContinue()
+    if (await LocationMatchPage.headerTextMatch.isExisting()) {
+      await LocationMatchPage.firstLinkOfLocationMatch.click()
+    }
+    await ForecastMainPage.regionHeaderDisplay.waitForDisplayed({
+      timeout: MOBILE_TIMEOUT
+    })
 
     // Assert the "Air quality alerts by text message or email" section header
     await alertsSmsPage.alertsSectionHeader.scrollIntoView()
