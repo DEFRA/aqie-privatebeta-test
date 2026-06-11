@@ -1,4 +1,4 @@
-import { $ } from '@wdio/globals'
+import { $, browser } from '@wdio/globals'
 
 class LocationSearchPage {
   get getRadiobtn() {
@@ -74,6 +74,26 @@ class LocationSearchPage {
   }
 
   async clickContinueBtn() {
+    await this.continueBtn.click()
+  }
+
+  // Dismiss the mobile soft keyboard, then click Continue. A synthetic
+  // document.body.click() does NOT close the native keyboard on a real device,
+  // so it stays up and covers the Continue button, swallowing the click. Blur
+  // the focused input (the reliable trigger in a mobile-web context), ask
+  // Appium to hide the keyboard where supported, then bring the button into
+  // view before clicking.
+  async dismissKeyboardAndContinue() {
+    await browser.execute(() => {
+      const el = document.activeElement
+      if (el && typeof el.blur === 'function') el.blur()
+    })
+    try {
+      await browser.hideKeyboard()
+    } catch {
+      // hideKeyboard is unavailable on some mobile-web sessions - ignore
+    }
+    await this.continueBtn.scrollIntoView()
     await this.continueBtn.click()
   }
 
