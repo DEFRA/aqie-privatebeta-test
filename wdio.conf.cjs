@@ -1,16 +1,6 @@
 import fs from 'node:fs'
-import { ProxyAgent, setGlobalDispatcher } from 'undici'
-import { bootstrap } from 'global-agent'
-
 const debug = process.env.DEBUG
 const oneHour = 60 * 60 * 1000
-
-const dispatcher = new ProxyAgent({
-  uri: process.env.HTTP_PROXY
-})
-setGlobalDispatcher(dispatcher)
-bootstrap()
-global.GLOBAL_AGENT.HTTP_PROXY = process.env.HTTP_PROXY
 
 export const config = {
   //
@@ -29,13 +19,13 @@ export const config = {
 
   baseUrl: `https://aqie-front-end.${process.env.ENVIRONMENT}.cdp-int.defra.cloud/`,
 
-  user: process.env.BROWSERSTACK_USER,
-  key: process.env.BROWSERSTACK_KEY,
-
   // If the service you're testing is setup with its own subdomain you can build the baseUrl
   // up using the Environment name:
   // baseUrl: `https://service-name.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`,
 
+  // Connection to remote chromedriver
+  hostname: process.env.CHROMEDRIVER_URL || '127.0.0.1',
+  port: process.env.CHROMEDRIVER_PORT || 4444,
 
   //
   // ==================
@@ -53,9 +43,9 @@ export const config = {
   // then the current working directory is where your `package.json` resides, so `wdio`
   // will be called from there.
   //
-  specs: ['./test/specs/**/mobileHappyPath.js'],
+  specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: [],
+  exclude: ['./test/specs/mobileHappyPath.js'],
   // injectGlobals: false,
   //
   // ============
@@ -80,19 +70,26 @@ export const config = {
   // https://saucelabs.com/platform/platform-configurator
   //
 
-  commonCapabilities: {
-    'bstack:options': {
-      buildName: `test-run-${process.env.ENVIRONMENT}`,
-      projectName: 'aqie-privatebeta-test'
-    }
-  },
   capabilities: [
     {
-      'bstack:options': {
-      browserName: 'chromium',
-      deviceName: 'Samsung Galaxy S25',
-      osVersion: '15.0',
-      platformName: 'android'
+      maxInstances: 1,
+      browserName: 'chrome',
+      'goog:chromeOptions': {
+        args: [
+          '--no-sandbox',
+          '--disable-infobars',
+          '--headless',
+          '--disable-gpu',
+          '--window-size=1920,1080',
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--password-store=basic',
+          '--use-mock-keychain',
+          '--dns-prefetch-disable',
+          '--disable-background-networking',
+          '--disable-remote-fonts',
+          '--ignore-certificate-errors',
+          '--host-resolver-rules=MAP www.googletagmanager.com 127.0.0.1'
+        ]
       }
     }
   ],
@@ -144,27 +141,7 @@ export const config = {
   // Services take over a specific job you don't want to take care of. They enhance
   // your test setup with almost no effort. Unlike plugins, they don't add new
   // commands. Instead, they hook themselves up into the test process.
-  services: [
-    [
-      'browserstack',
-      {
-        testObservability: true,
-        testObservabilityOptions: {
-          user: process.env.BROWSERSTACK_USER,
-          key: process.env.BROWSERSTACK_KEY,
-          projectName: 'aqie-privatebeta-test',
-          buildName: `test-run-${process.env.ENVIRONMENT}`
-        },
-        acceptInsecureCerts: true,
-        forceLocal: false,
-        browserstackLocal: true,
-        opts: {
-          proxyHost: 'localhost',
-          proxyPort: 3128
-        }
-      }
-    ]
-  ],
+  // services: [],
   //
   // Framework you want to run your specs with.
   // The following are supported: Mocha, Jasmine, and Cucumber
@@ -260,7 +237,27 @@ export const config = {
    * @param {Array.<String>} specs        List of spec file paths that are to be run
    * @param {object}         browser      instance of created browser/device session
    */
-  // before: function (capabilities, specs) {},
+  before: async function () {
+    // Force scrollIntoView to use the JS DOM implementation instead of the
+    // WebDriver Actions API. The Actions API intermittently warns with
+    // 'Failed to execute "scrollIntoView" using WebDriver Actions API'
+    // (e.g. "move target out of bounds" / "javascript error") before falling
+    // back to JS anyway. Overriding it here removes the warning suite-wide.
+    await browser.overwriteCommand(
+      'scrollIntoView',
+      async function (
+        origScrollIntoView,
+        options = { block: 'center', inline: 'center' }
+      ) {
+        await browser.execute(
+          (el, opts) => el.scrollIntoView(opts),
+          this,
+          options
+        )
+      },
+      true
+    )
+  },
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {string} commandName hook command name
@@ -305,38 +302,11 @@ export const config = {
     context,
     { error, result, duration, passed, retries }
   ) {
-    // Capture a screenshot (attached to the WDIO/BrowserStack session report).
     await browser.takeScreenshot()
-    // On failure, log the page state to the CONSOLE only. The CDP runner
-    // container is ephemeral and ./screenshots is not published, so writing
-    // files there is useless; console output is captured in the CDP logs.
-    if (error) {
-      try {
-        const url = await browser.getUrl()
-        const info = await browser.execute(() => {
-          const h1 = document.querySelector('h1')
-          const errTitle = document.querySelector('.govuk-error-summary__title')
-          const errList = document.querySelector('.govuk-error-summary__list')
-          return {
-            title: document.title,
-            h1: h1 ? h1.textContent.trim() : '(no h1)',
-            errorTitle: errTitle ? errTitle.textContent.trim() : null,
-            errorText: errList
-              ? errList.textContent.replace(/\s+/g, ' ').trim()
-              : null
-          }
-        })
-        // eslint-disable-next-line no-console
-        console.log(
-          `[afterTest] FAILURE "${test.title}" | URL=${url} | title=${info.title} | h1=${info.h1} | errorTitle=${info.errorTitle} | errorText=${info.errorText}`
-        )
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(
-          `[afterTest] Could not capture failure diagnostics: ${e.message}`
-        )
-      }
-    }
+    /*  if (error) {
+      await browser.takeScreenshot()
+      // await browser.saveScreenshot()
+    } */
   },
 
   /**
