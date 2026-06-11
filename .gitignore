@@ -11,3 +11,6 @@ coverage
 /allure-report
 /allure-results
 FAILED
+
+# VS Code MCP config - contains credentials
+.vscode/mcp.json
