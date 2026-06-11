@@ -90,8 +90,8 @@ export const config = {
     {
       'bstack:options': {
       browserName: 'chromium',
-      deviceName: 'Samsung Galaxy S21',
-      osVersion: '11.0',
+      deviceName: 'Samsung Galaxy S25',
+      osVersion: '15.0',
       platformName: 'android'
       }
     }
