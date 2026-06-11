@@ -1,0 +1,239 @@
+[90m2026-06-11T10:02:22.216Z[39m [96mINFO[39m [97m@wdio/browserstack-service[39m BrowserStack service started with id: 8c37342f-9f97-4ca8-9bfe-898acc08e777
+[90m2026-06-11T10:02:22.238Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Sending SDK event with data {
+  userName: '[REDACTED]',
+  accessKey: '[REDACTED]',
+  event_type: 'SDKTestAttempted',
+  detectedFramework: 'WebdriverIO-mocha',
+  event_properties: {
+    sdkRunId: '8c37342f-9f97-4ca8-9bfe-898acc08e777',
+    testhub_uuid: undefined,
+    language_framework: 'WebdriverIO_mocha',
+    referrer: 'WebdriverIO-mocha/9.9.0',
+    language: 'WebdriverIO',
+    languageVersion: 'v25.1.0',
+    buildName: 'mobile-local-run-test',
+    buildIdentifier: 'undefined',
+    os: 'Windows_NT',
+    hostname: 'LTGB012550',
+    productMap: {
+      observability: true,
+      accessibility: false,
+      percy: false,
+      automate: true,
+      app_automate: false
+    },
+    product: [ 'observability', 'automate' ],
+    framework: 'mocha'
+  }
+}
+[90m2026-06-11T10:02:22.792Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Exception in sending funnel data: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at fetchWrap (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:254:15)
+    at fireFunnelRequest (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3057:20)
+    at fireFunnelTestEvent (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3021:5)
+    at sendStart (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3029:3)
+    at BrowserstackLauncherService.onPrepare (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3526:5) {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1630:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket.emit (node:domain:489:12)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at TLSWrap.ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+[90m2026-06-11T10:02:22.793Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m app is not defined in browserstack-service config, skipping ...
+[90m2026-06-11T10:02:22.793Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Sending launch start event
+[90m2026-06-11T10:02:23.444Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m TestHub build start failed: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at launchTestSession2 (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:1364:22) {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1630:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket.emit (node:domain:489:12)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at TLSWrap.ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+[90m2026-06-11T10:02:23.445Z[39m [31mERROR[39m [97m@wdio/browserstack-service[39m  Build creation failed TypeError: fetch failed
+[90m2026-06-11T10:02:23.446Z[39m [96mINFO[39m [97m@wdio/browserstack-service[39m browserstackLocal is not enabled - skipping...
+[90m2026-06-11T10:02:28.276Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m teardown started
+[90m2026-06-11T10:02:28.276Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m teardown ended
+[90m2026-06-11T10:02:29.010Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Inside OnComplete hook..
+[90m2026-06-11T10:02:29.010Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Sending stop launch event
+[90m2026-06-11T10:02:29.012Z[39m [96mINFO[39m [97m@wdio/browserstack-service[39m BrowserStack service run ended for id: 8c37342f-9f97-4ca8-9bfe-898acc08e777 testhub id: undefined
+[90m2026-06-11T10:02:29.014Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Reading worker file worker-data-2120.json
+[90m2026-06-11T10:02:29.016Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Sending SDK event with data {
+  userName: '[REDACTED]',
+  accessKey: '[REDACTED]',
+  event_type: 'SDKTestSuccessful',
+  detectedFramework: 'WebdriverIO-mocha',
+  event_properties: {
+    sdkRunId: '8c37342f-9f97-4ca8-9bfe-898acc08e777',
+    testhub_uuid: undefined,
+    language_framework: 'WebdriverIO_mocha',
+    referrer: 'WebdriverIO-mocha/9.9.0',
+    language: 'WebdriverIO',
+    languageVersion: 'v25.1.0',
+    buildName: 'mobile-local-run-test',
+    buildIdentifier: 'undefined',
+    os: 'Windows_NT',
+    hostname: 'LTGB012550',
+    productMap: {
+      observability: true,
+      accessibility: false,
+      percy: false,
+      automate: true,
+      app_automate: false
+    },
+    product: [ 'observability', 'automate' ],
+    framework: 'mocha',
+    productUsage: {
+      testObservability: {
+        enabled: true,
+        manuallySet: true,
+        buildHashedId: undefined,
+        events: {
+          buildEvents: {
+            started: {
+              isTriggered: true,
+              status: 'failed',
+              error: 'fetch failed'
+            },
+            finished: {
+              isTriggered: true,
+              status: 'failed',
+              error: 'Build is not completed yet'
+            }
+          },
+          testEvents: {
+            started: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+            finished: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+          },
+          hookEvents: {
+            started: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+            finished: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+          },
+          logEvents: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+          cbtSessionEvents: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+        }
+      }
+    }
+  }
+}
+[90m2026-06-11T10:02:29.171Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Exception in sending funnel data: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at fetchWrap (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:254:15)
+    at fireFunnelRequest (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3057:20)
+    at fireFunnelTestEvent (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3021:5)
+    at sendFinish (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3032:3)
+    at BrowserstackLauncherService.onComplete (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3674:5) {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1630:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket.emit (node:domain:489:12)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at TLSWrap.ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+[90m2026-06-11T10:02:29.172Z[39m [96mINFO[39m [97m@wdio/browserstack-service[39m If facing any issues, please contact BrowserStack support with the Build Run Id - 8c37342f-9f97-4ca8-9bfe-898acc08e777
+[90m2026-06-11T10:02:29.520Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Error in firing request https://upload-observability.browserstack.com/client-logs/upload: TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at nodeRequest (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:1189:22)
+    at uploadLogs (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:2160:22)
+    at BrowserstackLauncherService._uploadServiceLogs (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3808:22)
+    at BrowserstackLauncherService.onComplete (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3676:7) {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1630:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket.emit (node:domain:489:12)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at TLSWrap.ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
+[90m2026-06-11T10:02:29.520Z[39m [32mDEBUG[39m [97m@wdio/browserstack-service[39m Failed to fire api request due to TypeError: fetch failed - TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at nodeRequest (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:1189:22)
+    at uploadLogs (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:2160:22)
+    at BrowserstackLauncherService._uploadServiceLogs (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3808:22)
+    at BrowserstackLauncherService.onComplete (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/index.js:3676:7)
+2026-06-11T10:02:30.594Z DEBUG @wdio/browserstack-service Sending SDK event with data {
+  userName: '[REDACTED]',
+  accessKey: '[REDACTED]',
+  event_type: 'SDKTestSuccessful',
+  detectedFramework: 'WebdriverIO-mocha',
+  event_properties: {
+    sdkRunId: '8c37342f-9f97-4ca8-9bfe-898acc08e777',
+    language_framework: 'WebdriverIO_mocha',
+    referrer: 'WebdriverIO-mocha/9.9.0',
+    language: 'WebdriverIO',
+    languageVersion: 'v25.1.0',
+    buildName: 'mobile-local-run-test',
+    buildIdentifier: 'undefined',
+    os: 'Windows_NT',
+    hostname: 'LTGB012550',
+    productMap: {
+      observability: true,
+      accessibility: false,
+      percy: false,
+      automate: true,
+      app_automate: false
+    },
+    product: [ 'observability', 'automate' ],
+    framework: 'mocha',
+    productUsage: {
+      testObservability: {
+        enabled: true,
+        manuallySet: true,
+        events: {
+          buildEvents: {
+            started: {
+              isTriggered: true,
+              status: 'failed',
+              error: 'fetch failed'
+            },
+            finished: {
+              isTriggered: true,
+              status: 'failed',
+              error: 'Build is not completed yet'
+            }
+          },
+          testEvents: {
+            started: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+            finished: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+          },
+          hookEvents: {
+            started: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+            finished: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+          },
+          logEvents: { triggeredCount: 0, sentCount: 0, failedCount: 0 },
+          cbtSessionEvents: { triggeredCount: 0, sentCount: 0, failedCount: 0 }
+        }
+      }
+    }
+  }
+}
+2026-06-11T10:02:30.791Z ERROR @wdio/browserstack-service Error in sending funnel data: TypeError: fetch failed
+2026-06-11T10:02:31.288Z DEBUG @wdio/browserstack-service Failed to upload performance events TypeError: fetch failed
+    at node:internal/deps/undici/undici:15845:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async fetchWrap (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/cleanup.js:236:15)
+    at async _PerformanceTester.uploadEventsData (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/cleanup.js:477:22)
+    at async _BStackCleanup.startCleanup (file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/cleanup.js:2057:9)
+    at async file:///C:/Users/175040/Documents/GitHub/aqie-privatebeta-test/node_modules/@wdio/browserstack-service/build/cleanup.js:2122:1 {
+  [cause]: Error: unable to get local issuer certificate
+      at TLSSocket.onConnectSecure (node:internal/tls/wrap:1630:34)
+      at TLSSocket.emit (node:events:508:28)
+      at TLSSocket._finishInit (node:internal/tls/wrap:1076:8)
+      at ssl.onhandshakedone (node:internal/tls/wrap:862:12) {
+    code: 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY'
+  }
+}
