@@ -66,7 +66,8 @@ export const config = {
               '--disable-gpu',
               '--window-size=1920,1080',
               '--disable-logging',
-              '--log-level=3'
+              '--log-level=3',
+              '--remote-debugging-port=9222' //accessibility framework config
             ]
           }
         }
@@ -169,7 +170,7 @@ export const config = {
   // See the full list at http://mochajs.org/
   mochaOpts: {
     ui: 'bdd',
-    timeout: debug ? oneHour : 60000
+    timeout: debug ? oneHour : 80000
   },
   //
   // =====

@@ -45,7 +45,10 @@ export const config = {
   //
   specs: ['./test/specs/**/*.js'],
   // Patterns to exclude.
-  exclude: ['./test/specs/mobileHappyPath.js'],
+  exclude: [
+    './test/specs/mobileHappyPath.js',
+    './test/specs/accessibility.e2e.js'
+  ],
   // injectGlobals: false,
   //
   // ============

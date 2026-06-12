@@ -10,6 +10,7 @@ coverage
 .png
 /allure-report
 /allure-results
+/reports
 FAILED
 
 # VS Code MCP config - contains credentials
