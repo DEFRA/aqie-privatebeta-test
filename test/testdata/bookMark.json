@@ -156,18 +156,6 @@
     "language": "Welsh"
   },
   {
-    "region": "/lleoliad/london",
-    "headerRegionText": "Ansawdd aer – London, City of Westminster",
-    "happyFlow": "Yes",
-    "language": "Welsh"
-  },
-  {
-    "region": "/lleoliad/reading",
-    "headerRegionText": "Ansawdd aer – Reading, Reading",
-    "happyFlow": "Yes",
-    "language": "Welsh"
-  },
-  {
     "region": "/location/scotland",
     "headerRegionText": "Page not found",
     "happyFlow": "No",
