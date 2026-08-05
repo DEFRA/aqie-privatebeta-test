@@ -28,6 +28,42 @@ function logFetchFailure(label, err) {
       Object.getOwnPropertyNames(cause || {})
     )}`
   )
+  // api-ukair.defra.gov.uk is an EXTERNAL domain (not *.cdp-int.defra.cloud).
+  // Prod pods typically block direct external egress and require routing
+  // through the CDP squid proxy. If no proxy is configured, this is almost
+  // certainly the cause of a "fetch failed" in prod.
+  if (!proxy) {
+    logger.error(
+      '[AQSR] No HTTP_PROXY/HTTPS_PROXY configured. If this failure only ' +
+        'happens in prod, the pod network policy is likely blocking direct ' +
+        'egress to the external api-ukair.defra.gov.uk domain. Set the ' +
+        'HTTP_PROXY/HTTPS_PROXY env vars for the prod pipeline (same values ' +
+        'used in wdio.conf.hybrid.cjs / wdio.conf-mobile-cdp.cjs) to route ' +
+        'this request through the CDP egress proxy.'
+    )
+  }
+}
+
+// Simple retry helper for transient network failures (proxy warm-up, DNS
+// blips, etc). Retries the given async function up to `retries` times with
+// a short delay between attempts.
+async function withRetry(fn, label, retries = 2, delayMs = 2000) {
+  let lastErr
+  for (let attempt = 1; attempt <= retries + 1; attempt++) {
+    try {
+      return await fn()
+    } catch (err) {
+      lastErr = err
+      logFetchFailure(label, err)
+      if (attempt <= retries) {
+        logger.warn(
+          `[AQSR] ${label} attempt ${attempt} failed, retrying in ${delayMs}ms...`
+        )
+        await new Promise((resolve) => setTimeout(resolve, delayMs))
+      }
+    }
+  }
+  throw lastErr
 }
 
 // Step 9 - obtain a bearer token from the login_check endpoint
@@ -36,20 +72,18 @@ async function getAqsrToken() {
   logger.info(
     `[AQSR] Requesting bearer token from ${LOGIN_URL} (proxy: ${proxy || 'none (direct connection)'})`
   )
-  let response
-  try {
-    response = await proxyFetch(LOGIN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: EMAIL,
-        password: PASSWORD
-      })
-    })
-  } catch (err) {
-    logFetchFailure('login_check', err)
-    throw err
-  }
+  const response = await withRetry(
+    () =>
+      proxyFetch(LOGIN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: EMAIL,
+          password: PASSWORD
+        })
+      }),
+    'login_check'
+  )
   let data
   if (response.ok) {
     data = await response.json()
@@ -63,16 +97,14 @@ async function getAqsrToken() {
 async function fetchAqsrAlerts(token, startDate, endDate) {
   const apiUrl = `${ALERTS_URL}?page=1&start-date=${startDate}&end-date=${endDate}`
   logger.info(`[AQSR] GET ${apiUrl}`)
-  let response
-  try {
-    response = await proxyFetch(apiUrl, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    })
-  } catch (err) {
-    logFetchFailure('aqsr_alerts', err)
-    throw err
-  }
+  const response = await withRetry(
+    () =>
+      proxyFetch(apiUrl, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` }
+      }),
+    'aqsr_alerts'
+  )
   let data
   if (response.ok) {
     data = await response.json()
