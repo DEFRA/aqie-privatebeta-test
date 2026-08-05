@@ -86,7 +86,7 @@ const config = convict({
   ephemeralApiKey: {
     doc: 'API key for ephemeral forecast service',
     format: String,
-    default: 'O6o62H5Ss87HXnfUfyI73Lo3VbTUfiDF',
+    default: '2J0l73qKnpZrljkIA4ckCIU2oD41HvX5',
     sensitive: true,
     env: 'EPHEMERAL_API_KEY'
   },

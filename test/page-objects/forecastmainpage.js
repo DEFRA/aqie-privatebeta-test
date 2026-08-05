@@ -8,6 +8,19 @@ class ForecastMainPage {
     return $("h1[class='govuk-heading-xl govuk-!-margin-top-4']")
   }
 
+  // Robust heading locator that matches both the forecast page heading
+  // (class="govuk-heading-xl govuk-!-margin-top-4") and the "We could not
+  // find '<postcode>'" error page heading (class="govuk-heading-l odd-page"),
+  // regardless of any extra classes appended or their order. Uses a
+  // substring attribute selector on the common "govuk-heading-" prefix so it
+  // matches -l, -xl, -m, -s heading size variants without needing an exact
+  // class string. Use this instead of regionHeaderDisplay when the page
+  // reached after a location search could be either the forecast page or the
+  // "could not find" error page (e.g. flaky/invalid postcode lookups).
+  get regionOrErrorHeaderDisplay() {
+    return $("h1[class*='govuk-heading-']")
+  }
+
   get subHeadersinForecastPage() {
     return $$("h2[class='govuk-heading-m']")
   }

@@ -102,7 +102,7 @@ describe('Location Search', () => {
     await locationSearchPage.setUserESWRegion(singleRegion[1].region)
     await locationSearchPage.clickContinueBtn()
     const getForecastHeader =
-      await ForecastMainPage.regionHeaderDisplay.getText()
+      await ForecastMainPage.regionOrErrorHeaderDisplay.getText()
     await expect(getForecastHeader).toMatch('Tenby, Sir Benfro - Pembrokeshire')
     await browser.deleteCookies(['airaqie_cookie'])
     logger.info(
