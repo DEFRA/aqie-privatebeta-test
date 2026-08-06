@@ -131,21 +131,41 @@ describe('Location Search', () => {
       await locationSearchPage.setUserNIRegion(region)
       await browser.pause(3000)
       await locationSearchPage.clickContinueBtn()
-      // Location Match Page
-      const getUserRegion =
-        await ForecastMainPage.regionOrErrorHeaderDisplay.getText()
-      const getUserRegionSplit = getUserRegion.split(',')
-      const regionToUppercaseText = region.toUpperCase()
-      const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
-      const addAirQualityTxt = 'Air quality in ' + regionRemoveSpace
-      const receivedAreaOnly = getUserRegionSplit[0].replace(
-        'Air quality in ',
-        ''
-      )
-      const removeSpaceinReceivedAreaOnly = receivedAreaOnly.replace(/\s+/, '')
-      const addBackAirQuality =
-        'Air quality in ' + removeSpaceinReceivedAreaOnly
-      await expect(addBackAirQuality).toMatch(addAirQualityTxt)
+      // NI only accepts postcodes starting with 'BT'. Any other postcode
+      // (e.g. GL4 3YX, W4 3TT) should show the "We could not find" error
+      // page instead of a forecast/region match page.
+      const isBTPostcode = /^\s*BT/i.test(region)
+      if (isBTPostcode) {
+        // Location Match Page
+        const getUserRegion =
+          await ForecastMainPage.regionOrErrorHeaderDisplay.getText()
+        const getUserRegionSplit = getUserRegion.split(',')
+        const regionToUppercaseText = region.toUpperCase()
+        const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
+        const addAirQualityTxt = 'Air quality in ' + regionRemoveSpace
+        const receivedAreaOnly = getUserRegionSplit[0].replace(
+          'Air quality in ',
+          ''
+        )
+        const removeSpaceinReceivedAreaOnly = receivedAreaOnly.replace(
+          /\s+/,
+          ''
+        )
+        const addBackAirQuality =
+          'Air quality in ' + removeSpaceinReceivedAreaOnly
+        await expect(addBackAirQuality).toMatch(addAirQualityTxt)
+      } else {
+        // Non-BT postcode: expect the "We could not find '<postcode>'"
+        // error page. The error page preserves the original spacing of the
+        // postcode, so only the casing should be transformed here.
+        const errorPageHeader =
+          await errorPageLocationSearch.errorHeaderDisplay.getText()
+        const transformedRegion = capitalizeFirstLetter(region)
+        await expect(errorPageHeader).toMatch(
+          'We could not find ' + "'" + transformedRegion + "'"
+        )
+        await errorPageLocationSearch.clickSearchBackLink()
+      }
       await browser.deleteCookies(['airaqie_cookie'])
       logger.info('--- LocSearch EndScenario NI Location Search Page --------')
     })
