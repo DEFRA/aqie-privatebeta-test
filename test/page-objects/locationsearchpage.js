@@ -98,11 +98,28 @@ class LocationSearchPage {
   }
 
   async clickESWRadiobtn() {
-    await this.getRadiobtn[0].click()
+    // getRadiobtn ($$) resolves immediately without waiting for the page to
+    // render, so indexing into it right after a navigation can return an
+    // empty array on a slower load ("Index out of bounds! ... returned only
+    // 0 elements"). Wait until the radio labels have actually rendered
+    // before re-querying and indexing into them.
+    await browser.waitUntil(async () => (await this.getRadiobtn).length >= 2, {
+      timeout: 20000,
+      timeoutMsg: 'Radio button labels did not render in time'
+    })
+    const radios = await this.getRadiobtn
+    await radios[0].waitForClickable({ timeout: 20000 })
+    await radios[0].click()
   }
 
   async clickNIRadiobtn() {
-    await this.getRadiobtn[1].click()
+    await browser.waitUntil(async () => (await this.getRadiobtn).length >= 2, {
+      timeout: 20000,
+      timeoutMsg: 'Radio button labels did not render in time'
+    })
+    const radios = await this.getRadiobtn
+    await radios[1].waitForClickable({ timeout: 20000 })
+    await radios[1].click()
   }
 
   // Welsh Translation

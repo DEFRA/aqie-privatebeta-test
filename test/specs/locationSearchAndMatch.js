@@ -132,7 +132,8 @@ describe('Location Search', () => {
       await browser.pause(3000)
       await locationSearchPage.clickContinueBtn()
       // Location Match Page
-      const getUserRegion = await ForecastMainPage.regionHeaderDisplay.getText()
+      const getUserRegion =
+        await ForecastMainPage.regionOrErrorHeaderDisplay.getText()
       const getUserRegionSplit = getUserRegion.split(',')
       const regionToUppercaseText = region.toUpperCase()
       const regionRemoveSpace = regionToUppercaseText.replace(/\s+/, '')
