@@ -375,6 +375,19 @@ describe(`new ricardo validation `, () => {
       ) {
         if (await ForecastMainPage.pollutantTabsNameItself[i].isDisplayed()) {
           await ForecastMainPage.pollutantTabsNameItself[i].click()
+          // Scroll the resulting pollutant values table into view so that
+          // any screenshot taken (e.g. on assertion failure) captures the
+          // actual table content instead of just the tab bar above it.
+          try {
+            if (await ForecastMainPage.pollutantAreaNames[i].isExisting()) {
+              await ForecastMainPage.pollutantAreaNames[i].scrollIntoView({
+                block: 'center'
+              })
+            }
+          } catch (error) {
+            logger.info('ERRORINSCROLLINTOVIEWTABLE')
+            logger.error(error)
+          }
           const pollutantAreaName =
             await ForecastMainPage.pollutantAreaNames[i].getText()
           const tabResultItems = []
