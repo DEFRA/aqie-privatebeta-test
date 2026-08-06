@@ -107,90 +107,111 @@ async function newRicardoAPI(region, latitude, longitude) {
       logger.info('siteMetaDatas.member is not an array or missing')
     }
     const allSitesResults = {}
+
+    // Normalizes the raw HTML-ish pollutant name coming back from the API
+    // into the plain labels used for comparison/allow-listing.
+    function normalizePollutantName(name) {
+      if (!name) return ''
+      return name
+        .replace(
+          /PM<sub>10<\/sub> particulate matter \(Hourly measured\)/,
+          'PM10'
+        )
+        .replace(
+          /PM<sub>2\.5<\/sub> particulate matter \(Hourly measured\)/,
+          'PM2.5'
+        )
+        .replace(/<[^>]+>/g, '')
+        .trim()
+    }
+
+    // Requirement change: O3 (Ozone) and GE10/PM2.5 (PM10, PM2.5) now need a
+    // dedicated "data-type" query string on the measurements request, while
+    // SO2 (Sulphur dioxide) and NO2 (Nitrogen dioxide) keep using the
+    // original request (no data-type). Each entry below describes one
+    // request to make per site: which data-type query param to add (if any)
+    // and which normalized pollutant names to keep from that response.
+    const measurementRequests = [
+      // Old logic - unchanged - for SO2/NO2
+      { dataType: null, pollutants: ['Nitrogen dioxide', 'Sulphur dioxide'] },
+      // New logic - Ozone requires data-type=23
+      { dataType: 23, pollutants: ['Ozone'] },
+      // New logic - PM10 (GE10) and PM2.5 require data-type=24
+      { dataType: 24, pollutants: ['PM10', 'PM2.5'] }
+    ]
+
     for (const site of result) {
       if (!site.siteId) continue
       const siteId = site.siteId
       const siteName = site.siteName
       const measurementsBaseUrl = config.get('pollutantsMeasurementsUrl')
-      const measurementsUrl = `${measurementsBaseUrl}?station-id=${siteId}&latest-measurement=true`
-      logger.info(`Fetching pollutant measurements for siteId: ${siteId}`)
-      const measurementsResponse = await proxyFetch(measurementsUrl, {
-        method: 'GET',
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      if (measurementsResponse.ok) {
-        const measurementsData = await measurementsResponse.json()
 
-        logger.info('Final Data', JSON.stringify(measurementsData))
-        const allowedPollutantsNormalized = [
-          'PM10',
-          'PM2.5',
-          'Ozone',
-          'Nitrogen dioxide',
-          'Sulphur dioxide'
-        ]
-        function normalizePollutantName(name) {
-          if (!name) return ''
-          return name
-            .replace(
-              /PM<sub>10<\/sub> particulate matter \(Hourly measured\)/,
-              'PM10'
-            )
-            .replace(
-              /PM<sub>2\.5<\/sub> particulate matter \(Hourly measured\)/,
-              'PM2.5'
-            )
-            .replace(/<[^>]+>/g, '')
-            .trim()
+      // Fetch each request (old logic + the two new data-type calls) for
+      // this site and collect the filtered measurements from each into one
+      // combined list before picking the latest reading per pollutant.
+      let combinedFiltered = []
+      for (const { dataType, pollutants } of measurementRequests) {
+        const measurementsUrl =
+          `${measurementsBaseUrl}?station-id=${siteId}&latest-measurement=true` +
+          (dataType ? `&data-type=${dataType}` : '')
+        logger.info(
+          `Fetching pollutant measurements for siteId: ${siteId} (data-type: ${dataType ?? 'none'})`
+        )
+        const measurementsResponse = await proxyFetch(measurementsUrl, {
+          method: 'GET',
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        if (!measurementsResponse.ok) {
+          logger.info(
+            'Failed to fetch pollutant measurements:',
+            JSON.stringify(measurementsResponse.status)
+          )
+          continue
         }
-        let filteredMeasurements = []
+        const measurementsData = await measurementsResponse.json()
+        logger.info('Final Data', JSON.stringify(measurementsData))
+
         let measurementMembers = []
         if (measurementsData.member) {
-          if (Array.isArray(measurementsData.member)) {
-            measurementMembers = measurementsData.member
-          } else {
-            measurementMembers = [measurementsData.member]
-          }
-          // Filter for allowed pollutants
-          const filtered = measurementMembers.filter((obj) =>
-            allowedPollutantsNormalized.includes(
-              normalizePollutantName(obj.pollutantName)
-            )
-          )
-          // Keep only the latest measurement per pollutant
-          const latestByPollutant = {}
-          for (const obj of filtered) {
-            const normName = normalizePollutantName(obj.pollutantName)
-            if (
-              !latestByPollutant[normName] ||
-              new Date(obj.endDateTime) >
-                new Date(latestByPollutant[normName].endDateTime)
-            ) {
-              latestByPollutant[normName] = obj
-            }
-          }
-          filteredMeasurements = Object.values(latestByPollutant)
+          measurementMembers = Array.isArray(measurementsData.member)
+            ? measurementsData.member
+            : [measurementsData.member]
         }
-        // Normalize pollutantName for output
-        const normalizedFilteredMeasurements = filteredMeasurements.map(
-          (obj) => ({
-            ...obj,
-            pollutantName: normalizePollutantName(obj.pollutantName)
-          })
+        // Keep only the pollutants this specific request is responsible for
+        const filtered = measurementMembers.filter((obj) =>
+          pollutants.includes(normalizePollutantName(obj.pollutantName))
         )
-        const outputData = {
-          siteId,
-          siteName,
-          measurements: normalizedFilteredMeasurements
-        }
-        allSitesResults[siteId] = outputData
-        // Remove per-site file writing
-      } else {
-        logger.info(
-          'Failed to fetch pollutant measurements:',
-          JSON.stringify(measurementsResponse.status)
-        )
+        combinedFiltered = combinedFiltered.concat(filtered)
       }
+
+      // Keep only the latest measurement per pollutant across all requests
+      const latestByPollutant = {}
+      for (const obj of combinedFiltered) {
+        const normName = normalizePollutantName(obj.pollutantName)
+        if (
+          !latestByPollutant[normName] ||
+          new Date(obj.endDateTime) >
+            new Date(latestByPollutant[normName].endDateTime)
+        ) {
+          latestByPollutant[normName] = obj
+        }
+      }
+      const filteredMeasurements = Object.values(latestByPollutant)
+
+      // Normalize pollutantName for output
+      const normalizedFilteredMeasurements = filteredMeasurements.map(
+        (obj) => ({
+          ...obj,
+          pollutantName: normalizePollutantName(obj.pollutantName)
+        })
+      )
+      const outputData = {
+        siteId,
+        siteName,
+        measurements: normalizedFilteredMeasurements
+      }
+      allSitesResults[siteId] = outputData
+      // Remove per-site file writing
     }
     // After all sites processed, write consolidated file
     /* const finalDataDir = path.resolve(__dirname, 'finalData')
